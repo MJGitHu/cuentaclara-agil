@@ -1,0 +1,16 @@
+{
+  "name": "cuentaclara-mvp",
+  "version": "1.0.0",
+  "description": "Sistema de gestion de pagos para gerencia y asistencia administrativa",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "gestion-pagos",
+    "mvp",
+    "finanzas"
+  ],
+  "author": "",
+  "license": "ISC"
+}
