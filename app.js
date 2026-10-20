@@ -577,10 +577,10 @@
   };
 
   const STORAGE_KEYS = {
-    SUPPLIERS: 'cuentaclara_suppliers_v3',
-    EXPENSES: 'cuentaclara_expenses_v3',
-    TYPES: 'cuentaclara_types_v3',
-    SESSION: 'cuentaclara_session_v3'
+    SUPPLIERS: 'cuentaclara_suppliers_v4',
+    EXPENSES: 'cuentaclara_expenses_v4',
+    TYPES: 'cuentaclara_types_v4',
+    SESSION: 'cuentaclara_session_v4'
   };
 
   // ==========================================================================
@@ -589,13 +589,14 @@
 
   const Store = {
     init() {
-      if (!localStorage.getItem(STORAGE_KEYS.SUPPLIERS)) {
-        localStorage.setItem(STORAGE_KEYS.SUPPLIERS, JSON.stringify(DEFAULT_SUPPLIERS));
+      // Por defecto para la exposición ante el profesor, el sistema inicia limpio/vacío (0 registros)
+      if (localStorage.getItem(STORAGE_KEYS.SUPPLIERS) === null) {
+        localStorage.setItem(STORAGE_KEYS.SUPPLIERS, JSON.stringify([]));
       }
-      if (!localStorage.getItem(STORAGE_KEYS.EXPENSES)) {
-        localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(DEFAULT_EXPENSES));
+      if (localStorage.getItem(STORAGE_KEYS.EXPENSES) === null) {
+        localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify([]));
       }
-      if (!localStorage.getItem(STORAGE_KEYS.TYPES)) {
+      if (localStorage.getItem(STORAGE_KEYS.TYPES) === null) {
         localStorage.setItem(STORAGE_KEYS.TYPES, JSON.stringify(DEFAULT_EXPENSE_TYPES));
       }
     },
@@ -698,10 +699,20 @@
       sessionStorage.removeItem(STORAGE_KEYS.SESSION);
     },
 
-    resetDemoData() {
+    loadDemoData() {
       localStorage.setItem(STORAGE_KEYS.SUPPLIERS, JSON.stringify(DEFAULT_SUPPLIERS));
       localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(DEFAULT_EXPENSES));
       localStorage.setItem(STORAGE_KEYS.TYPES, JSON.stringify(DEFAULT_EXPENSE_TYPES));
+    },
+
+    clearAllData() {
+      localStorage.setItem(STORAGE_KEYS.SUPPLIERS, JSON.stringify([]));
+      localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify([]));
+      localStorage.setItem(STORAGE_KEYS.TYPES, JSON.stringify(DEFAULT_EXPENSE_TYPES));
+    },
+
+    resetDemoData() {
+      this.loadDemoData();
     }
   };
 
@@ -836,8 +847,14 @@
     usernameInput: document.getElementById('usernameInput'),
     passwordInput: document.getElementById('passwordInput'),
     loginAlert: document.getElementById('loginAlert'),
+    loginDemoBox: document.getElementById('loginDemoBox'),
     demoGerenteBtn: document.getElementById('demoGerenteBtn'),
     demoAsistenteBtn: document.getElementById('demoAsistenteBtn'),
+
+    // Barra Discreta de Demostración (Modo Presentación)
+    secretDevToolbar: document.getElementById('secretDevToolbar'),
+    btnLoadDemoData: document.getElementById('btnLoadDemoData'),
+    btnClearAllData: document.getElementById('btnClearAllData'),
 
     // Gerente View
     gerenteView: document.getElementById('gerenteView'),
@@ -1520,17 +1537,67 @@
       renderAssistantPayments();
     });
 
-    // Botón de Restablecer Datos de Demostración
-    if (DOM.resetDemoBtn) {
-      DOM.resetDemoBtn.addEventListener('click', function () {
-        const confirmReset = confirm('¿Desea restablecer la base de datos local con los datos de muestra iniciales?\n\nEsto recargará todos los proveedores y obligaciones originales.');
-        if (confirmReset) {
-          Store.resetDemoData();
-          updateSupplierSelects();
-          updateTypeSelects();
-          updatePeriodViews();
-          showToast('Base de datos restablecida a los valores iniciales de demostración.', 'success');
+    // ========================================================================
+    // Modo Presentación Discreto (Atajo: Ctrl+Shift+D o Ctrl+D o 3 clics en Logo)
+    // ========================================================================
+
+    function toggleSecretToolbar() {
+      if (!DOM.secretDevToolbar) return;
+      const isHidden = DOM.secretDevToolbar.classList.contains('hidden');
+      if (isHidden) {
+        DOM.secretDevToolbar.classList.remove('hidden');
+        if (DOM.loginDemoBox) DOM.loginDemoBox.classList.remove('hidden');
+        showToast('Modo Presentación activado.', 'info');
+      } else {
+        DOM.secretDevToolbar.classList.add('hidden');
+        if (DOM.loginDemoBox) DOM.loginDemoBox.classList.add('hidden');
+        showToast('Modo Presentación ocultado.', 'info');
+      }
+    }
+
+    // Atajo de teclado secreto: Ctrl+Shift+D o Ctrl+D o Ctrl+M
+    window.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey && e.shiftKey && (e.key === 'D' || e.key === 'd')) ||
+          (e.ctrlKey && (e.key === 'd' || e.key === 'D')) ||
+          (e.ctrlKey && (e.key === 'm' || e.key === 'M'))) {
+        e.preventDefault();
+        toggleSecretToolbar();
+      }
+    });
+
+    // Respaldo alternativo: 3 clics rápidos en el título "CuentaClara"
+    let logoClickCount = 0;
+    let logoClickTimer = null;
+    document.querySelectorAll('.brand-title, .login-header h1').forEach(elem => {
+      elem.addEventListener('click', function () {
+        logoClickCount++;
+        clearTimeout(logoClickTimer);
+        logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 800);
+        if (logoClickCount >= 3) {
+          logoClickCount = 0;
+          toggleSecretToolbar();
         }
+      });
+    });
+
+    // Botones de la Barra Secreta
+    if (DOM.btnLoadDemoData) {
+      DOM.btnLoadDemoData.addEventListener('click', function () {
+        Store.loadDemoData();
+        updateSupplierSelects();
+        updateTypeSelects();
+        updatePeriodViews();
+        showToast('Datos de prueba cargados exitosamente.', 'success');
+      });
+    }
+
+    if (DOM.btnClearAllData) {
+      DOM.btnClearAllData.addEventListener('click', function () {
+        Store.clearAllData();
+        updateSupplierSelects();
+        updateTypeSelects();
+        updatePeriodViews();
+        showToast('Base de datos vaciada. Sistema limpio para exposición.', 'info');
       });
     }
 
@@ -1716,6 +1783,9 @@
     } else {
       setUnauthenticatedView();
     }
+
+    window.Store = Store;
+    window.updatePeriodViews = updatePeriodViews;
   }
 
   document.addEventListener('DOMContentLoaded', init);

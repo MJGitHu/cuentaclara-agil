@@ -16,7 +16,6 @@
 
     <div class="header-user-actions hidden" id="userHeaderActions">
       <div class="user-badge" id="userBadgeInfo"></div>
-      <button class="btn btn-secondary btn-sm" id="resetDemoBtn" type="button" title="Restablecer datos originales de prueba">Restablecer Datos</button>
       <button class="btn btn-secondary btn-sm" id="logoutBtn" type="button">Cerrar Sesión</button>
     </div>
   </header>
@@ -48,7 +47,7 @@
           <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 8px;">Iniciar Sesión</button>
         </form>
 
-        <div class="login-demo-box">
+        <div class="login-demo-box hidden" id="loginDemoBox">
           <div class="login-demo-title">Credenciales de Acceso:</div>
           <div class="login-demo-grid">
             <button type="button" class="demo-btn" id="demoGerenteBtn">
@@ -585,6 +584,13 @@
       </div>
     </div>
   </div>
+
+  <!-- Barra Discreta de Demostracion (Se activa/desactiva con Ctrl+Shift+D o 3 clics en el logo) -->
+  <aside id="secretDevToolbar" class="secret-dev-toolbar hidden" aria-label="Control de Demostración">
+    <span class="secret-dev-label">Modo Presentación:</span>
+    <button type="button" class="btn btn-sm btn-primary" id="btnLoadDemoData">Cargar Datos Demo</button>
+    <button type="button" class="btn btn-sm btn-danger" id="btnClearAllData">Vaciar Base de Datos</button>
+  </aside>
 
   <script src="app.js"></script>
 </body>

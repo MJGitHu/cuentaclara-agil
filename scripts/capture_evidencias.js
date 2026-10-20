@@ -40,28 +40,43 @@ async function run() {
 
   // 3. Login Gerente
   console.log('Capturando 03_gerente_dashboard_octubre.png');
-  await page.click('#demoGerenteBtn');
-  await sleep(200);
+  await page.type('#usernameInput', 'gerente');
+  await page.type('#passwordInput', 'gerente123');
   await page.click('button[type="submit"]');
   await sleep(600);
+  await page.evaluate(() => {
+    Store.loadDemoData();
+    updatePeriodViews();
+  });
+  await sleep(400);
   await page.screenshot({ path: path.join(OUTPUT_DIR, '03_gerente_dashboard_octubre.png'), fullPage: true });
 
   // 4. Mes Anterior: Septiembre 2026
   console.log('Capturando 04_gerente_mes_anterior_septiembre.png');
-  await page.click('#prevMonthBtn');
+  await page.evaluate(() => {
+    window.scrollTo(0, 0);
+    document.getElementById('prevMonthBtn').click();
+  });
   await sleep(400);
   await page.screenshot({ path: path.join(OUTPUT_DIR, '04_gerente_mes_anterior_septiembre.png'), fullPage: true });
 
   // 5. Próximo Mes: Noviembre 2026
   console.log('Capturando 05_gerente_proximo_mes_noviembre.png');
-  await page.click('#nextMonthBtn'); // vuelve a octubre
+  await page.evaluate(() => {
+    document.getElementById('nextMonthBtn').click(); // vuelve a octubre
+  });
   await sleep(300);
-  await page.click('#nextMonthBtn'); // va a noviembre
+  await page.evaluate(() => {
+    document.getElementById('nextMonthBtn').click(); // va a noviembre
+  });
   await sleep(400);
   await page.screenshot({ path: path.join(OUTPUT_DIR, '05_gerente_proximo_mes_noviembre.png'), fullPage: true });
 
   // Volver a Octubre 2026
-  await page.click('#prevMonthBtn');
+  await page.evaluate(() => {
+    window.scrollTo(0, 0);
+    document.getElementById('prevMonthBtn').click();
+  });
   await sleep(400);
 
   // 6. Modal Ver Titular / DNI
@@ -89,7 +104,10 @@ async function run() {
 
   // 8. Modal Nuevo Proveedor con Yape
   console.log('Capturando 08_modal_nuevo_proveedor_yape.png');
-  await page.click('#openGerenteNewSupplierModalBtn');
+  await page.evaluate(() => {
+    window.scrollTo(0, 0);
+    document.getElementById('openGerenteNewSupplierModalBtn').click();
+  });
   await sleep(400);
   await page.type('#supplierRucInput', '20778899001');
   await page.type('#supplierNameInput', 'Tecnología & Servicios Digitales S.A.C.');
@@ -102,49 +120,52 @@ async function run() {
   await page.type('#supplierYapePhoneInput', '998877665');
   await page.type('#supplierYapeHolderInput', 'Mario Gómez / TecnoDigital');
   await page.screenshot({ path: path.join(OUTPUT_DIR, '08_modal_nuevo_proveedor_yape.png'), fullPage: false });
-  await page.click('#closeSupplierModalBtn');
+  await page.evaluate(() => document.getElementById('closeSupplierModalBtn').click());
   await sleep(300);
 
   // 9. Modal Nuevo Tipo de Gasto
   console.log('Capturando 09_modal_nuevo_tipo_gasto.png');
-  await page.click('#openNewExpenseTypeModalBtn');
+  await page.evaluate(() => document.getElementById('openNewExpenseTypeModalBtn').click());
   await sleep(400);
   await page.type('#expenseTypeNameInput', 'Seguros Empresariales');
   await page.screenshot({ path: path.join(OUTPUT_DIR, '09_modal_nuevo_tipo_gasto.png'), fullPage: false });
-  await page.click('#closeExpenseTypeModalBtn');
+  await page.evaluate(() => document.getElementById('closeExpenseTypeModalBtn').click());
   await sleep(300);
 
   // 10. Catálogo de Proveedores
   console.log('Capturando 10_catalogo_proveedores.png');
-  await page.click('#openSupplierListModalBtn');
+  await page.evaluate(() => document.getElementById('openSupplierListModalBtn').click());
   await sleep(400);
   await page.screenshot({ path: path.join(OUTPUT_DIR, '10_catalogo_proveedores.png'), fullPage: false });
-  await page.click('#closeSupplierListModalBtn');
+  await page.evaluate(() => document.getElementById('closeSupplierListModalBtn').click());
   await sleep(300);
 
   // Cerrar sesión Gerente
   console.log('Cerrando sesión de Gerente...');
-  await page.click('#logoutBtn');
+  await page.evaluate(() => document.getElementById('logoutBtn').click());
   await sleep(400);
 
   // 11. Login Asistente
   console.log('Capturando 11_asistente_consola_octubre.png');
-  await page.click('#demoAsistenteBtn');
-  await sleep(200);
+  await page.type('#usernameInput', 'asistente');
+  await page.type('#passwordInput', 'asistente123');
   await page.click('button[type="submit"]');
   await sleep(500);
   await page.screenshot({ path: path.join(OUTPUT_DIR, '11_asistente_consola_octubre.png'), fullPage: true });
 
   // 12. Modal Nuevo Gasto del Asistente
   console.log('Capturando 12_modal_asistente_nuevo_gasto.png');
-  await page.click('#openNewExpenseModalBtn');
+  await page.evaluate(() => {
+    window.scrollTo(0, 0);
+    document.getElementById('openNewExpenseModalBtn').click();
+  });
   await sleep(400);
   await page.type('#expenseReceiptIdInput', 'SUMIN-SEDAPAL-1092');
   await page.type('#expenseDescInput', 'Servicio de Agua Potable - Planta de Producción');
   await page.type('#expenseAmountInput', '412.50');
   await page.type('#expenseDueDateInput', '2026-10-28');
   await page.screenshot({ path: path.join(OUTPUT_DIR, '12_modal_asistente_nuevo_gasto.png'), fullPage: false });
-  await page.click('#closeExpenseModalBtn');
+  await page.evaluate(() => document.getElementById('closeExpenseModalBtn').click());
   await sleep(300);
 
   // 13. Modal Liquidación Yape
@@ -204,6 +225,11 @@ async function run() {
     });
     await sleep(300);
   }
+
+  // Dejar la base de datos completamente limpia y vacía para la exposición en vivo ante el profesor
+  await page.evaluate(() => {
+    Store.clearAllData();
+  });
 
   await browser.close();
   console.log('¡Todas las capturas se guardaron exitosamente en docs/evidencias!');
