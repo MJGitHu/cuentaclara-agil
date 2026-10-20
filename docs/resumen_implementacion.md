@@ -1,68 +1,46 @@
-# Resumen de Implementación del MVP - CuentaClara
+# Resumen de Implementación del MVP - CuentaClara (Versión Refinada)
 
-## 1. Visión General de lo Implementado
+## 1. Visión General de la Solución
 
-Se ha implementado el Producto Mínimo Viable (MVP) para la gestión y monitoreo de pagos corporativos denominado **CuentaClara**, diseñado específicamente para resolver la falta de control en los vencimientos que experimentaba la gerencia frente a proveedores, tributos, servicios y entidades financieras.
-
-La solución cumple al 100% con los requerimientos funcionales y las estrictas directrices de diseño corporativo profesional establecidas por el cliente.
+Se ha completado la implementación integral de las observaciones del cliente (profesor) para el Producto Mínimo Viable (MVP) **CuentaClara**, consolidando un sistema de control y registro administrativo de pagos sin pasarelas reales ni integraciones innecesarias, con diseño corporativo sobrio y máxima facilidad de uso.
 
 ---
 
-## 2. Componentes y Módulos Desarrollados
+## 2. Novedades y Módulos Implementados
 
-### 2.1 Módulo de Autenticación y Seguridad
-- **Control de Acceso Basado en Roles (RBAC):**
-  - Rol **Gerente** (`gerente` / `gerente123`).
-  - Rol **Asistente** (`asistente` / `asistente123`).
-- **Vista Inicial Desacoplada:** El sistema inicia estrictamente con el formulario de inicio de sesión; no se despliega ninguna métrica ni dato previo a la autenticación.
-- **Manejo de Errores Sobrio:** Ante credenciales inválidas, despliega `"Usuario o contraseña incorrectos."` sin elementos decorativos ni emojis.
-- **Protección de Credenciales Financieras:** La sesión del gerente cuenta con un bloque privado de medios de pago personales (cuentas bancarias y tarjetas empresariales) que está completamente oculto y bloqueado para el rol de asistente.
+### 2.1 Dashboard Ejecutivo y Navegación de Periodos
+- **Barra de Navegación Temporal:** Permite alternar instantáneamente entre el mes pasado (Septiembre 2026), el mes actual (Octubre 2026) y el próximo mes (Noviembre 2026).
+- **Los 4 Indicadores Financieros Obligatorios (KPIs):**
+  1. *Total Pendiente del Mes:* Saldo que resta por cancelar en el periodo seleccionado.
+  2. *Total Pagado del Mes:* Sumatoria de egresos cancelados en dicho periodo.
+  3. *Deudas Vencidas Anteriores:* Identificación y sumatoria de obligaciones de meses pasados no liquidadas (alerta de morosidad con contador).
+  4. *Próximo Vencimiento:* Fecha más urgente con descripción del servicio y monto.
+- **Vista Conjunta en la Misma Pantalla:** Las tablas de "Pagos Pendientes del Periodo" y "Pagos Realizados del Periodo" se muestran juntas en la misma pantalla para una auditoría sin fricciones.
 
-### 2.2 Dashboard Ejecutivo del Gerente
-- **Tarjetas de Métricas (KPIs):**
-  - **Total Pendiente del Mes:** Sumatoria de las obligaciones por pagar del periodo.
-  - **Total Pagado del Mes:** Sumatoria consolidada de pagos ejecutados.
-  - **Próximo Vencimiento:** Indicación de la fecha límite más cercana, el concepto y su monto.
-- **Tablas de Monitoreo Mensual:**
-  - Tabla de "Pagos Pendientes del Mes".
-  - Tabla de "Pagos Realizados del Mes" (con fecha de abono y método de pago).
-- **Consola de Solo Lectura:** El gerente tiene una experiencia de auditoría limpia y sin botones de acción que pudieran generar modificaciones erróneas.
+### 2.2 Identificación y Evidencias Documentales
+- **Identificación Oficial del Recibo:** Incorporación de un campo y etiqueta visible (`N° Recibo / Código de Suministro / NPS SUNAT`) para cada gasto registrado.
+- **Comprobación de Titularidad (Foto DNI):** Registro y visualización del documento de identidad del titular para verificar que la deuda corresponde legítimamente al negocio.
+- **Foto del Comprobante de Pago:** Registro obligatorio y visualización de la captura de pantalla del voucher o constancia bancaria al liquidar un pago.
+- **Modal de Visualización Fotográfica:** Ventana modal para inspeccionar a tamaño completo las evidencias de DNI o comprobantes de pago.
 
-### 2.3 Consola Operativa del Asistente
-- **Listado Dinámico de Obligaciones:**
-  - Visualización completa de pagos ordenados por defecto según fecha de vencimiento.
-- **Barra de Filtros Combinables:**
-  - Filtro por Proveedor / Entidad acreedora.
-  - Filtro por Tipo de Gasto (Servicio, Impuesto, Proveedor, Préstamo).
-  - Filtro por Estado (Pendiente, Realizado, Todos).
-  - Selector de Orden (Vencimiento ascendente/descendente, Monto ascendente/descendente).
-  - Botón "Restablecer" para limpiar los filtros en un clic.
-- **Registro de Pagos Ejecutados:**
-  - Botón de acción `"Registrar Pago"` en cada fila de pago pendiente.
-  - Modal interactivo donde se indica la fecha de pago y el método utilizado (Transferencia Bancaria, Efectivo, Cheque, Tarjeta de Débito) con número de operación opcional.
-  - Al confirmar, el gasto pasa automáticamente al estado `"Realizado"` y actualiza de inmediato tanto la vista del asistente como las métricas del gerente.
-- **Registro de Nuevos Gastos e Impuestos:**
-  - Modal para dar de alta nuevas obligaciones vinculadas a proveedores del catálogo.
-  - En el caso de impuestos (ej. SUNAT), el monto se introduce de manera manual sin cálculos automáticos, cumpliendo el alcance pactado.
-- **Catálogo de Proveedores:**
-  - Pestaña independiente para registrar y consultar empresas y entidades (RUC, razón social, rubro, persona de contacto, teléfono y correo).
+### 2.3 Gobierno Centralizado por Gerencia
+- **Administración de Proveedores con Billetera Digital (Yape):** El Gerente da de alta a los proveedores, indicando si reciben Yape, el número de celular y el titular/alias. El Asistente no crea proveedores, solo los selecciona.
+- **Tipos de Gasto Dinámicos:** El Gerente puede dar de alta nuevas categorías de gasto (ej. "Seguros", "Mantenimiento", "Alquiler") desde su panel.
+- **Catálogo de Proveedores:** Modal de consulta rápida para auditar todos los acreedores registrados y sus datos de contacto.
+
+### 2.4 Liquidación Operativa y Reglas de Efectivo (Asistente)
+- **Visualización Automática de Yape:** Al seleccionar Yape en el modal de pago, el sistema muestra el número y titular configurados previamente por el Gerente.
+- **Ley de Redondeo en Efectivo (Ley N° 29571 / BCRP):**
+  - Si un recibo contiene céntimos no fraccionables (ej. S/ 500.35), en pagos en efectivo se aplica el redondeo hacia abajo a favor del cliente (S/ 500.30 con ajuste de -S/ 0.05).
+  - Al ingresar el efectivo entregado (ej. S/ 510.00), el sistema calcula y muestra de forma reactiva el vuelto exacto a entregar (S/ 9.70).
+  - Si el pago es por transferencia bancaria o Yape, no aplica redondeo y se cobra el importe exacto.
 
 ---
 
-## 3. Arquitectura Técnica y Código Fuente
+## 3. Verificación de Restricciones Cumplidas
 
-- **`index.html`:** Estructura semántica HTML5 modular sin elementos superfluos.
-- **`estilos.css`:** Sistema de diseño basado en CSS plano (Vanilla CSS) con paleta corporativa de tres colores (#1E3A5F, #F8F9FA, #D97706), espaciado en retícula de 8px, radio de bordes de 4px y tipografía limpia.
-- **`app.js`:** Lógica de negocio modular bajo IIFE; gestión de estado con persistencia en `localStorage`, control de sesiones en `sessionStorage`, filtros reactivos y renderizado dinámico.
-- **`server.js`:** Servidor HTTP nativo en Node.js sin dependencias de terceros para ejecución inmediata (`npm start`).
-- **`docs/entregable_mvp.md`:** Documento formal con Historias de Usuario (Gherkin), Matriz Jira de 21 subtareas técnicas estimadas (49h), análisis y justificación de costos (S/ 4,532.00 con contingencia) y guía de usuario.
-
----
-
-## 4. Verificación de Restricciones Cumplidas
-
-1. **Cero Emojis:** Verificado en el 100% de archivos y cadenas de texto.
-2. **Sin viñetas con barras verticales:** Formato de tablas y listas planas.
-3. **Identidad de Producto:** Nombre neutro y profesional (**CuentaClara**), sin referencias académicas ni de cursos.
-4. **Textos Directos:** Ausencia de saludos de IA o textos de relleno; comunicación puramente funcional.
-5. **Navegación Mínima:** Gerente en pantalla única y asistente con navegación de dos pestañas (Pagos y Proveedores).
+1. **Cero Emojis:** Verificación en el 100% de la interfaz, botones y mensajes.
+2. **Sin viñetas con líneas verticales:** Estructura pura de tablas limpias y tarjetas sobrias.
+3. **Identidad Corporativa:** Nombre neutro (**CuentaClara**), sin referencias a parciales ni cursos.
+4. **Textos Directos:** Sin saludos conversacionales de IA.
+5. **Navegación Minimalista:** Máxima simplicidad en los flujos de Gerente y Asistente.

@@ -12,10 +12,6 @@
   <header class="app-header" id="appHeader">
     <div style="display: flex; align-items: center;">
       <div class="brand-title">CuentaClara</div>
-      <nav class="header-nav hidden" id="assistantNav">
-        <button class="nav-tab active" id="tabPaymentsBtn" type="button">Pagos</button>
-        <button class="nav-tab" id="tabSuppliersBtn" type="button">Proveedores</button>
-      </nav>
     </div>
 
     <div class="header-user-actions hidden" id="userHeaderActions">
@@ -69,13 +65,28 @@
       </div>
     </section>
 
-    <!-- Vista 2: Dashboard del Gerente (Solo Lectura) -->
+    <!-- Barra de Navegacion Temporal (Mes Pasado / Mes Actual / Proximo Mes) -->
+    <div id="periodNavigatorContainer" class="period-navigator hidden">
+      <button type="button" class="btn btn-secondary btn-sm" id="prevMonthBtn">&lt; Mes Anterior</button>
+      <div class="period-center">
+        <div class="period-title" id="currentPeriodLabel">Octubre 2026</div>
+        <div class="period-subtitle">Periodo financiero consultado</div>
+      </div>
+      <button type="button" class="btn btn-secondary btn-sm" id="nextMonthBtn">Próximo Mes &gt;</button>
+    </div>
+
+    <!-- Vista 2: Dashboard del Gerente (Solo Lectura con Configuraciones) -->
     <section id="gerenteView" class="hidden">
       <div class="section-header">
-        <h2 class="section-title" id="gerenteMonthTitle">Resumen de Pagos - Mes Actual</h2>
+        <h2 class="section-title">Consolidado Mensual de Obligaciones</h2>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-secondary btn-sm" id="openSupplierListModalBtn" type="button">Ver Proveedores</button>
+          <button class="btn btn-secondary btn-sm" id="openNewExpenseTypeModalBtn" type="button">Nuevo Tipo de Gasto</button>
+          <button class="btn btn-primary btn-sm" id="openGerenteNewSupplierModalBtn" type="button">Nuevo Proveedor</button>
+        </div>
       </div>
 
-      <!-- Tarjetas de Resumen Mensual -->
+      <!-- Tarjetas de Resumen (4 KPIs Solicitados por el Cliente) -->
       <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-title">Total Pendiente del Mes</div>
@@ -90,25 +101,33 @@
         </div>
 
         <div class="kpi-card">
+          <div class="kpi-title">Deudas Vencidas Anteriores</div>
+          <div class="kpi-value overdue" id="kpiManagerOverdue">S/ 0.00</div>
+          <div class="kpi-subtitle" id="kpiManagerOverdueCount">0 obligaciones vencidas</div>
+        </div>
+
+        <div class="kpi-card">
           <div class="kpi-title">Próximo Vencimiento</div>
           <div class="kpi-value" id="kpiManagerNextDate" style="font-size: 20px;">Sin pendientes</div>
           <div class="kpi-subtitle" id="kpiManagerNextDesc">-</div>
         </div>
       </div>
 
-      <!-- Tabla: Pagos Pendientes del Mes -->
+      <!-- Tabla 1: Pagos Pendientes del Mes -->
       <div class="content-panel">
         <div class="panel-body">
-          <h3 class="section-title" style="margin-bottom: 16px;">Pagos Pendientes del Mes</h3>
+          <h3 class="section-title" style="margin-bottom: 16px;">Pagos Pendientes del Periodo</h3>
           <div class="table-responsive">
             <table class="data-table">
               <thead>
                 <tr>
+                  <th>N° Recibo / Código</th>
                   <th>Descripción</th>
-                  <th>Proveedor / Entidad</th>
+                  <th>Proveedor</th>
                   <th>Tipo</th>
                   <th>Vencimiento</th>
                   <th style="text-align: right;">Monto</th>
+                  <th>Titularidad</th>
                   <th>Estado</th>
                 </tr>
               </thead>
@@ -117,24 +136,25 @@
               </tbody>
             </table>
           </div>
-          <div id="managerPendingEmpty" class="empty-state hidden">No hay pagos pendientes para este mes.</div>
+          <div id="managerPendingEmpty" class="empty-state hidden">No hay pagos pendientes para este periodo.</div>
         </div>
       </div>
 
-      <!-- Tabla: Pagos Realizados del Mes -->
+      <!-- Tabla 2: Pagos Realizados del Mes (Juntos en la Misma Pantalla) -->
       <div class="content-panel">
         <div class="panel-body">
-          <h3 class="section-title" style="margin-bottom: 16px;">Pagos Realizados del Mes</h3>
+          <h3 class="section-title" style="margin-bottom: 16px;">Pagos Realizados del Periodo</h3>
           <div class="table-responsive">
             <table class="data-table">
               <thead>
                 <tr>
+                  <th>N° Recibo / Código</th>
                   <th>Descripción</th>
-                  <th>Proveedor / Entidad</th>
-                  <th>Tipo</th>
+                  <th>Proveedor</th>
                   <th>Fecha de Pago</th>
                   <th>Método</th>
                   <th style="text-align: right;">Monto</th>
+                  <th>Comprobante</th>
                   <th>Estado</th>
                 </tr>
               </thead>
@@ -143,15 +163,15 @@
               </tbody>
             </table>
           </div>
-          <div id="managerPaidEmpty" class="empty-state hidden">No hay pagos realizados registrados en este mes.</div>
+          <div id="managerPaidEmpty" class="empty-state hidden">No hay pagos realizados registrados en este periodo.</div>
         </div>
       </div>
 
-      <!-- Seccion Confidencial de Medios de Pago de Gerencia -->
+      <!-- Seccion Confidencial de Cuentas Bancarias del Gerente -->
       <div class="content-panel">
         <div class="panel-body">
           <h3 class="section-title" style="margin-bottom: 8px;">Cuentas y Tarjetas de Pago (Uso Exclusivo de Gerencia)</h3>
-          <p class="form-hint" style="margin-bottom: 16px;">Información confidencial de medios de pago. No accesible para el rol de asistente.</p>
+          <p class="form-hint" style="margin-bottom: 16px;">Información confidencial de medios de pago personales. Inaccesible para el rol de asistente.</p>
           <div class="table-responsive">
             <table class="data-table">
               <thead>
@@ -192,125 +212,87 @@
       </div>
     </section>
 
-    <!-- Vista 3: Portal del Asistente -->
+    <!-- Vista 3: Consola Operativa del Asistente -->
     <section id="asistenteView" class="hidden">
+      <div class="section-header">
+        <h2 class="section-title">Control de Pagos y Obligaciones</h2>
+        <button class="btn btn-primary" id="openNewExpenseModalBtn" type="button">Nuevo Gasto</button>
+      </div>
 
-      <!-- Subvista Asistente: Pagos -->
-      <div id="assistantPaymentsSection">
-        <div class="section-header">
-          <h2 class="section-title">Control de Pagos y Obligaciones</h2>
-          <button class="btn btn-primary" id="openNewExpenseModalBtn" type="button">Nuevo Gasto</button>
-        </div>
-
-        <!-- Filtros -->
-        <div class="filters-bar">
-          <div class="filters-grid">
-            <div class="form-group" style="margin-bottom: 0;">
-              <label for="filterSupplier">Proveedor</label>
-              <select id="filterSupplier" class="form-control">
-                <option value="all">Todos los proveedores</option>
-              </select>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 0;">
-              <label for="filterType">Tipo de Gasto</label>
-              <select id="filterType" class="form-control">
-                <option value="all">Todos los tipos</option>
-                <option value="servicio">Servicio</option>
-                <option value="impuesto">Impuesto</option>
-                <option value="proveedor">Proveedor</option>
-                <option value="prestamo">Préstamo</option>
-              </select>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 0;">
-              <label for="filterStatus">Estado</label>
-              <select id="filterStatus" class="form-control">
-                <option value="all">Todos los estados</option>
-                <option value="pendiente" selected>Pendientes</option>
-                <option value="realizado">Realizados</option>
-              </select>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 0;">
-              <label for="filterSort">Orden</label>
-              <select id="filterSort" class="form-control">
-                <option value="due_asc">Vencimiento: próximo primero</option>
-                <option value="due_desc">Vencimiento: lejano primero</option>
-                <option value="amount_desc">Monto: mayor a menor</option>
-                <option value="amount_asc">Monto: menor a mayor</option>
-              </select>
-            </div>
-
-            <div>
-              <button class="btn btn-secondary" id="resetFiltersBtn" type="button" style="width: 100%;">Restablecer</button>
-            </div>
+      <!-- Filtros -->
+      <div class="filters-bar">
+        <div class="filters-grid">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="filterSupplier">Proveedor</label>
+            <select id="filterSupplier" class="form-control">
+              <option value="all">Todos los proveedores</option>
+            </select>
           </div>
-        </div>
 
-        <!-- Tabla Principal de Pagos -->
-        <div class="content-panel">
-          <div class="panel-body">
-            <div class="table-responsive">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Descripción</th>
-                    <th>Proveedor / Entidad</th>
-                    <th>Tipo</th>
-                    <th>Vencimiento</th>
-                    <th style="text-align: right;">Monto</th>
-                    <th>Estado</th>
-                    <th>Detalle de Pago</th>
-                    <th style="text-align: right;">Acción</th>
-                  </tr>
-                </thead>
-                <tbody id="assistantPaymentsTableBody">
-                  <!-- Filas dinamicas -->
-                </tbody>
-              </table>
-            </div>
-            <div id="assistantPaymentsEmpty" class="empty-state hidden">No se encontraron pagos con los filtros seleccionados.</div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="filterType">Tipo de Gasto</label>
+            <select id="filterType" class="form-control">
+              <option value="all">Todos los tipos</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="filterStatus">Estado</label>
+            <select id="filterStatus" class="form-control">
+              <option value="all">Todos los estados</option>
+              <option value="pendiente" selected>Pendientes</option>
+              <option value="realizado">Realizados</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="filterSort">Orden</label>
+            <select id="filterSort" class="form-control">
+              <option value="due_asc">Vencimiento: próximo primero</option>
+              <option value="due_desc">Vencimiento: lejano primero</option>
+              <option value="amount_desc">Monto: mayor a menor</option>
+              <option value="amount_asc">Monto: menor a mayor</option>
+            </select>
+          </div>
+
+          <div>
+            <button class="btn btn-secondary" id="resetFiltersBtn" type="button" style="width: 100%;">Restablecer</button>
           </div>
         </div>
       </div>
 
-      <!-- Subvista Asistente: Proveedores -->
-      <div id="assistantSuppliersSection" class="hidden">
-        <div class="section-header">
-          <h2 class="section-title">Registro de Proveedores y Entidades</h2>
-          <button class="btn btn-primary" id="openNewSupplierModalBtn" type="button">Nuevo Proveedor</button>
-        </div>
-
-        <div class="content-panel">
-          <div class="panel-body">
-            <div class="table-responsive">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>RUC / Identificador</th>
-                    <th>Razón Social / Nombre</th>
-                    <th>Rubro / Categoría</th>
-                    <th>Contacto</th>
-                    <th>Teléfono</th>
-                    <th>Correo Electrónico</th>
-                  </tr>
-                </thead>
-                <tbody id="assistantSuppliersTableBody">
-                  <!-- Filas dinamicas -->
-                </tbody>
-              </table>
-            </div>
-            <div id="assistantSuppliersEmpty" class="empty-state hidden">No hay proveedores registrados.</div>
+      <!-- Tabla Principal de Pagos del Asistente -->
+      <div class="content-panel">
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>N° Recibo / Código</th>
+                  <th>Descripción</th>
+                  <th>Proveedor</th>
+                  <th>Tipo</th>
+                  <th>Vencimiento</th>
+                  <th style="text-align: right;">Monto</th>
+                  <th>Estado</th>
+                  <th>Titularidad</th>
+                  <th>Comprobante</th>
+                  <th style="text-align: right;">Acción</th>
+                </tr>
+              </thead>
+              <tbody id="assistantPaymentsTableBody">
+                <!-- Filas dinamicas -->
+              </tbody>
+            </table>
           </div>
+          <div id="assistantPaymentsEmpty" class="empty-state hidden">No se encontraron pagos con los filtros seleccionados para este periodo.</div>
         </div>
       </div>
-
     </section>
 
   </main>
 
-  <!-- Modal: Registrar Pago Realizado -->
+  <!-- Modal: Registrar Pago Realizado (Con Soporte para Yape y Redondeo en Efectivo Ley 29571) -->
   <div class="modal-backdrop hidden" id="recordPaymentModal">
     <div class="modal-box">
       <div class="modal-header">
@@ -323,6 +305,10 @@
           
           <div class="info-summary-box">
             <div class="info-summary-row">
+              <span style="color: var(--color-text-muted);">Identificación de Recibo:</span>
+              <strong id="modalPaymentReceiptId" class="receipt-id-tag">-</strong>
+            </div>
+            <div class="info-summary-row">
               <span style="color: var(--color-text-muted);">Gasto:</span>
               <strong id="modalPaymentExpenseDesc">-</strong>
             </div>
@@ -331,7 +317,7 @@
               <span id="modalPaymentExpenseSupplier">-</span>
             </div>
             <div class="info-summary-row">
-              <span style="color: var(--color-text-muted);">Monto a Pagar:</span>
+              <span style="color: var(--color-text-muted);">Monto Original del Recibo:</span>
               <strong id="modalPaymentExpenseAmount" style="color: var(--color-primary);">-</strong>
             </div>
           </div>
@@ -346,16 +332,62 @@
             <select id="paymentMethodSelect" class="form-control" required>
               <option value="">Seleccione un método</option>
               <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+              <option value="Yape (Billetera Digital)">Yape (Billetera Digital)</option>
               <option value="Efectivo">Efectivo</option>
               <option value="Cheque">Cheque</option>
               <option value="Tarjeta de Débito">Tarjeta de Débito</option>
             </select>
           </div>
 
+          <!-- Caja de Datos de Yape (Configurados por el Gerente) -->
+          <div id="yapeDetailsBox" class="yape-info-box hidden">
+            <div><strong>Datos de Yape del Proveedor:</strong></div>
+            <div id="yapeSupplierPhone">Número Celular: -</div>
+            <div id="yapeSupplierHolder">Titular / Alias: -</div>
+          </div>
+
+          <!-- Caja de Liquidacion en Efectivo con Redondeo de Centimos (Ley 29571) -->
+          <div id="cashRoundingBox" class="cash-breakdown-box hidden">
+            <div class="cash-breakdown-title">Liquidación en Efectivo (Ley N° 29571 / BCRP)</div>
+            <div class="cash-row">
+              <span>Importe Original:</span>
+              <span id="cashOriginalAmount">S/ 0.00</span>
+            </div>
+            <div class="cash-row">
+              <span>Redondeo Legal a Favor del Pagador:</span>
+              <span id="cashRoundingDifference" style="color: #92400E;">-S/ 0.00</span>
+            </div>
+            <div class="cash-row highlight">
+              <span>Total a Pagar en Efectivo:</span>
+              <span id="cashRoundedTotal">S/ 0.00</span>
+            </div>
+
+            <div class="form-group" style="margin-top: 12px; margin-bottom: 8px;">
+              <label for="cashReceivedInput" style="color: #92400E; font-weight: 600;">Efectivo Entregado (Soles)</label>
+              <input type="number" step="0.10" min="0" id="cashReceivedInput" class="form-control" placeholder="Ej. 510.00">
+            </div>
+
+            <div class="cash-row change-result" id="cashChangeRow">
+              <span>Vuelto a Recibir:</span>
+              <span id="cashChangeAmount">S/ 0.00</span>
+            </div>
+          </div>
+
           <div class="form-group">
-            <label for="paymentRefInput">Número de Operación / Referencia (Opcional)</label>
+            <label for="paymentRefInput">Número de Operación / Constancia (Opcional)</label>
             <input type="text" id="paymentRefInput" class="form-control" placeholder="Ej. OP-9823412">
           </div>
+
+          <!-- Foto del Comprobante de Pago -->
+          <div class="form-group">
+            <label for="paymentReceiptPhotoInput">Foto del Comprobante de Pago (Voucher / Recibo Sellado)</label>
+            <input type="file" id="paymentReceiptPhotoInput" class="form-control" accept="image/*">
+            <div class="form-hint">Adjunte la captura o fotografía que acredita el pago realizado.</div>
+            <div id="paymentReceiptPreviewContainer" class="image-preview-container hidden">
+              <img id="paymentReceiptPreviewImg" src="" alt="Comprobante de pago" class="image-preview-img">
+            </div>
+          </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" id="cancelPaymentModalBtn">Cancelar</button>
@@ -365,7 +397,7 @@
     </div>
   </div>
 
-  <!-- Modal: Registrar Nuevo Gasto -->
+  <!-- Modal: Registrar Nuevo Gasto (Con Identificacion de Recibo y Comprobacion de Titularidad) -->
   <div class="modal-backdrop hidden" id="newExpenseModal">
     <div class="modal-box">
       <div class="modal-header">
@@ -375,13 +407,18 @@
       <form id="newExpenseForm">
         <div class="modal-body">
           <div class="form-group">
-            <label for="expenseDescInput">Descripción del Gasto</label>
-            <input type="text" id="expenseDescInput" class="form-control" required placeholder="Ej. Impuesto SUNAT - Octubre 2026, Factura F001-28">
-            <div class="form-hint">Para impuestos, ingrese la entidad y el periodo correspondiente.</div>
+            <label for="expenseReceiptIdInput">Identificación del Recibo / Código de Suministro / Comprobante</label>
+            <input type="text" id="expenseReceiptIdInput" class="form-control" required placeholder="Ej. Suministro Luz #102941, Recibo #002-9841, NPS SUNAT">
+            <div class="form-hint">Número de comprobante oficial que identifica la obligación.</div>
           </div>
 
           <div class="form-group">
-            <label for="expenseSupplierSelect">Proveedor / Entidad Asociada</label>
+            <label for="expenseDescInput">Descripción del Gasto</label>
+            <input type="text" id="expenseDescInput" class="form-control" required placeholder="Ej. Impuesto SUNAT - Octubre 2026, Energía Eléctrica Sede Central">
+          </div>
+
+          <div class="form-group">
+            <label for="expenseSupplierSelect">Proveedor / Entidad Asociada (Autorizado por Gerencia)</label>
             <select id="expenseSupplierSelect" class="form-control" required>
               <option value="">Seleccione un proveedor</option>
             </select>
@@ -391,23 +428,30 @@
             <label for="expenseTypeSelect">Tipo de Gasto</label>
             <select id="expenseTypeSelect" class="form-control" required>
               <option value="">Seleccione un tipo</option>
-              <option value="servicio">Servicio (Luz, Agua, Internet, etc.)</option>
-              <option value="impuesto">Impuesto (SUNAT, Tributos, etc.)</option>
-              <option value="proveedor">Proveedor (Bienes, Mercadería, Alquiler)</option>
-              <option value="prestamo">Préstamo (Cuotas Bancarias)</option>
             </select>
           </div>
 
           <div class="form-group">
             <label for="expenseAmountInput">Monto (Soles)</label>
-            <input type="number" step="0.01" min="0.01" id="expenseAmountInput" class="form-control" required placeholder="0.00">
-            <div class="form-hint">Monto exacto a pagar (los impuestos se ingresan manualmente).</div>
+            <input type="number" step="0.01" min="0.01" id="expenseAmountInput" class="form-control" required placeholder="Ej. 500.35">
+            <div class="form-hint">Monto exacto del recibo (los impuestos se ingresan manualmente).</div>
           </div>
 
           <div class="form-group">
             <label for="expenseDueDateInput">Fecha de Vencimiento</label>
             <input type="date" id="expenseDueDateInput" class="form-control" required>
           </div>
+
+          <!-- Comprobacion de Titularidad / DNI -->
+          <div class="form-group">
+            <label for="expenseTitularProofInput">Comprobación de Titularidad (Foto DNI / Documento que acredita deuda propia)</label>
+            <input type="file" id="expenseTitularProofInput" class="form-control" accept="image/*">
+            <div class="form-hint">Adjunte foto del DNI o constancia para validar que la deuda corresponde al negocio.</div>
+            <div id="expenseTitularPreviewContainer" class="image-preview-container hidden">
+              <img id="expenseTitularPreviewImg" src="" alt="Comprobación de titularidad" class="image-preview-img">
+            </div>
+          </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" id="cancelExpenseModalBtn">Cancelar</button>
@@ -417,11 +461,11 @@
     </div>
   </div>
 
-  <!-- Modal: Registrar Nuevo Proveedor -->
+  <!-- Modal: Registrar Proveedor (Exclusivo Gerente - Con Datos de Yape) -->
   <div class="modal-backdrop hidden" id="newSupplierModal">
     <div class="modal-box">
       <div class="modal-header">
-        <div class="modal-title">Registrar Proveedor</div>
+        <div class="modal-title">Registrar Proveedor (Gerencia)</div>
         <button class="modal-close-btn" id="closeSupplierModalBtn" type="button">&times;</button>
       </div>
       <form id="newSupplierForm">
@@ -453,7 +497,7 @@
           </div>
 
           <div class="form-group">
-            <label for="supplierPhoneInput">Teléfono</label>
+            <label for="supplierPhoneInput">Teléfono Principal</label>
             <input type="text" id="supplierPhoneInput" class="form-control" required placeholder="Ej. 01-517-1717">
           </div>
 
@@ -461,12 +505,111 @@
             <label for="supplierEmailInput">Correo Electrónico</label>
             <input type="email" id="supplierEmailInput" class="form-control" required placeholder="Ej. contacto@empresa.com">
           </div>
+
+          <!-- Seccion de Billetera Digital (Yape) -->
+          <div class="content-panel" style="margin-bottom: 0; background-color: var(--color-secondary-bg);">
+            <div style="padding: 12px;">
+              <div style="font-weight: 600; font-size: 14px; margin-bottom: 8px;">Configuración de Billetera Digital (Yape)</div>
+              <div class="form-group" style="margin-bottom: 8px;">
+                <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                  <input type="checkbox" id="supplierHasYapeCheck"> El proveedor acepta pagos mediante Yape
+                </label>
+              </div>
+
+              <div id="supplierYapeFields" class="hidden">
+                <div class="form-group">
+                  <label for="supplierYapePhoneInput">Número Celular de Yape</label>
+                  <input type="text" id="supplierYapePhoneInput" class="form-control" placeholder="Ej. 987654321">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="supplierYapeHolderInput">Titular o Alias Registrado en Yape</label>
+                  <input type="text" id="supplierYapeHolderInput" class="form-control" placeholder="Ej. Juan Pérez Ramos / Logística Norte">
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" id="cancelSupplierModalBtn">Cancelar</button>
           <button type="submit" class="btn btn-primary">Guardar Proveedor</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Modal: Registrar Nuevo Tipo de Gasto (Exclusivo Gerente) -->
+  <div class="modal-backdrop hidden" id="newExpenseTypeModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Agregar Tipo de Gasto (Gerencia)</div>
+        <button class="modal-close-btn" id="closeExpenseTypeModalBtn" type="button">&times;</button>
+      </div>
+      <form id="newExpenseTypeForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="expenseTypeNameInput">Nombre del Tipo de Gasto</label>
+            <input type="text" id="expenseTypeNameInput" class="form-control" required placeholder="Ej. Mantenimiento, Seguros, Alquiler, Viáticos">
+            <div class="form-hint">Este tipo de gasto quedará disponible para que el asistente lo seleccione al cargar recibos.</div>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Tipos de Gasto Registrados Actualmente:</label>
+            <div id="currentExpenseTypesList" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelExpenseTypeModalBtn">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar Tipo</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Directorio de Proveedores (Solo Lectura para Gerente / Asistente) -->
+  <div class="modal-backdrop hidden" id="supplierListModal">
+    <div class="modal-box" style="max-width: 800px;">
+      <div class="modal-header">
+        <div class="modal-title">Catálogo de Proveedores Registrados</div>
+        <button class="modal-close-btn" id="closeSupplierListModalBtn" type="button">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>RUC</th>
+                <th>Razón Social</th>
+                <th>Rubro</th>
+                <th>Contacto</th>
+                <th>Yape</th>
+              </tr>
+            </thead>
+            <tbody id="supplierCatalogTableBody">
+              <!-- Filas dinamicas -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="closeSupplierListBtn">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Visualizador de Evidencias / Comprobantes (Foto DNI o Foto Voucher) -->
+  <div class="modal-backdrop hidden" id="imageViewerModal">
+    <div class="modal-box image-viewer-modal-box">
+      <div class="modal-header">
+        <div class="modal-title" id="imageViewerTitle">Visualización de Evidencia</div>
+        <button class="modal-close-btn" id="closeImageViewerBtn" type="button">&times;</button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <img id="imageViewerDisplay" src="" alt="Evidencia fotográfica" class="full-image-display">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="closeImageViewerFooterBtn">Cerrar</button>
+      </div>
     </div>
   </div>
 

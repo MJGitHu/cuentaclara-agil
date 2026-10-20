@@ -118,9 +118,40 @@ body {
 }
 
 .app-container {
-  max-width: 1200px;
+  max-width: 1240px;
   margin: 0 auto;
-  padding: var(--space-32);
+  padding: var(--space-24) var(--space-32);
+}
+
+/* ==========================================================================
+   Navegacion Temporal de Meses
+   ========================================================================== */
+
+.period-navigator {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 12px var(--space-24);
+  margin-bottom: var(--space-24);
+  box-shadow: var(--shadow-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.period-center {
+  text-align: center;
+}
+
+.period-title {
+  font-size: var(--font-size-subtitle);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.period-subtitle {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
 }
 
 /* ==========================================================================
@@ -167,6 +198,21 @@ body {
 .btn-sm {
   padding: 4px var(--space-8);
   font-size: var(--font-size-xs);
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: var(--font-size-xs);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+
+.btn-link:hover {
+  color: var(--color-primary-hover);
 }
 
 /* ==========================================================================
@@ -289,27 +335,27 @@ body {
 }
 
 /* ==========================================================================
-   Tarjetas de Resumen (KPIs)
+   Tarjetas de Resumen (4 KPIs del Gerente)
    ========================================================================== */
 
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: var(--space-16);
-  margin-bottom: var(--space-32);
+  margin-bottom: var(--space-24);
 }
 
 .kpi-card {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: var(--space-24);
+  padding: 20px;
   box-shadow: var(--shadow-subtle);
 }
 
 .kpi-title {
-  font-size: var(--font-size-small);
-  font-weight: 500;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
   color: var(--color-text-muted);
   margin-bottom: var(--space-8);
   text-transform: uppercase;
@@ -317,7 +363,7 @@ body {
 }
 
 .kpi-value {
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 700;
   color: var(--color-primary);
   line-height: 1.2;
@@ -331,10 +377,14 @@ body {
   color: var(--color-success);
 }
 
+.kpi-value.overdue {
+  color: var(--color-danger);
+}
+
 .kpi-subtitle {
   font-size: var(--font-size-xs);
   color: var(--color-text-muted);
-  margin-top: var(--space-8);
+  margin-top: 6px;
 }
 
 /* ==========================================================================
@@ -360,7 +410,7 @@ body {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-subtle);
   overflow: hidden;
-  margin-bottom: var(--space-32);
+  margin-bottom: var(--space-24);
 }
 
 .panel-body {
@@ -415,7 +465,7 @@ body {
 }
 
 .data-table td {
-  padding: 14px var(--space-16);
+  padding: 12px var(--space-16);
   border-bottom: 1px solid var(--color-border-light);
   color: var(--color-text);
   vertical-align: middle;
@@ -433,6 +483,17 @@ body {
   text-align: right;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+}
+
+.receipt-id-tag {
+  display: inline-block;
+  font-family: monospace;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  background-color: var(--color-border-light);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
 }
 
 /* ==========================================================================
@@ -460,6 +521,12 @@ body {
   border: 1px solid #A3CFBB;
 }
 
+.badge-overdue {
+  background-color: var(--color-danger-bg);
+  color: var(--color-danger);
+  border: 1px solid #F1AEB5;
+}
+
 .badge-type {
   background-color: var(--color-secondary-bg);
   color: var(--color-text-muted);
@@ -467,7 +534,65 @@ body {
 }
 
 /* ==========================================================================
-   Alertas y Mensajes
+   Cajas de Reglas de Negocio (Yape y Redondeo en Efectivo)
+   ========================================================================== */
+
+.yape-info-box {
+  background-color: #F3E8FF;
+  border: 1px solid #D8B4FE;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-bottom: var(--space-16);
+  font-size: var(--font-size-small);
+}
+
+.yape-info-box strong {
+  color: #6B21A8;
+}
+
+.cash-breakdown-box {
+  background-color: var(--color-accent-bg);
+  border: 1px solid #FCD34D;
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  margin-bottom: var(--space-16);
+}
+
+.cash-breakdown-title {
+  font-weight: 600;
+  font-size: var(--font-size-small);
+  color: #92400E;
+  margin-bottom: 8px;
+}
+
+.cash-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-small);
+  margin-bottom: 4px;
+  color: var(--color-text);
+}
+
+.cash-row.highlight {
+  border-top: 1px solid #F59E0B;
+  padding-top: 8px;
+  margin-top: 8px;
+  font-weight: 700;
+  font-size: var(--font-size-body);
+  color: var(--color-primary);
+}
+
+.cash-row.change-result {
+  background-color: var(--color-success-bg);
+  color: var(--color-success);
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Alertas y Estados Vacios
    ========================================================================== */
 
 .alert {
@@ -496,13 +621,6 @@ body {
   font-size: var(--font-size-small);
 }
 
-.loading-text {
-  text-align: center;
-  padding: var(--space-24);
-  color: var(--color-text-muted);
-  font-size: var(--font-size-small);
-}
-
 /* ==========================================================================
    Modales
    ========================================================================== */
@@ -519,16 +637,20 @@ body {
   justify-content: center;
   z-index: 1000;
   padding: var(--space-16);
+  overflow-y: auto;
 }
 
 .modal-box {
   background-color: var(--color-surface);
   border-radius: var(--radius-md);
   width: 100%;
-  max-width: 500px;
+  max-width: 540px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border: 1px solid var(--color-border);
   overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-header {
@@ -537,6 +659,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .modal-title {
@@ -561,6 +684,7 @@ body {
 
 .modal-body {
   padding: var(--space-24);
+  overflow-y: auto;
 }
 
 .modal-footer {
@@ -570,6 +694,7 @@ body {
   justify-content: flex-end;
   gap: var(--space-8);
   background-color: var(--color-secondary-bg);
+  flex-shrink: 0;
 }
 
 .info-summary-box {
@@ -589,6 +714,33 @@ body {
 
 .info-summary-row:last-child {
   margin-bottom: 0;
+}
+
+.image-preview-container {
+  margin-top: 8px;
+  text-align: center;
+}
+
+.image-preview-img {
+  max-width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: #FAFAFA;
+}
+
+.image-viewer-modal-box {
+  max-width: 700px;
+}
+
+.full-image-display {
+  width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: #FAFAFA;
 }
 
 .hidden {
@@ -618,5 +770,10 @@ body {
 
   .filters-grid {
     grid-template-columns: 1fr;
+  }
+
+  .period-navigator {
+    flex-direction: column;
+    gap: 12px;
   }
 }
