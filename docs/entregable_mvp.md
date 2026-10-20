@@ -1,16 +1,20 @@
 # Documento Entregable - Producto Mínimo Viable (MVP)
 ## Sistema de Gestión y Control de Pagos: CuentaClara
 
+- **Documento Word Oficial:** [docs/entregable_completo_mvp.docx](file:///d:/parcial-agile/docs/entregable_completo_mvp.docx) (o [docs/informe_evidencias_mvp.docx](file:///d:/parcial-agile/docs/informe_evidencias_mvp.docx))
+- **Informe de Evidencias y Pruebas Paso a Paso:** [docs/informe_evidencias_mvp.md](file:///d:/parcial-agile/docs/informe_evidencias_mvp.md)
+- **Carpeta de Capturas de Pantalla:** [docs/evidencias/](file:///d:/parcial-agile/docs/evidencias/)
+
 ---
 
 ## 1. Contexto del Negocio y Resumen de la Solución
 
 El negocio presenta una problemática operativa recurrente: la gerencia maneja múltiples obligaciones financieras mensuales (servicios públicos, tributos/impuestos, préstamos bancarios y proveedores de insumos). Debido a la dispersión de fechas y montos, se generaban retrasos involuntarios y desorden administrativo.
 
-A partir de la sesión de feedback y refinamiento con el cliente (profesor), se optimizó el Producto Mínimo Viable (MVP) **CuentaClara**, asegurando una experiencia funcional, intuitiva y transparente bajo la metodología ágil Scrum, con las siguientes directrices clave:
+A partir de la sesión de feedback y refinamiento con el cliente (profesor) y el equipo de pruebas, se optimizó el Producto Mínimo Viable (MVP) **CuentaClara**, asegurando una experiencia funcional, intuitiva y transparente bajo la metodología ágil Scrum, con las siguientes directrices clave:
 1. **Etapa de Registro y Control (Sin pasarelas reales):** La solución prescinde de pasarelas de pago externas o integraciones complejas (MercadoPago/WhatsApp); el flujo culmina con el registro administrativo y la evidencia documental del pago.
-2. **Gerente:** Dispone de un panel ejecutivo de supervisión en una sola pantalla con 4 indicadores clave (Pendientes del mes, Pagados del mes, Deudas vencidas anteriores y Próximo vencimiento), visualización conjunta de pendientes y realizados, navegación entre meses (pasado, actual y próximo), y gobierno exclusivo para crear proveedores (con soporte para Yape) y tipos de gasto.
-3. **Asistente:** Dispone de una consola operativa para registrar compromisos con su código oficial de recibo y comprobación de titularidad (foto DNI), seleccionar proveedores y categorías autorizadas por el Gerente, registrar pagos con constancia fotográfica del voucher, visualizar datos de Yape del proveedor y aplicar la regla legal de redondeo en efectivo (Ley N° 29571 / BCRP) con cálculo automático del vuelto.
+2. **Gerente:** Dispone de un panel ejecutivo de supervisión en una sola pantalla con 4 indicadores clave (Pendientes del mes, Pagados del mes, Deudas vencidas anteriores y Próximo vencimiento), visualización conjunta de pendientes y realizados con su N° de Operación, navegación temporal ágil (botones de mes y salto directo a cualquier mes/año), gestión dinámica de métodos de pago (ej. Plin, Efectivo), administración de cuentas bancarias confidenciales y gobierno para crear o editar proveedores (con validación de 9 dígitos para Perú y soporte Yape) y tipos de gasto.
+3. **Asistente:** Dispone de una consola operativa con alerta prominente de deudas arrastradas de meses anteriores, registro de compromisos con código oficial de recibo y comprobación de titularidad (foto DNI), catálogo de proveedores y tipos autorizados por Gerencia con opción de edición/rectificación, visualización simultánea de comprobante de titularidad y voucher de pago, visualización automática de datos de Yape, y aplicación de la regla legal de redondeo en efectivo (Ley N° 29571 / BCRP) con cálculo reactivo del vuelto.
 
 ---
 
@@ -58,24 +62,23 @@ A partir de la sesión de feedback y refinamiento con el cliente (profesor), se 
     2. *Total Pagado del Mes:* Monto de obligaciones canceladas en dicho mes.
     3. *Deudas Vencidas Anteriores:* Monto acumulado de obligaciones de meses pasados que permanecen en mora.
     4. *Próximo Vencimiento:* Fecha límite más cercana, concepto e importe a liquidar.
-* **Criterio 2.2 (Vista Unificada en la Misma Pantalla):**
+* **Criterio 2.2 (Vista Unificada en la Misma Pantalla y N° de Operación):**
   - **Dado** que existen compromisos financieros registrados en el mes,
   - **Cuando** el Gerente revisa su panel,
-  - **Entonces** visualiza todas las obligaciones y pagos del periodo consolidados en una sola tabla unificada ('Obligaciones y Pagos del Periodo'), con el estado (Pendiente o Realizado) indicado claramente a la derecha, sin dividirlas en tablas separadas ni pestañas intermedias.
-* **Criterio 2.3 (Navegación de Meses):**
-  - **Dado** que el Gerente se encuentra en el mes actual (Octubre 2026),
-  - **Cuando** pulsa "< Mes Anterior",
-  - **Entonces** la pantalla se actualiza al instante con los datos de Septiembre 2026; y al presionar "Próximo Mes >", avanza hacia Noviembre 2026.
-* **Criterio 2.4 (Privacidad de Cuentas Personales):**
+  - **Entonces** visualiza todas las obligaciones y pagos del periodo consolidados en una sola tabla unificada ('Obligaciones y Pagos del Periodo'), con el estado (Pendiente o Realizado) indicado claramente a la derecha, la columna 'N° Operación' visible con su referencia bancaria, sin dividirlas en tablas separadas ni pestañas intermedias.
+* **Criterio 2.3 (Navegación de Meses y Salto Directo a Periodo):**
+  - **Dado** que el Gerente o Asistente se encuentra en el sistema,
+  - **Cuando** pulsa "< Mes Anterior", la pantalla retrocede un mes; al presionar "Próximo Mes >", avanza un mes; y cuando selecciona directamente un Mes y digita un Año (ej. 2017) pulsando "Ir", el sistema salta de inmediato a dicho periodo sin necesidad de decenas de clics consecutivos.
+* **Criterio 2.4 (Privacidad y Gestión Dinámica de Cuentas y Tarjetas Bancarias):**
   - **Dado** que el Gerente mantiene cuentas bancarias personales para pagos,
   - **Cuando** consulta su sesión,
-  - **Entonces** visualiza su panel confidencial de cuentas y tarjetas, el cual permanece 100% oculto e inaccesible para la vista del asistente.
+  - **Entonces** visualiza su panel confidencial de cuentas y tarjetas (100% oculto e inaccesible para el Asistente), disponiendo del botón "+ Nueva Cuenta / Tarjeta" para registrar nuevas entidades (BCP, BBVA, Scotiabank, Interbank), monedas y números de cuenta o tarjeta.
 * **Subtareas Técnicas de Desarrollo (Jira):**
-  - `SUB-06` (Desarrollador 2 - 2h): Maquetar componente de navegación temporal (period-navigator) con botones anterior/siguiente.
-  - `SUB-07` (Desarrollador 3 - 2h): Programar funciones de fechas (changePeriod, getActivePeriodKey) para Septiembre, Octubre y Noviembre.
+  - `SUB-06` (Desarrollador 2 - 2h): Maquetar componente de navegación temporal (period-navigator) con botones anterior/siguiente y salto ágil.
+  - `SUB-07` (Desarrollador 3 - 2h): Programar funciones de fechas (changePeriod, getActivePeriodKey, salto directo) y persistencia temporal.
   - `SUB-08` (Desarrollador 3 - 3h): Desarrollar algoritmos de agregación financiera para cálculo dinámico de los 4 KPIs en Dashboard.
-  - `SUB-09` (Desarrollador 1 - 3h): Construir tabla consolidada en el DOM para renderizar todas las obligaciones y pagos del periodo.
-  - `SUB-10` (Desarrollador 4 - 2h): Codificar sección de cuentas bancarias confidenciales con lógica de aislamiento para el Asistente.
+  - `SUB-09` (Desarrollador 1 - 3h): Construir tabla consolidada en el DOM para renderizar todas las obligaciones y pagos del periodo con N° Operación.
+  - `SUB-10` (Desarrollador 4 - 2h): Codificar sección dinámica de cuentas bancarias confidenciales con lógica de aislamiento para el Asistente.
   - `SUB-11` (Desarrollador 5 - 2h): Ejecutar pruebas de recálculo dinámico de métricas y filtrado temporal al cambiar de mes.
 
 ---
@@ -101,15 +104,15 @@ A partir de la sesión de feedback y refinamiento con el cliente (profesor), se 
 
 ---
 
-### Historia de Usuario 4: Gobierno de Proveedores y Tipos de Gasto por Gerencia
+### Historia de Usuario 4: Gobierno de Proveedores, Tipos de Gasto y Métodos de Pago por Gerencia
 **Como** Gerente,  
-**Quiero** crear y administrar el catálogo de proveedores (con datos de Yape) y registrar nuevos tipos de gasto,  
+**Quiero** crear y editar el catálogo de proveedores con validación de teléfono en Perú, registrar nuevos tipos de gasto y parametrizar métodos de pago,  
 **Para** que el Asistente únicamente seleccione opciones previamente autorizadas y sepa dónde transferir.
 
-* **Criterio 4.1 (Alta de Proveedores con Billetera Digital Yape):**
-  - **Dado** que el Gerente registra un proveedor,
-  - **Cuando** activa la opción "¿Acepta Yape?", ingresa el número celular y el nombre del titular/alias,
-  - **Entonces** el proveedor queda guardado y esos datos de Yape estarán disponibles para el asistente al momento del pago.
+* **Criterio 4.1 (Alta y Edición de Proveedores con Validación de Teléfono Perú):**
+  - **Dado** que el Gerente registra o edita un proveedor,
+  - **Cuando** ingresa el teléfono o activa la opción "¿Acepta Yape?",
+  - **Entonces** el sistema bloquea caracteres alfabéticos, restringe la longitud a exactamente 9 dígitos numéricos (formato peruano iniciando en 9), guarda los datos y permite editarlos en cualquier momento desde el catálogo sin duplicados.
 * **Criterio 4.2 (Creación Dinámica de Tipos de Gasto):**
   - **Dado** que el Gerente requiere una nueva categoría (ej. "Seguros" o "Mantenimiento"),
   - **Cuando** pulsa "Nuevo Tipo de Gasto", ingresa el nombre y confirma,
@@ -118,18 +121,22 @@ A partir de la sesión de feedback y refinamiento con el cliente (profesor), se 
   - **Dado** que el Asistente registra un nuevo gasto,
   - **Cuando** despliega las opciones de proveedor y tipo de gasto,
   - **Entonces** solo puede elegir entre los elementos registrados por la gerencia.
+* **Criterio 4.4 (Parametrización Dinámica de Métodos de Pago por Gerencia):**
+  - **Dado** que el Gerente desea incorporar o retirar métodos de pago (ej. Plin, PagoEfectivo, Tarjeta Corporativa),
+  - **Cuando** ingresa al modal "Gestión de Métodos de Pago" y añade uno nuevo,
+  - **Entonces** este método se sincroniza automáticamente en el selector de pagos del Asistente.
 * **Subtareas Técnicas de Desarrollo (Jira):**
-  - `SUB-16` (Desarrollador 1 - 3h): Desarrollar modal exclusivo de Gerente para alta de proveedores con campos de Yape (celular/titular).
+  - `SUB-16` (Desarrollador 1 - 3h): Desarrollar modal de Gerente para alta y edición de proveedores con campos de Yape y validación de 9 dígitos.
   - `SUB-17` (Desarrollador 3 - 2h): Implementar función addExpenseType y selector dinámico para tipos de gasto de Gerencia.
-  - `SUB-18` (Desarrollador 2 - 2h): Construir tabla modal para auditoría del catálogo de proveedores y datos de billetera digital.
+  - `SUB-18` (Desarrollador 2 - 2h): Construir tabla modal para auditoría y edición del catálogo de proveedores y datos de billetera digital.
   - `SUB-19` (Desarrollador 5 - 2h): Escribir pruebas funcionales para asegurar que el Asistente solo consuma catálogos aprobados.
 
 ---
 
 ### Historia de Usuario 5: Liquidación de Pagos con Yape, Efectivo y Evidencia Fotográfica
 **Como** Asistente,  
-**Quiero** registrar pagos atendidos con Yape o Efectivo adjuntando la foto del comprobante y calculando el vuelto exacto por ley,  
-**Para** cumplir con la normativa peruana de redondeo, documentar la salida de dinero y actualizar el estado a "Realizado".
+**Quiero** registrar pagos atendidos con Yape o Efectivo adjuntando la foto del comprobante, calculando el vuelto por ley y disponiendo de auditoría documental conjunta,  
+**Para** cumplir con la normativa peruana de redondeo, documentar la salida de dinero y mantener acceso simultáneo a la titularidad y al voucher.
 
 * **Criterio 5.1 (Visualización Automática de Datos de Yape):**
   - **Dado** que el Asistente selecciona como método "Yape (Billetera Digital)",
@@ -139,16 +146,20 @@ A partir de la sesión de feedback y refinamiento con el cliente (profesor), se 
   - **Dado** que el Asistente selecciona el método "Efectivo" para un gasto con céntimos no fraccionables (ej. S/ 500.35),
   - **Cuando** el sistema procesa la liquidación física,
   - **Entonces** aplica la Ley 29571 redondeando hacia abajo a la decena de céntimos inmediata a favor del cliente (S/ 500.30 con descuento de -S/ 0.05), solicita el efectivo recibido y calcula el vuelto exacto (ej. con S/ 510.00 recibidos, calcula S/ 9.70 de vuelto).
-* **Criterio 5.3 (Foto del Comprobante de Pago Obligatorio):**
+* **Criterio 5.3 (Foto del Comprobante, N° de Operación y Acceso Documental Simultáneo):**
   - **Dado** que el Asistente liquida una obligación,
-  - **Cuando** adjunta la fotografía o captura del voucher bancario/recibo sellado y confirma el pago,
-  - **Entonces** el gasto cambia a estado "Realizado" y la foto queda archivada para consulta inmediata del Gerente mediante el botón "Ver Voucher".
+  - **Cuando** digita el N° de Operación oficial (ej. OP-9988221), adjunta el voucher bancario y confirma el pago,
+  - **Entonces** el gasto cambia a estado "Realizado", se muestra el N° de Operación en la tabla y se mantienen visibles AMBOS botones: "Ver Titular / DNI" y "Ver Voucher", garantizando una auditoría contable íntegra.
+* **Criterio 5.4 (Edición y Rectificación de Gastos y Pagos):**
+  - **Dado** que el Asistente necesita corregir un error de digitación en un gasto o pago,
+  - **Cuando** pulsa el botón "Editar" en la fila correspondiente,
+  - **Entonces** puede rectificar el concepto, fecha, importe o número de operación sin perder la trazabilidad.
 * **Subtareas Técnicas de Desarrollo (Jira):**
   - `SUB-20` (Desarrollador 3 - 2h): Programar event listener en selector de método de pago para desplegar tarjeta Yape del proveedor.
   - `SUB-21` (Desarrollador 3 - 2h): Implementar algoritmo matemático de redondeo de céntimos en efectivo bajo Ley N° 29571 / BCRP.
   - `SUB-22` (Desarrollador 4 - 2h): Codificar lógica reactiva de cálculo de vuelto en efectivo según monto en input cashReceived.
-  - `SUB-23` (Desarrollador 2 - 3h): Programar módulo de carga de foto de voucher con FileReader y modal de comprobante archivado.
-  - `SUB-24` (Desarrollador 5 - 2h): Ejecutar suite de pruebas de liquidación en efectivo (S/ 500.35 -> S/ 500.30 y vuelto S/ 9.70) y Yape.
+  - `SUB-23` (Desarrollador 2 - 3h): Programar módulo de carga de foto de voucher con FileReader y visualización simultánea de evidencias.
+  - `SUB-24` (Desarrollador 5 - 2h): Ejecutar suite de pruebas de liquidación en efectivo, Yape, N° de operación y rectificación.
 
 ---
 
@@ -216,29 +227,38 @@ A partir de la sesión de feedback y refinamiento con el cliente (profesor), se 
 
 ### 5.1 Para el Gerente
 1. **Acceso al Sistema:** Ingrese su usuario (`gerente`) y contraseña (`gerente123`).
-2. **Navegación de Meses:** En la barra superior use `< Mes Anterior` y `Próximo Mes >` para auditar Septiembre, Octubre o Noviembre 2026.
+2. **Navegación Temporal Ágil:** 
+   - Use los botones `< Mes Anterior` y `Próximo Mes >` para recorrer meses adyacentes.
+   - Utilice el selector de mes, campo de año y botón `Ir` para saltar de inmediato a cualquier fecha histórica (ej. 2017) o futura en un solo clic, o presione `Mes Actual`.
 3. **Monitoreo de 4 KPIs:** Revise en una sola mirada el Total Pendiente, Total Pagado, Deudas Vencidas Anteriores (alerta de morosidad) y Próximo Vencimiento.
-4. **Inspección de Obligaciones y Pagos del Periodo:** En una sola tabla unificada revise todos los compromisos del mes, con el estado claramente visible a la derecha (Pendiente o Realizado) y acceso directo a la comprobación de titularidad (DNI) o comprobante archivado (Voucher).
-5. **Configuración del Negocio:**
-   - **Nuevo Proveedor:** Registre acreedores y active la casilla Yape para fijar el número y titular.
-   - **Nuevo Tipo de Gasto:** Registre categorías adicionales (ej. Seguros, Alquiler, Mantenimiento).
-   - **Ver Proveedores:** Consulte el directorio completo de empresas autorizadas.
+4. **Inspección Unificada y Auditoría Documental:**
+   - Visualice en una sola tabla todas las obligaciones del periodo con la columna `N° Operación` visible.
+   - Acceda simultáneamente a la comprobación de titularidad (`Ver Titular / DNI`) y al comprobante archivado (`Ver Voucher`) una vez pagado el recibo.
+5. **Configuración y Gobierno del Negocio:**
+   - **Nuevo Proveedor:** Registre acreedores con validación estricta de teléfono para Perú (exactamente 9 dígitos numéricos, sin letras) y active la casilla Yape para fijar número y titular.
+   - **Ver / Editar Proveedores:** Consulte el directorio completo y use el botón `Editar` para rectificar datos de contacto o Yape sin duplicar registros.
+   - **Nuevo Tipo de Gasto:** Registre categorías adicionales (ej. Seguros Empresariales, Alquiler, Mantenimiento).
+   - **Métodos de Pago:** Incorpore nuevas modalidades de liquidación (ej. Plin, PagoEfectivo) para habilitarlas al Asistente.
+   - **Cuentas y Tarjetas Bancarias:** Use el botón `+ Nueva Cuenta / Tarjeta` para dar de alta instrumentos confidenciales con banco, tipo, moneda y número.
 6. **Cierre de Sesión:** Presione "Cerrar Sesión" para proteger la privacidad de sus instrumentos bancarios personales.
 
 ### 5.2 Para el Asistente
 1. **Acceso al Sistema:** Ingrese su usuario (`asistente`) y contraseña (`asistente123`).
-2. **Navegación Temporal:** Seleccione el mes sobre el cual registrará o consultará obligaciones.
-3. **Registrar Nuevo Gasto:**
+2. **Alerta de Deudas Anteriores:** En la cabecera visualice de inmediato el banner de advertencia si existen deudas vencidas arrastradas de meses pasados pendientes de pago.
+3. **Navegación Temporal:** Seleccione el periodo a trabajar con las flechas o el salto directo a Mes y Año.
+4. **Registrar Nuevo Gasto:**
    - Presione "Nuevo Gasto".
    - Digite el número o código oficial de recibo (ej. Suministro Luz, Factura, NPS SUNAT).
    - Seleccione el proveedor y tipo de gasto (aprobados previamente por el Gerente).
    - Ingrese el monto y la fecha de vencimiento.
    - Adjunte la foto de comprobación de titularidad (DNI/recibo del titular) y guarde.
-4. **Registrar Pago Realizado:**
+5. **Registrar Pago Realizado:**
    - Ubique la obligación en la lista y presione "Registrar Pago".
    - **Si paga con Yape:** El sistema le mostrará el número y titular registrado por el Gerente para que realice el depósito con total seguridad.
    - **Si paga en Efectivo (Ley N° 29571):** Si el recibo tiene céntimos (ej. S/ 500.35), el sistema aplicará el redondeo a S/ 500.30. Al escribir el dinero recibido (ej. S/ 510.00), el sistema le mostrará el vuelto exacto a entregar (S/ 9.70).
-   - Adjunte la foto o captura del comprobante de pago/voucher y confirme.
+   - Ingrese el N° de Operación oficial (ej. `OP-9988221`), adjunte la foto o captura del comprobante de pago/voucher y confirme.
+6. **Edición y Rectificación de Obligaciones:**
+   - En caso de error en la digitación del concepto, importe, vencimiento o N° de operación, use el botón `Editar` en la fila correspondiente para subsanar los datos.
 
 ---
 
@@ -256,3 +276,16 @@ A partir de la sesión de feedback y refinamiento con el cliente (profesor), se 
 | **Navegación minimalista** | Cumplido | Pantalla única para el Gerente con vista conjunta de pendientes/realizados y selector de meses central. |
 | **Privacidad de medios de pago** | Cumplido | Sección confidencial de medios de pago visible únicamente en la sesión del gerente. |
 | **Cumplimiento legal Ley 29571** | Cumplido | Algoritmo de redondeo hacia abajo a favor del cliente con desglose transparente y cálculo de vuelto. |
+
+---
+
+## 7. Resumen de Atención a Observaciones de Feedback del Cliente
+
+1. **Visibilidad de N° Operación:** Columna fija en ambas tablas (Gerente y Asistente).
+2. **Métodos de Pago Dinámicos:** Modal del Gerente para crear nuevos métodos (ej. Plin) y consumirlos en el Asistente.
+3. **Alerta de Deudas Anteriores en Asistente:** Banner prominente de advertencia para obligaciones vencidas pasadas.
+4. **Validación de Teléfono Perú:** Restricción estricta en tiempo real a 9 dígitos numéricos sin letras ni símbolos.
+5. **Edición de Proveedores y Gastos:** Botones de edición dedicados para rectificar acreedores y registros de pago.
+6. **Doble Botón de Evidencias:** Acceso simultáneo a "Ver Titular / DNI" y "Ver Voucher" tras liquidar la obligación.
+7. **Cuentas y Tarjetas Bancarias:** Módulo dinámico del Gerente para dar de alta instrumentos financieros con persistencia.
+8. **Salto Rápido a Periodo:** Selector directo de Mes y Año para navegar a cualquier fecha histórica o futura en 1 clic.
