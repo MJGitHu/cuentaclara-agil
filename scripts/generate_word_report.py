@@ -158,7 +158,7 @@ def build_document():
     meta_table.autofit = False
     meta_data = [
         ("Producto de Software:", "CuentaClara (Producto Mínimo Viable - MVP)"),
-        ("Metodología Ágil:", "Scrum (2 Sprints semanales, equipo de 5 profesionales)"),
+        ("Metodología Ágil:", "Scrum (2 Sprints semanales, equipo de 5 desarrolladores de software)"),
         ("Alcance Operativo:", "Registro administrativo y liquidación documentada (Sin pasarelas reales)"),
         ("Roles de Usuario:", "Gerente (Supervisión y Gobierno) / Asistente (Operación y Registro)"),
         ("Marco Normativo Evaluado:", "Ley N° 29571 (Código del Consumidor, Art. 44) y Circulares BCRP")
@@ -231,7 +231,7 @@ def build_document():
 
     p = doc.add_paragraph()
     p.paragraph_format.space_after = Pt(6)
-    p.add_run("A continuación se detallan las Historias de Usuario formales con sus Criterios de Aceptación estructurados bajo la sintaxis Gherkin (Dado / Cuando / Entonces):")
+    p.add_run("A continuación se detallan las Historias de Usuario formales con sus Criterios de Aceptación estructurados bajo la sintaxis Gherkin (Dado / Cuando / Entonces) y sus subtareas técnicas de desarrollo asociadas:")
 
     hu_list = [
         {
@@ -242,6 +242,12 @@ def build_document():
                 ("Criterio 1.2 (Credenciales incorrectas):", "Dado que el usuario ingresa credenciales no registradas,\nCuando hace clic en 'Iniciar Sesión',\nEntonces el sistema muestra el mensaje directo 'Usuario o contraseña incorrectos.' sin permitir el acceso."),
                 ("Criterio 1.3 (Acceso de Gerente):", "Dado que el usuario ingresa las credenciales válidas de Gerente,\nCuando presiona 'Iniciar Sesión',\nEntonces accede a la consola ejecutiva con métricas, listas y herramientas de configuración del negocio."),
                 ("Criterio 1.4 (Acceso de Asistente):", "Dado que el usuario ingresa las credenciales de Asistente,\nCuando presiona 'Iniciar Sesión',\nEntonces accede al panel operativo de pagos, sin acceso a las cuentas bancarias personales del gerente.")
+            ],
+            "subtasks": [
+                ("SUB-02 (Desarrollador 1 - 3h):", "Codificar formulario de autenticación RBAC con captura de evento submit y sessionStorage."),
+                ("SUB-03 (Desarrollador 2 - 2h):", "Maquetar layout CSS responsive en estilos.css con paleta corporativa y retícula de 8px."),
+                ("SUB-04 (Desarrollador 4 - 2h):", "Implementar controlador DOM para alternar visibilidad entre contenedor de login y vistas de rol."),
+                ("SUB-05 (Desarrollador 5 - 2h):", "Escribir y ejecutar suite de pruebas de inyección de credenciales inválidas y control de alertas.")
             ]
         },
         {
@@ -252,6 +258,14 @@ def build_document():
                 ("Criterio 2.2 (Vista Conjunta en la Misma Pantalla):", "Dado que existen gastos registrados,\nCuando el Gerente revisa su panel,\nEntonces visualiza simultáneamente en la misma pantalla la tabla de 'Pagos Pendientes del Periodo' y la tabla de 'Pagos Realizados del Periodo', sin pestañas intermedias."),
                 ("Criterio 2.3 (Navegación de Meses):", "Dado que el Gerente se encuentra en el mes actual (Octubre 2026),\nCuando pulsa '< Mes Anterior', la pantalla se actualiza con los datos de Septiembre 2026; y al presionar 'Próximo Mes >', avanza hacia Noviembre 2026 recalculando los 4 KPIs al instante."),
                 ("Criterio 2.4 (Privacidad de Cuentas Personales):", "Dado que el Gerente mantiene cuentas bancarias personales,\nCuando consulta su sesión,\nEntonces visualiza su panel confidencial de cuentas y tarjetas, el cual permanece 100% oculto e inaccesible para la vista del asistente.")
+            ],
+            "subtasks": [
+                ("SUB-06 (Desarrollador 2 - 2h):", "Maquetar componente de navegación temporal (period-navigator) con botones anterior/siguiente."),
+                ("SUB-07 (Desarrollador 3 - 2h):", "Programar funciones de fechas (changePeriod, getActivePeriodKey) para Septiembre, Octubre y Noviembre."),
+                ("SUB-08 (Desarrollador 3 - 3h):", "Desarrollar algoritmos de agregación financiera para cálculo dinámico de los 4 KPIs en Dashboard."),
+                ("SUB-09 (Desarrollador 1 - 3h):", "Construir tablas sincronizadas en el DOM para renderizar pagos pendientes y realizados juntos."),
+                ("SUB-10 (Desarrollador 4 - 2h):", "Codificar sección de cuentas bancarias confidenciales con lógica de aislamiento para el Asistente."),
+                ("SUB-11 (Desarrollador 5 - 2h):", "Ejecutar pruebas de recálculo dinámico de métricas y filtrado temporal al cambiar de mes.")
             ]
         },
         {
@@ -260,6 +274,12 @@ def build_document():
             "criteria": [
                 ("Criterio 3.1 (Identificación del recibo):", "Dado que se registra una nueva obligación financiera,\nCuando se ingresa el gasto,\nEntonces es obligatorio registrar el código o número de comprobante (ej. N° de suministro eléctrico, código de recibo o NPS SUNAT), mostrándose visible en la tabla."),
                 ("Criterio 3.2 (Comprobación de deuda propia / DNI):", "Dado que se registra o consulta un recibo,\nCuando el usuario hace clic en 'Ver Titular / DNI',\nEntonces se despliega una ventana modal con la imagen del documento de identidad o constancia que acredita que la obligación pertenece al titular del negocio.")
+            ],
+            "subtasks": [
+                ("SUB-12 (Desarrollador 4 - 2h):", "Definir e inicializar esquema en localStorage con atributos receiptId y fotos base64/SVG."),
+                ("SUB-13 (Desarrollador 2 - 1h):", "Maquetar etiquetas monoespaciadas para códigos oficiales de recibo/suministro en tablas."),
+                ("SUB-14 (Desarrollador 2 - 2h):", "Programar modal y visor de imágenes en DOM para comprobación de titularidad (Foto DNI/RUC)."),
+                ("SUB-15 (Desarrollador 5 - 2h):", "Validar procesamiento de imágenes con FileReader y manejo de visualización en modal.")
             ]
         },
         {
@@ -269,6 +289,12 @@ def build_document():
                 ("Criterio 4.1 (Alta de Proveedores con Billetera Digital Yape):", "Dado que el Gerente registra un proveedor,\nCuando activa la opción '¿Acepta Yape?', ingresa el número celular y el nombre del titular/alias,\nEntonces el proveedor queda guardado y esos datos de Yape estarán disponibles para el asistente al momento del pago."),
                 ("Criterio 4.2 (Creación Dinámica de Tipos de Gasto):", "Dado que el Gerente requiere una nueva categoría (ej. 'Seguros' o 'Mantenimiento'),\nCuando pulsa 'Nuevo Tipo de Gasto', ingresa el nombre y confirma,\nEntonces el nuevo tipo se incorpora de inmediato a los catálogos y filtros del sistema."),
                 ("Criterio 4.3 (Consumo Restringido por el Asistente):", "Dado que el Asistente registra un nuevo gasto,\nCuando despliega las opciones de proveedor y tipo de gasto,\nEntonces solo puede elegir entre los elementos registrados previamente por la gerencia.")
+            ],
+            "subtasks": [
+                ("SUB-16 (Desarrollador 1 - 3h):", "Desarrollar modal exclusivo de Gerente para alta de proveedores con campos de Yape (celular/titular)."),
+                ("SUB-17 (Desarrollador 3 - 2h):", "Implementar función addExpenseType y selector dinámico para tipos de gasto de Gerencia."),
+                ("SUB-18 (Desarrollador 2 - 2h):", "Construir tabla modal para auditoría del catálogo de proveedores y datos de billetera digital."),
+                ("SUB-19 (Desarrollador 5 - 2h):", "Escribir pruebas funcionales para asegurar que el Asistente solo consuma catálogos aprobados.")
             ]
         },
         {
@@ -278,6 +304,13 @@ def build_document():
                 ("Criterio 5.1 (Visualización Automática de Datos de Yape):", "Dado que el Asistente selecciona como método 'Yape (Billetera Digital)',\nCuando el proveedor tiene configurado Yape,\nEntonces el modal muestra una tarjeta informativa con el número celular y el nombre del titular para facilitar el depósito."),
                 ("Criterio 5.2 (Redondeo Legal de Céntimos en Efectivo - Ley N° 29571 / BCRP):", "Dado que el Asistente selecciona el método 'Efectivo' para un gasto con céntimos no fraccionables (ej. S/ 500.35),\nCuando el sistema procesa la liquidación física,\nEntonces aplica la Ley 29571 redondeando hacia abajo a la decena de céntimos inmediata a favor del cliente (S/ 500.30 con descuento de -S/ 0.05), solicita el efectivo recibido y calcula el vuelto exacto (ej. con S/ 510.00 recibidos, calcula S/ 9.70 de vuelto)."),
                 ("Criterio 5.3 (Foto del Comprobante de Pago Obligatorio):", "Dado que el Asistente liquida una obligación,\nCuando adjunta la fotografía o captura del voucher bancario/recibo sellado y confirma el pago,\nEntonces el gasto cambia a estado 'Realizado' y la foto queda archivada para consulta inmediata del Gerente mediante el botón 'Ver Voucher'.")
+            ],
+            "subtasks": [
+                ("SUB-20 (Desarrollador 3 - 2h):", "Programar event listener en selector de método de pago para desplegar tarjeta Yape del proveedor."),
+                ("SUB-21 (Desarrollador 3 - 2h):", "Implementar algoritmo matemático de redondeo de céntimos en efectivo bajo Ley N° 29571 / BCRP."),
+                ("SUB-22 (Desarrollador 4 - 2h):", "Codificar lógica reactiva de cálculo de vuelto en efectivo según monto en input cashReceived."),
+                ("SUB-23 (Desarrollador 2 - 3h):", "Programar módulo de carga de foto de voucher con FileReader y modal de comprobante archivado."),
+                ("SUB-24 (Desarrollador 5 - 2h):", "Ejecutar suite de pruebas de liquidación en efectivo (S/ 500.35 -> S/ 500.30 y vuelto S/ 9.70) y Yape.")
             ]
         }
     ]
@@ -295,13 +328,36 @@ def build_document():
         r_n = p_n.add_run(hu["narrative"])
         r_n.italic = True; r_n.font.name = "Arial"; r_n.font.size = Pt(9.5); r_n.font.color.rgb = RGBColor(0x47, 0x55, 0x69)
 
+        # Criterios
+        p_cr_lbl = doc.add_paragraph()
+        p_cr_lbl.paragraph_format.space_before = Pt(3)
+        p_cr_lbl.paragraph_format.space_after = Pt(2)
+        r_crl = p_cr_lbl.add_run("Criterios de Aceptación (Gherkin):")
+        r_crl.bold = True; r_crl.font.name = "Arial"; r_crl.font.size = Pt(9); r_crl.font.color.rgb = RGBColor(0x1E, 0x3A, 0x5F)
+
         for crit_title, crit_body in hu["criteria"]:
             p_cr = doc.add_paragraph(style='List Bullet')
-            p_cr.paragraph_format.space_after = Pt(3)
+            p_cr.paragraph_format.space_after = Pt(2)
             r_ct = p_cr.add_run(crit_title + " ")
-            r_ct.bold = True; r_ct.font.name = "Arial"; r_ct.font.size = Pt(9); r_ct.font.color.rgb = RGBColor(0xD9, 0x77, 0x06)
+            r_ct.bold = True; r_ct.font.name = "Arial"; r_ct.font.size = Pt(8.5); r_ct.font.color.rgb = RGBColor(0xD9, 0x77, 0x06)
             r_cb = p_cr.add_run(crit_body)
-            r_cb.font.name = "Arial"; r_cb.font.size = Pt(9); r_cb.font.color.rgb = RGBColor(0x1F, 0x29, 0x37)
+            r_cb.font.name = "Arial"; r_cb.font.size = Pt(8.5); r_cb.font.color.rgb = RGBColor(0x1F, 0x29, 0x37)
+
+        # Subtareas técnicas
+        if "subtasks" in hu and hu["subtasks"]:
+            p_sub_lbl = doc.add_paragraph()
+            p_sub_lbl.paragraph_format.space_before = Pt(3)
+            p_sub_lbl.paragraph_format.space_after = Pt(2)
+            r_sbl = p_sub_lbl.add_run("Subtareas Técnicas de Desarrollo (Jira):")
+            r_sbl.bold = True; r_sbl.font.name = "Arial"; r_sbl.font.size = Pt(9); r_sbl.font.color.rgb = RGBColor(0x0F, 0x51, 0x32)
+
+            for sub_code, sub_desc in hu["subtasks"]:
+                p_sb = doc.add_paragraph(style='List Bullet')
+                p_sb.paragraph_format.space_after = Pt(2)
+                r_sbt = p_sb.add_run(sub_code + " ")
+                r_sbt.bold = True; r_sbt.font.name = "Arial"; r_sbt.font.size = Pt(8.5); r_sbt.font.color.rgb = RGBColor(0x0F, 0x51, 0x32)
+                r_sbd = p_sb.add_run(sub_desc)
+                r_sbd.font.name = "Arial"; r_sbd.font.size = Pt(8.5); r_sbd.font.color.rgb = RGBColor(0x1F, 0x29, 0x37)
 
     doc.add_paragraph().paragraph_format.space_after = Pt(12)
 
@@ -315,33 +371,39 @@ def build_document():
     p = doc.add_paragraph()
     p.paragraph_format.space_after = Pt(6)
     p.add_run(
-        "A continuación se presenta el desglose técnico de 20 subtareas estimadas (entre 1h y 3h cada una), "
-        "clasificadas por tipo de tarea según el estándar ágil de Jira:"
+        "A continuación se presenta el desglose técnico de 26 subtareas directas y libres de ambigüedad, "
+        "desarrolladas por el equipo de 5 programadores según el estándar ágil de Jira:"
     )
 
-    jira_headers = ["Código", "Historia", "Título de la Subtarea", "Tipo de Tarea", "Horas", "Rol Asignado"]
-    jira_widths = [Inches(0.8), Inches(1.0), Inches(2.2), Inches(1.1), Inches(0.5), Inches(0.9)]
+    jira_headers = ["Código", "Historia Relacionada", "Título Técnico de la Subtarea (Para Desarrolladores)", "Tipo de Tarea", "Estimación", "Asignado"]
+    jira_widths = [Inches(0.65), Inches(0.95), Inches(2.7), Inches(0.85), Inches(0.45), Inches(0.9)]
     jira_data = [
-        ["SUB-01", "Transversal", "Configuración de arquitectura modular y servidor local", "Configuración", "2h", "Full-Stack Dev 1"],
-        ["SUB-02", "HU-01", "Implementación de autenticación RBAC y pantalla inicial", "Codificación", "3h", "Full-Stack Dev 1"],
-        ["SUB-03", "HU-02", "Maquetado de barra de navegación temporal por meses", "Prototipado", "2h", "Full-Stack Dev 2"],
-        ["SUB-04", "HU-02", "Lógica de cálculo de los 4 KPIs consolidados del Gerente", "Codificación", "3h", "Full-Stack Dev 1"],
-        ["SUB-05", "HU-02", "Integración visual de listas pendientes y realizadas unificadas", "Prototipado", "2h", "Full-Stack Dev 2"],
-        ["SUB-06", "HU-03", "Incorporación de código oficial de recibo en datos y tablas", "Codificación", "2h", "Full-Stack Dev 1"],
-        ["SUB-07", "HU-03", "Módulo de comprobación de titularidad (Foto DNI / Titular)", "Codificación", "3h", "Full-Stack Dev 2"],
-        ["SUB-08", "HU-04", "Módulo de registro de proveedores con billetera Yape", "Codificación", "3h", "Full-Stack Dev 1"],
-        ["SUB-09", "HU-04", "Almacenamiento dinámico de nuevos tipos de gasto por Gerencia", "Codificación", "2h", "Full-Stack Dev 1"],
-        ["SUB-10", "HU-04", "Modal de consulta del catálogo de proveedores aprobados", "Prototipado", "2h", "Full-Stack Dev 2"],
-        ["SUB-11", "HU-05", "Despliegue contextual de número y titular de Yape al pagar", "Codificación", "2h", "Full-Stack Dev 1"],
-        ["SUB-12", "HU-05", "Algoritmo de redondeo legal de céntimos en efectivo (Ley 29571)", "Codificación", "3h", "Full-Stack Dev 1"],
-        ["SUB-13", "HU-05", "Control de efectivo recibido y cálculo de vuelto en pantalla", "Codificación", "2h", "Full-Stack Dev 2"],
-        ["SUB-14", "HU-05", "Carga y previsualización de foto de voucher/comprobante", "Codificación", "3h", "Full-Stack Dev 2"],
-        ["SUB-15", "HU-05", "Modal de visualización de comprobante de pago a tamaño completo", "Prototipado", "2h", "Full-Stack Dev 2"],
-        ["SUB-16", "QA", "Pruebas E2E de navegación temporal en 3 periodos", "Test", "2h", "QA Engineer"],
-        ["SUB-17", "QA", "Verificación matemática de regla de redondeo (S/ 500.35 -> S/ 500.30)", "Test", "2h", "QA Engineer"],
-        ["SUB-18", "QA", "Validación de aislamiento de cuentas confidenciales del Gerente", "Test", "2h", "QA Engineer"],
-        ["SUB-19", "Transversal", "Auditoría estricta de restricciones UX/UI (0 emojis, paleta sobria)", "Test", "2h", "Scrum Master/QA"],
-        ["SUB-20", "Transversal", "Generación de expediente técnico, guía de uso y Word de evidencias", "Implantación", "2h", "Full-Stack Dev 1"]
+        ["SUB-01", "Transversal", "Configurar servidor HTTP nativo en server.js con manejo de MIME types y rutas estáticas", "Configuración", "2h", "Desarrollador 1"],
+        ["SUB-02", "HU-01", "Codificar formulario de autenticación RBAC con captura de evento submit y sessionStorage", "Codificación", "3h", "Desarrollador 1"],
+        ["SUB-03", "HU-01", "Maquetar layout CSS responsive en estilos.css con paleta corporativa y retícula de 8px", "Prototipado", "2h", "Desarrollador 2"],
+        ["SUB-04", "HU-01", "Implementar controlador DOM para alternar visibilidad entre contenedor de login y vistas de rol", "Codificación", "2h", "Desarrollador 4"],
+        ["SUB-05", "HU-01", "Escribir y ejecutar suite de pruebas de inyección de credenciales inválidas y control de alertas", "Test", "2h", "Desarrollador 5"],
+        ["SUB-06", "HU-02", "Maquetar componente de navegación temporal (period-navigator) con botones anterior/siguiente", "Prototipado", "2h", "Desarrollador 2"],
+        ["SUB-07", "HU-02", "Programar funciones de fechas (changePeriod, getActivePeriodKey) para Septiembre, Octubre y Noviembre", "Codificación", "2h", "Desarrollador 3"],
+        ["SUB-08", "HU-02", "Desarrollar algoritmos de agregación financiera para cálculo dinámico de los 4 KPIs en Dashboard", "Codificación", "3h", "Desarrollador 3"],
+        ["SUB-09", "HU-02", "Construir tablas sincronizadas en el DOM para renderizar pagos pendientes y realizados juntos", "Codificación", "3h", "Desarrollador 1"],
+        ["SUB-10", "HU-02", "Codificar sección de cuentas bancarias confidenciales con lógica de aislamiento para el Asistente", "Codificación", "2h", "Desarrollador 4"],
+        ["SUB-11", "HU-02", "Ejecutar pruebas de recálculo dinámico de métricas y filtrado temporal al cambiar de mes", "Test", "2h", "Desarrollador 5"],
+        ["SUB-12", "HU-03", "Definir e inicializar esquema en localStorage con atributos receiptId y fotos base64/SVG", "Análisis y diseño", "2h", "Desarrollador 4"],
+        ["SUB-13", "HU-03", "Maquetar etiquetas monoespaciadas para códigos oficiales de recibo/suministro en tablas", "Prototipado", "1h", "Desarrollador 2"],
+        ["SUB-14", "HU-03", "Programar modal y visor de imágenes en DOM para comprobación de titularidad (Foto DNI/RUC)", "Codificación", "2h", "Desarrollador 2"],
+        ["SUB-15", "HU-03", "Validar procesamiento de imágenes con FileReader y manejo de visualización en modal", "Test", "2h", "Desarrollador 5"],
+        ["SUB-16", "HU-04", "Desarrollar modal exclusivo de Gerente para alta de proveedores con campos de Yape (celular/titular)", "Codificación", "3h", "Desarrollador 1"],
+        ["SUB-17", "HU-04", "Implementar función addExpenseType y selector dinámico para tipos de gasto de Gerencia", "Codificación", "2h", "Desarrollador 3"],
+        ["SUB-18", "HU-04", "Construir tabla modal para auditoría del catálogo de proveedores y datos de billetera digital", "Prototipado", "2h", "Desarrollador 2"],
+        ["SUB-19", "HU-04", "Escribir pruebas funcionales para asegurar que el Asistente solo consuma catálogos aprobados", "Test", "2h", "Desarrollador 5"],
+        ["SUB-20", "HU-05", "Programar event listener en selector de método de pago para desplegar tarjeta Yape del proveedor", "Codificación", "2h", "Desarrollador 3"],
+        ["SUB-21", "HU-05", "Implementar algoritmo matemático de redondeo de céntimos en efectivo bajo Ley N° 29571 / BCRP", "Codificación", "2h", "Desarrollador 3"],
+        ["SUB-22", "HU-05", "Codificar lógica reactiva de cálculo de vuelto en efectivo según monto en input cashReceived", "Codificación", "2h", "Desarrollador 4"],
+        ["SUB-23", "HU-05", "Programar módulo de carga de foto de voucher con FileReader y modal de comprobante archivado", "Codificación", "3h", "Desarrollador 2"],
+        ["SUB-24", "HU-05", "Ejecutar suite de pruebas de liquidación en efectivo (S/ 500.35 -> S/ 500.30 y vuelto S/ 9.70) y Yape", "Test", "2h", "Desarrollador 5"],
+        ["SUB-25", "Transversal", "Realizar auditoría de restricciones de diseño UX en frontend (0 emojis, sin viñetas IA, paleta 3 colores)", "Test", "2h", "Desarrollador 5"],
+        ["SUB-26", "Transversal", "Automatizar captura de evidencias con script Puppeteer y compilar documentos Word/Markdown", "Implantación", "2h", "Desarrollador 1"]
     ]
 
     jira_tbl = doc.add_table(rows=len(jira_data) + 1, cols=len(jira_headers))
@@ -350,7 +412,7 @@ def build_document():
     p_tot = doc.add_paragraph()
     p_tot.paragraph_format.space_before = Pt(4)
     p_tot.paragraph_format.space_after = Pt(12)
-    r_tot = p_tot.add_run("Total de horas técnicas especializadas: 46 horas.")
+    r_tot = p_tot.add_run("Total de horas técnicas especializadas: 54 horas de desarrollo directo.")
     r_tot.bold = True; r_tot.font.name = "Arial"; r_tot.font.size = Pt(9.5); r_tot.font.color.rgb = RGBColor(0x0F, 0x51, 0x32)
 
     # -------------------------------------------------------------
@@ -363,19 +425,19 @@ def build_document():
     p = doc.add_paragraph()
     p.paragraph_format.space_after = Pt(4)
     p.add_run(
-        "El dimensionamiento económico se calculó para un equipo de 5 profesionales bajo un régimen ágil de 4 horas diarias, "
-        "5 días a la semana (20 horas/semana por integrante), durante 2 Sprints semanales (2 semanas de calendario = 10 días laborables). "
-        "El costo promedio de mercado se estableció en S/ 40.00 por hora por especialista."
+        "El dimensionamiento económico se calculó para un equipo de 5 desarrolladores de software bajo un régimen ágil de 4 horas diarias, "
+        "5 días a la semana (20 horas/semana por desarrollador), durante 2 Sprints semanales (2 semanas de calendario = 10 días laborables). "
+        "La tarifa promedio de mercado se estableció en S/ 40.00 por hora por desarrollador."
     )
 
-    cost_headers = ["Rol en el Equipo", "Horas Subtareas", "Ceremonias y Gestión", "Total Horas", "Tarifa / Hora", "Subtotal (S/)"]
-    cost_widths = [Inches(1.5), Inches(1.0), Inches(1.3), Inches(0.8), Inches(0.9), Inches(1.0)]
+    cost_headers = ["Integrante del Equipo", "Horas Subtareas Técnicas", "Horas Ceremonias Ágiles / Gestión", "Total Horas Asignadas", "Tarifa / Hora", "Subtotal (S/)"]
+    cost_widths = [Inches(1.4), Inches(1.8), Inches(1.4), Inches(0.65), Inches(0.65), Inches(0.6)]
     cost_data = [
-        ["Product Owner", "4h (Requisitos y validación)", "12h (Refinement, Review)", "16h", "S/ 40.00", "S/ 640.00"],
-        ["Scrum Master", "4h (Supervisión restricciones)", "14h (Dailies, Retrospectiva)", "18h", "S/ 40.00", "S/ 720.00"],
-        ["Full-Stack Dev 1", "20h (Arquitectura, auth, lógica)", "8h (Planificación técnica)", "28h", "S/ 40.00", "S/ 1,120.00"],
-        ["Full-Stack Dev 2", "16h (CSS, modales, evidencias)", "8h (Planificación técnica)", "24h", "S/ 40.00", "S/ 960.00"],
-        ["QA Engineer", "10h (Pruebas E2E, Gherkin)", "6h (Casos y reportes)", "16h", "S/ 40.00", "S/ 640.00"],
+        ["Desarrollador 1", "12h (Arquitectura, auth, proveedores)", "10h (Dailies, Planning, Review)", "22h", "S/ 40.00", "S/ 880.00"],
+        ["Desarrollador 2", "12h (CSS, componentes, modales, vistas)", "10h (Dailies, Planning, Review)", "22h", "S/ 40.00", "S/ 880.00"],
+        ["Desarrollador 3", "11h (Lógica periodos, redondeo, Yape)", "10h (Dailies, Planning, Review)", "21h", "S/ 40.00", "S/ 840.00"],
+        ["Desarrollador 4", "8h (Persistencia, estado, filtros, vuelto)", "9h (Dailies, Planning, Review)", "17h", "S/ 40.00", "S/ 680.00"],
+        ["Desarrollador 5", "11h (Testing E2E, QA, restricciones UX)", "9h (Dailies, Planning, Review)", "20h", "S/ 40.00", "S/ 800.00"],
         ["SUBTOTAL BASE", "54h", "48h", "102h", "-", "S/ 4,080.00"]
     ]
 
@@ -385,10 +447,11 @@ def build_document():
     add_callout(
         doc,
         "Justificación Formal del Presupuesto:",
-        "El costo del proyecto se basa en un equipo de 5 desarrolladores/especialistas con un costo promedio de S/ 40 por hora, "
-        "trabajando 4 horas al día durante 2 semanas (10 días laborables). El total incluye 54 horas de desarrollo y análisis, "
-        "28 horas de testing y control de calidad, y 20 horas de ceremonias ágiles y gestión. El costo directo base es de S/ 4,080.00. "
-        "Aplicando un 10% de contingencia técnica y operativa (S/ 408.00), el costo total consolidado del MVP es de S/ 4,488.00.",
+        "El costo del proyecto se basa en un equipo de 5 desarrolladores con un costo promedio de S/ 40 por hora, "
+        "trabajando 4 horas al día durante 2 semanas (10 días laborables). El total incluye 54 horas de desarrollo y análisis distribuidas en 26 subtareas técnicas claras y desglosadas, "
+        "28 horas de testing y control de calidad sobre las reglas de negocio (redondeo de céntimos, Yape, evidencias fotográficas y navegación temporal), "
+        "y 20 horas de ceremonias ágiles y gestión de entregables. Con una tarifa de S/ 40.00 por hora, el costo directo base es de S/ 4,080.00. "
+        "Aplicando un 10% de contingencia técnica y operativa (S/ 408.00), el costo total consolidado para el MVP es de S/ 4,488.00.",
         bg_hex="FEF3C7", border_color="D97706"
     )
 
