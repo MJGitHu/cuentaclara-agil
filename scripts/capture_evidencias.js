@@ -94,19 +94,35 @@ async function run() {
     await sleep(300);
   }
 
-  // 7. Cuentas confidenciales Gerente
+  // 7. Cuentas confidenciales Gerente (Tabla Dinámica de Cuentas y Tarjetas)
   console.log('Capturando 07_cuentas_confidenciales_gerente.png');
   await page.evaluate(() => {
     window.scrollTo(0, document.body.scrollHeight);
   });
-  await sleep(300);
+  await sleep(400);
   await page.screenshot({ path: path.join(OUTPUT_DIR, '07_cuentas_confidenciales_gerente.png'), fullPage: false });
+
+  // 7b. Modal Nueva Cuenta / Tarjeta Bancaria (Observación Gerente)
+  console.log('Capturando 07b_modal_nueva_cuenta_tarjeta.png');
+  await page.evaluate(() => {
+    document.getElementById('openNewAccountModalBtn').click();
+  });
+  await sleep(400);
+  await page.type('#accountBankInput', 'Scotiabank Perú');
+  await page.select('#accountTypeSelect', 'Cuenta Corriente');
+  await page.evaluate(() => {
+    document.getElementById('accountIdentifierInput').value = 'CTA: 000-4829104-0-99';
+  });
+  await sleep(300);
+  await page.screenshot({ path: path.join(OUTPUT_DIR, '07b_modal_nueva_cuenta_tarjeta.png'), fullPage: false });
+  await page.evaluate(() => document.getElementById('cancelNewAccountModalBtn').click());
+  await sleep(300);
 
   // Volver arriba
   await page.evaluate(() => window.scrollTo(0, 0));
   await sleep(300);
 
-  // 8. Modal Nuevo Proveedor con Yape
+  // 8. Modal Nuevo Proveedor con Validación Estricta de 9 Dígitos (Observación Perú)
   console.log('Capturando 08_modal_nuevo_proveedor_yape.png');
   await page.evaluate(() => {
     window.scrollTo(0, 0);
@@ -117,11 +133,11 @@ async function run() {
   await page.type('#supplierNameInput', 'Tecnología & Servicios Digitales S.A.C.');
   await page.select('#supplierCategorySelect', 'Servicio');
   await page.type('#supplierContactInput', 'Mario Gómez');
-  await page.type('#supplierPhoneInput', '998877665');
+  await page.type('#supplierPhoneInput', '998877665'); // 9 dígitos numéricos
   await page.type('#supplierEmailInput', 'ventas@tecnodigital.pe');
   await page.click('#supplierHasYapeCheck');
   await sleep(200);
-  await page.type('#supplierYapePhoneInput', '998877665');
+  await page.type('#supplierYapePhoneInput', '998877665'); // 9 dígitos numéricos
   await page.type('#supplierYapeHolderInput', 'Mario Gómez / TecnoDigital');
   await page.screenshot({ path: path.join(OUTPUT_DIR, '08_modal_nuevo_proveedor_yape.png'), fullPage: false });
   await page.evaluate(() => document.getElementById('closeSupplierModalBtn').click());
@@ -136,11 +152,32 @@ async function run() {
   await page.evaluate(() => document.getElementById('closeExpenseTypeModalBtn').click());
   await sleep(300);
 
-  // 10. Catálogo de Proveedores
+  // 9b. Modal Gestión de Métodos de Pago (Observación Gerente)
+  console.log('Capturando 09b_modal_metodos_pago.png');
+  await page.evaluate(() => document.getElementById('openPaymentMethodsModalBtn').click());
+  await sleep(400);
+  await page.type('#newPaymentMethodNameInput', 'Plin (Billetera Digital BBVA/Interbank)');
+  await sleep(300);
+  await page.screenshot({ path: path.join(OUTPUT_DIR, '09b_modal_metodos_pago.png'), fullPage: false });
+  await page.evaluate(() => document.getElementById('closePaymentMethodsModalBtn').click());
+  await sleep(300);
+
+  // 10. Catálogo de Proveedores con Botón Editar
   console.log('Capturando 10_catalogo_proveedores.png');
   await page.evaluate(() => document.getElementById('openSupplierListModalBtn').click());
   await sleep(400);
   await page.screenshot({ path: path.join(OUTPUT_DIR, '10_catalogo_proveedores.png'), fullPage: false });
+
+  // 10b. Modal Editar Proveedor (Observación Edición)
+  console.log('Capturando 10b_modal_editar_proveedor.png');
+  const editSupBtns = await page.$$('.edit-supplier-btn');
+  if (editSupBtns.length > 0) {
+    await editSupBtns[0].click();
+    await sleep(400);
+    await page.screenshot({ path: path.join(OUTPUT_DIR, '10b_modal_editar_proveedor.png'), fullPage: false });
+    await page.evaluate(() => document.getElementById('closeEditSupplierModalBtn').click());
+    await sleep(300);
+  }
   await page.evaluate(() => document.getElementById('closeSupplierListModalBtn').click());
   await sleep(300);
 
@@ -149,7 +186,7 @@ async function run() {
   await page.evaluate(() => document.getElementById('logoutBtn').click());
   await sleep(400);
 
-  // 11. Login Asistente
+  // 11. Login Asistente (Con Alerta de Deudas Anteriores, N° Operación y Salto de Periodo)
   console.log('Capturando 11_asistente_consola_octubre.png');
   await page.evaluate(() => {
     document.getElementById('usernameInput').value = '';
@@ -160,6 +197,23 @@ async function run() {
   await page.click('button[type="submit"]');
   await sleep(500);
   await page.screenshot({ path: path.join(OUTPUT_DIR, '11_asistente_consola_octubre.png'), fullPage: true });
+
+  // 11b. Salto Rápido a Periodo (Observación Selector Directo de Mes y Año)
+  console.log('Capturando 11b_salto_periodo_rapido.png');
+  await page.evaluate(() => {
+    window.scrollTo(0, 0);
+    document.getElementById('jumpMonthSelect').value = '8'; // Septiembre
+    document.getElementById('jumpYearInput').value = '2026';
+    document.getElementById('applyPeriodJumpBtn').click();
+  });
+  await sleep(500);
+  await page.screenshot({ path: path.join(OUTPUT_DIR, '11b_salto_periodo_rapido.png'), fullPage: true });
+
+  // Volver a Octubre 2026
+  await page.evaluate(() => {
+    document.getElementById('jumpCurrentMonthBtn').click();
+  });
+  await sleep(400);
 
   // 12. Modal Nuevo Gasto del Asistente
   console.log('Capturando 12_modal_asistente_nuevo_gasto.png');
@@ -200,18 +254,29 @@ async function run() {
   await sleep(300);
   await page.screenshot({ path: path.join(OUTPUT_DIR, '14_modal_pago_efectivo_redondeo_ley29571.png'), fullPage: false });
 
-  // 15. Liquidar pago
+  // 15. Liquidar pago registrando N° Operación
   await page.select('#paymentMethodSelect', 'Transferencia Bancaria');
   await sleep(200);
   await page.type('#paymentRefInput', 'OP-9988221');
   await page.click('#recordPaymentForm button[type="submit"]');
   await sleep(600);
 
-  // 16. Asistente con pago completado
+  // 16. Asistente con pago completado (Muestra N° Operación y ambos botones: Ver Titular y Ver Voucher)
   await page.select('#filterStatus', 'all');
   await sleep(400);
   console.log('Capturando 15_asistente_pago_completado.png');
   await page.screenshot({ path: path.join(OUTPUT_DIR, '15_asistente_pago_completado.png'), fullPage: true });
+
+  // 15b. Modal Editar Gasto Registrado (Observación Edición de Pagos)
+  console.log('Capturando 15b_modal_editar_gasto_asistente.png');
+  const editExpBtns = await page.$$('.edit-expense-btn');
+  if (editExpBtns.length > 0) {
+    await editExpBtns[0].click();
+    await sleep(400);
+    await page.screenshot({ path: path.join(OUTPUT_DIR, '15b_modal_editar_gasto_asistente.png'), fullPage: false });
+    await page.evaluate(() => document.getElementById('closeEditExpenseModalBtn').click());
+    await sleep(300);
+  }
 
   // 17. Ver Voucher del pago completado
   console.log('Capturando 16_modal_comprobante_voucher.png');

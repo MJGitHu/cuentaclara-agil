@@ -294,11 +294,19 @@ Para solucionar este problema, el Gerente contrató a un Asistente administrativ
 
 ---
 
-### Paso 8: Gobierno por Gerencia: Proveedor con Billetera Digital Yape (HU-04, Criterio 4.1)
+### Paso 7b: Alta Dinámica de Cuentas Bancarias y Tarjetas por Gerencia (Observación Cuentas Nuevas)
+- **Historia:** HU-02: Gobierno de Instrumentos Financieros del Gerente
+- **Descripción:** Modal para que el Gerente agregue nuevas cuentas o tarjetas bancarias con banco, tipo de instrumento, moneda y número de cuenta o tarjeta, persistiendo en el sistema.
+- **Captura:** ![Paso 7b](evidencias/07b_modal_nueva_cuenta_tarjeta.png)
+- **Resultado:** *Cumplido (Observación Cuentas Nuevas).*
+
+---
+
+### Paso 8: Gobierno por Gerencia: Registro de Proveedor y Validación Estricta de Teléfono en Perú (HU-04, Criterio 4.1)
 - **Historia:** HU-04: Gobierno de Proveedores y Tipos de Gasto por Gerencia
-- **Descripción:** Formulario donde el Gerente registra proveedores indicando número de celular y titular/alias de Yape.
+- **Descripción:** Formulario donde el Gerente registra proveedores con validación estricta de teléfono para Perú (exactamente 9 dígitos numéricos, sin letras) e indicando celular y titular/alias de Yape.
 - **Captura:** ![Paso 8](evidencias/08_modal_nuevo_proveedor_yape.png)
-- **Resultado:** *Cumplido (Criterio 4.1).*
+- **Resultado:** *Cumplido (Criterio 4.1 y Observación Teléfono 9 Dígitos).*
 
 ---
 
@@ -310,19 +318,43 @@ Para solucionar este problema, el Gerente contrató a un Asistente administrativ
 
 ---
 
-### Paso 10: Catálogo Consolidado de Proveedores (HU-04, Criterio 4.3)
-- **Historia:** HU-04: Gobierno de Proveedores y Tipos de Gasto por Gerencia
-- **Descripción:** Consulta del directorio autorizado de acreedores y sus datos de contacto y Yape.
+### Paso 9b: Habilitación y Gestión de Métodos de Pago por Gerencia (Observación Métodos de Pago)
+- **Historia:** HU-04 / HU-05: Parametrización y Métodos de Pago por Gerencia
+- **Descripción:** Modal interactivo que permite al Gerente incorporar nuevos métodos de pago personalizados (ej. Plin, PagoEfectivo) y eliminar métodos en desuso, impactando directamente en el selector de pagos del Asistente.
+- **Captura:** ![Paso 9b](evidencias/09b_modal_metodos_pago.png)
+- **Resultado:** *Cumplido (Observación Métodos de Pago).*
+
+---
+
+### Paso 10: Directorio y Catálogo de Proveedores con Edición Habilitada (HU-04, Criterio 4.3)
+- **Historia:** HU-04: Directorio Centralizado de Acreedores
+- **Descripción:** Directorio maestro de proveedores donde se visualizan los datos de contacto, Yape y el nuevo botón de edición para rectificar información.
 - **Captura:** ![Paso 10](evidencias/10_catalogo_proveedores.png)
 - **Resultado:** *Cumplido (Criterio 4.3).*
 
 ---
 
-### Paso 11: Consola Operativa del Asistente (HU-01, Criterio 1.4)
-- **Historia:** HU-01: Autenticación y Control de Acceso por Rol
-- **Descripción:** Vista operativa del asistente con filtros por proveedor, tipo, estado y orden de vencimiento.
+### Paso 10b: Edición y Rectificación de Proveedores por Gerencia (Observación Edición Proveedores)
+- **Historia:** HU-04: Rectificación y Mantenimiento de Proveedores
+- **Descripción:** Ventana modal que permite actualizar razón social, RUC, teléfono validado y billetera Yape de cualquier proveedor registrado.
+- **Captura:** ![Paso 10b](evidencias/10b_modal_editar_proveedor.png)
+- **Resultado:** *Cumplido (Observación Edición Proveedores).*
+
+---
+
+### Paso 11: Consola Operativa del Asistente, Alerta de Deudas Anteriores y N° de Operación (HU-01, Criterio 1.4)
+- **Historia:** HU-01 / HU-03: Consola Operativa y Control de Deudas Anteriores
+- **Descripción:** Panel operativo del Asistente con la nueva alerta de deudas impagas de periodos anteriores visible de forma prominente y la columna `N° Operación` integrada en la tabla de obligaciones.
 - **Captura:** ![Paso 11](evidencias/11_asistente_consola_octubre.png)
-- **Resultado:** *Cumplido (Criterio 1.4).*
+- **Resultado:** *Cumplido (Criterio 1.4 y Observaciones Compañero).*
+
+---
+
+### Paso 11b: Salto Rápido a Cualquier Periodo (Mes y Año) (Observación Navegación Temporal)
+- **Historia:** HU-02: Navegación Temporal Ágil sin Exceso de Clics
+- **Descripción:** Selector directo de Mes y Año en la barra de navegación que permite saltar a cualquier periodo (histórico o futuro) en un solo clic, sin decenas de pulsaciones consecutivas.
+- **Captura:** ![Paso 11b](evidencias/11b_salto_periodo_rapido.png)
+- **Resultado:** *Cumplido (Observación Navegación Temporal).*
 
 ---
 
@@ -350,11 +382,19 @@ Para solucionar este problema, el Gerente contrató a un Asistente administrativ
 
 ---
 
-### Paso 15: Actualización Inmediata a Estado 'Realizado' (HU-05, Criterio 5.3)
-- **Historia:** HU-05: Liquidación de Pagos con Yape, Efectivo y Evidencia Fotográfica
-- **Descripción:** Al confirmar el pago, la obligación cambia a estado `Realizado` y se sincroniza en el balance mensual.
+### Paso 15: Actualización a 'Realizado', N° Operación y Visualización Conjunta de Titular y Voucher (HU-05, Criterio 5.3)
+- **Historia:** HU-05: Liquidación de Pagos y Auditoría Documental Simultánea
+- **Descripción:** Al registrar el pago, se muestra claramente el N° de Operación (`OP-9988221`). Se mantienen disponibles simultáneamente AMBOS botones: `Ver Titular / DNI` y `Ver Voucher`, permitiendo auditar la titularidad y el comprobante de pago al mismo tiempo.
 - **Captura:** ![Paso 15](evidencias/15_asistente_pago_completado.png)
-- **Resultado:** *Cumplido (Criterio 5.3).*
+- **Resultado:** *Cumplido (Criterio 5.3 y Observaciones Compañero).*
+
+---
+
+### Paso 15b: Edición y Corrección de Gastos y Pagos por el Asistente (Observación Edición Pagos)
+- **Historia:** HU-03 / HU-05: Edición y Rectificación Administrativa
+- **Descripción:** El Asistente puede hacer clic en `Editar` sobre cualquier registro para corregir descripción, importe, fecha o N° de operación en caso de equivocación.
+- **Captura:** ![Paso 15b](evidencias/15b_modal_editar_gasto_asistente.png)
+- **Resultado:** *Cumplido (Observación Edición Pagos).*
 
 ---
 
@@ -380,3 +420,42 @@ Para solucionar este problema, el Gerente contrató a un Asistente administrativ
 | **Navegación minimalista** | Cumplido | Pantalla única para el Gerente con vista conjunta de listas y selector de meses central. |
 | **Privacidad de medios de pago** | Cumplido | Cuentas bancarias personales visibles únicamente en la sesión de gerencia. |
 | **Cumplimiento legal Ley 29571** | Cumplido | Algoritmo de redondeo hacia abajo a favor del cliente con cálculo de vuelto en efectivo. |
+
+---
+
+## 8. Resolución Integral de Observaciones de Feedback
+
+A continuación se resume la atención técnica dada a las 8 observaciones funcionales levantadas durante las sesiones de prueba con el equipo:
+
+1. **Visibilidad del N° de Operación en Ambas Vistas:**
+   - *Observación:* No se apreciaba el número de operación ni en la vista del Gerente ni en la del Asistente.
+   - *Solución:* Se agregó la columna oficial `N° Operación` tanto en la tabla unificada del Gerente como en la del Asistente. Muestra el código de comprobante o referencia bancaria (ej. `OP-9988221`), o un guión `-` si está pendiente.
+
+2. **Gestión Dinámica de Métodos de Pago por Gerencia:**
+   - *Observación:* El Gerente no podía agregar nuevos métodos de pago al sistema.
+   - *Solución:* Se creó el modal interactivo `Gestión de Métodos de Pago` accesible desde la barra superior del Gerente. Permite registrar métodos adicionales (ej. Plin, PagoEfectivo, Tarjeta de Crédito) y eliminar métodos en desuso, actualizando dinámicamente el selector del Asistente.
+
+3. **Alerta de Deudas Pendientes Anteriores en el Asistente:**
+   - *Observación:* El Asistente debía contar con una advertencia visible de deudas impagas de meses previos, al igual que el Gerente.
+   - *Solución:* Se integró un banner de alerta de color ámbar en la cabecera de la consola del Asistente (`#asistenteOverdueAlert`), indicando la cantidad de compromisos y el monto total acumulado de deudas de meses pasados.
+
+4. **Validación Estricta de Teléfono para Perú (9 Dígitos Numéricos):**
+   - *Observación:* Se permitía escribir letras en el teléfono del proveedor y no había límite de dígitos.
+   - *Solución:* Se implementó un sanitizador en tiempo real (`input` / `keydown`) que bloquea cualquier carácter no numérico y limita el campo a exactamente 9 dígitos. Al registrar o editar, se valida estrictamente que inicie con `9` y contenga 9 dígitos (formato estándar de telefonía móvil en Perú).
+
+5. **Edición y Rectificación de Proveedores y Gastos:**
+   - *Observación:* No era posible corregir proveedores ni pagos registrados si se cometía un error de digitación.
+   - *Solución:* Se agregó el botón `Editar` en el directorio de proveedores (`#supplierListModal`) abriendo `#editSupplierModal`. Asimismo, se incorporó el botón `Editar` en cada fila de la tabla del Asistente abriendo `#editExpenseModal` para corregir descripción, importe, fecha o N° de operación.
+
+6. **Visualización Conjunta de Titular y Voucher de Pago:**
+   - *Observación:* Al pagar un recibo, el botón de titularidad era reemplazado por el voucher de pago, perdiéndose la vista del titular.
+   - *Solución:* Se rediseñó la celda de comprobantes para mostrar simultáneamente ambos botones (`Ver Titular / DNI` y `Ver Voucher`) una vez liquidado el compromiso, permitiendo la auditoría documental completa.
+
+7. **Alta y Gestión Dinámica de Cuentas y Tarjetas Bancarias:**
+   - *Observación:* Las cuentas y tarjetas bancarias del Gerente eran estáticas y no permitían agregar nuevos instrumentos.
+   - *Solución:* Se transformó el módulo en una lista dinámica interactiva con persistencia en `localStorage`, respaldada por el botón `+ Nueva Cuenta / Tarjeta` y el modal `#newAccountModal`.
+
+8. **Navegación Temporal Ágil con Salto Directo a Mes y Año:**
+   - *Observación:* Para consultar años anteriores (ej. 2017) se requerían decenas de clics consecutivos en los botones de mes.
+   - *Solución:* Se incorporó un control directo con lista desplegable de mes (Enero a Diciembre), campo numérico de año y botón `Ir` (más acceso directo a `Mes Actual`), permitiendo saltar a cualquier fecha en un solo clic.
+

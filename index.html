@@ -65,22 +65,48 @@
       </div>
     </section>
 
-    <!-- Barra de Navegacion Temporal (Mes Pasado / Mes Actual / Proximo Mes) -->
+    <!-- Barra de Navegacion Temporal (Mes Pasado / Mes Actual / Proximo Mes y Salto Directo a Periodo) -->
     <div id="periodNavigatorContainer" class="period-navigator hidden">
-      <button type="button" class="btn btn-secondary btn-sm" id="prevMonthBtn">&lt; Mes Anterior</button>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <button type="button" class="btn btn-secondary btn-sm" id="prevMonthBtn">&lt; Mes Anterior</button>
+        <button type="button" class="btn btn-secondary btn-sm" id="nextMonthBtn">Próximo Mes &gt;</button>
+      </div>
+
       <div class="period-center">
         <div class="period-title" id="currentPeriodLabel">Octubre 2026</div>
         <div class="period-subtitle">Periodo financiero consultado</div>
       </div>
-      <button type="button" class="btn btn-secondary btn-sm" id="nextMonthBtn">Próximo Mes &gt;</button>
+
+      <!-- Selector directo de Mes y Año (Salto Rápido a cualquier Periodo sin exceso de clics) -->
+      <div class="period-jump-container" style="display: flex; align-items: center; gap: 6px;">
+        <label for="jumpMonthSelect" style="font-size: 12px; font-weight: 500; color: var(--color-text-muted); margin: 0;">Ir a:</label>
+        <select id="jumpMonthSelect" class="form-control" style="width: auto; padding: 4px 8px; font-size: 12px; height: 30px;">
+          <option value="0">Enero</option>
+          <option value="1">Febrero</option>
+          <option value="2">Marzo</option>
+          <option value="3">Abril</option>
+          <option value="4">Mayo</option>
+          <option value="5">Junio</option>
+          <option value="6">Julio</option>
+          <option value="7">Agosto</option>
+          <option value="8">Septiembre</option>
+          <option value="9" selected>Octubre</option>
+          <option value="10">Noviembre</option>
+          <option value="11">Diciembre</option>
+        </select>
+        <input type="number" id="jumpYearInput" class="form-control" style="width: 75px; padding: 4px 8px; font-size: 12px; height: 30px;" min="2000" max="2050" value="2026">
+        <button type="button" class="btn btn-primary btn-sm" id="applyPeriodJumpBtn" style="padding: 4px 10px; font-size: 12px; height: 30px;">Ir</button>
+        <button type="button" class="btn btn-secondary btn-sm" id="jumpCurrentMonthBtn" style="padding: 4px 8px; font-size: 12px; height: 30px;" title="Volver al periodo actual">Hoy</button>
+      </div>
     </div>
 
     <!-- Vista 2: Dashboard del Gerente (Solo Lectura con Configuraciones) -->
     <section id="gerenteView" class="hidden">
       <div class="section-header">
         <h2 class="section-title">Consolidado Mensual de Obligaciones</h2>
-        <div style="display: flex; gap: 8px;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
           <button class="btn btn-secondary btn-sm" id="openSupplierListModalBtn" type="button">Ver Proveedores</button>
+          <button class="btn btn-secondary btn-sm" id="openPaymentMethodsModalBtn" type="button">Métodos de Pago</button>
           <button class="btn btn-secondary btn-sm" id="openNewExpenseTypeModalBtn" type="button">Nuevo Tipo de Gasto</button>
           <button class="btn btn-primary btn-sm" id="openGerenteNewSupplierModalBtn" type="button">Nuevo Proveedor</button>
         </div>
@@ -127,6 +153,7 @@
                   <th>Tipo</th>
                   <th>Vencimiento</th>
                   <th style="text-align: right;">Monto</th>
+                  <th>N° Operación</th>
                   <th>Comprobante / Titularidad</th>
                   <th>Estado</th>
                 </tr>
@@ -140,11 +167,16 @@
         </div>
       </div>
 
-      <!-- Seccion Confidencial de Cuentas Bancarias del Gerente -->
+      <!-- Seccion Confidencial de Cuentas Bancarias y Tarjetas del Gerente -->
       <div class="content-panel">
         <div class="panel-body">
-          <h3 class="section-title" style="margin-bottom: 8px;">Cuentas y Tarjetas de Pago (Uso Exclusivo de Gerencia)</h3>
-          <p class="form-hint" style="margin-bottom: 16px;">Información confidencial de medios de pago personales. Inaccesible para el rol de asistente.</p>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+            <div>
+              <h3 class="section-title" style="margin-bottom: 4px;">Cuentas y Tarjetas de Pago (Uso Exclusivo de Gerencia)</h3>
+              <p class="form-hint" style="margin-bottom: 0;">Información confidencial de medios de pago personales. Inaccesible para el rol de asistente.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="openNewAccountModalBtn" type="button">Nueva Cuenta / Tarjeta</button>
+          </div>
           <div class="table-responsive">
             <table class="data-table">
               <thead>
@@ -153,34 +185,17 @@
                   <th>Tipo de Cuenta / Instrumento</th>
                   <th>Titular</th>
                   <th>Identificador / Terminación</th>
+                  <th>Moneda</th>
                   <th>Estado</th>
+                  <th style="text-align: right;">Acción</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>Banco de Crédito del Perú</td>
-                  <td>Cuenta Corriente Soles</td>
-                  <td>Carlos Mendoza</td>
-                  <td>CTA: 191-8849201-0-45</td>
-                  <td><span class="badge badge-paid">Activa</span></td>
-                </tr>
-                <tr>
-                  <td>BBVA Continental</td>
-                  <td>Tarjeta Débito Empresarial</td>
-                  <td>Carlos Mendoza</td>
-                  <td>Terminación **** 4819</td>
-                  <td><span class="badge badge-paid">Activa</span></td>
-                </tr>
-                <tr>
-                  <td>Interbank</td>
-                  <td>Cuenta de Ahorros Tributaria</td>
-                  <td>Carlos Mendoza</td>
-                  <td>CTA: 200-3004819-2-11</td>
-                  <td><span class="badge badge-paid">Activa</span></td>
-                </tr>
+              <tbody id="managerAccountsTableBody">
+                <!-- Cuentas bancarias dinamicas administradas por Gerencia -->
               </tbody>
             </table>
           </div>
+          <div id="managerAccountsEmpty" class="empty-state hidden">No hay cuentas bancarias ni tarjetas registradas.</div>
         </div>
       </div>
     </section>
@@ -190,6 +205,18 @@
       <div class="section-header">
         <h2 class="section-title">Control de Pagos y Obligaciones</h2>
         <button class="btn btn-primary" id="openNewExpenseModalBtn" type="button">Nuevo Gasto</button>
+      </div>
+
+      <!-- Alerta Destacada de Deudas Pendientes de Meses Anteriores (Observación Asistente) -->
+      <div id="asistenteOverdueAlert" class="alert-banner alert-warning hidden" style="margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background-color: #FEF3C7; border: 1px solid #F59E0B; border-radius: 6px; color: #92400E; flex-wrap: wrap; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 16px; font-weight: bold; background: #F59E0B; color: #FFFFFF; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%;">!</span>
+          <div>
+            <strong>Alerta de Deudas Pendientes Anteriores:</strong>
+            <span id="asistenteOverdueAlertText">Existen obligaciones de meses pasados sin pagar.</span>
+          </div>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" id="btnGoToOverduePeriod" style="background: #FFFFFF; border-color: #F59E0B; color: #92400E; font-weight: 600;">Ver Deudas Anteriores</button>
       </div>
 
       <!-- Filtros -->
@@ -248,9 +275,10 @@
                   <th>Vencimiento</th>
                   <th style="text-align: right;">Monto</th>
                   <th>Estado</th>
+                  <th>N° Operación</th>
                   <th>Titularidad</th>
                   <th>Comprobante</th>
-                  <th style="text-align: right;">Acción</th>
+                  <th style="text-align: right;">Acciones</th>
                 </tr>
               </thead>
               <tbody id="assistantPaymentsTableBody">
@@ -469,8 +497,9 @@
           </div>
 
           <div class="form-group">
-            <label for="supplierPhoneInput">Teléfono Principal</label>
-            <input type="text" id="supplierPhoneInput" class="form-control" required placeholder="Ej. 01-517-1717">
+            <label for="supplierPhoneInput">Teléfono Principal (Perú - 9 dígitos)</label>
+            <input type="tel" id="supplierPhoneInput" class="form-control" required placeholder="Ej. 987654321" maxlength="9" inputmode="numeric">
+            <div class="form-hint">Ingrese exactamente 9 dígitos numéricos (formato peruano).</div>
           </div>
 
           <div class="form-group">
@@ -490,8 +519,9 @@
 
               <div id="supplierYapeFields" class="hidden">
                 <div class="form-group">
-                  <label for="supplierYapePhoneInput">Número Celular de Yape</label>
-                  <input type="text" id="supplierYapePhoneInput" class="form-control" placeholder="Ej. 987654321">
+                  <label for="supplierYapePhoneInput">Número Celular de Yape (Perú - 9 dígitos)</label>
+                  <input type="tel" id="supplierYapePhoneInput" class="form-control" placeholder="Ej. 987654321" maxlength="9" inputmode="numeric">
+                  <div class="form-hint">Ingrese exactamente 9 dígitos numéricos.</div>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 0;">
@@ -538,9 +568,9 @@
     </div>
   </div>
 
-  <!-- Modal: Directorio de Proveedores (Solo Lectura para Gerente / Asistente) -->
+  <!-- Modal: Directorio de Proveedores (Para Gerente / Asistente con Edicion de Proveedores) -->
   <div class="modal-backdrop hidden" id="supplierListModal">
-    <div class="modal-box" style="max-width: 800px;">
+    <div class="modal-box" style="max-width: 850px;">
       <div class="modal-header">
         <div class="modal-title">Catálogo de Proveedores Registrados</div>
         <button class="modal-close-btn" id="closeSupplierListModalBtn" type="button">&times;</button>
@@ -554,11 +584,13 @@
                 <th>Razón Social</th>
                 <th>Rubro</th>
                 <th>Contacto</th>
+                <th>Teléfono (Perú)</th>
                 <th>Yape</th>
+                <th style="text-align: right;">Acción</th>
               </tr>
             </thead>
             <tbody id="supplierCatalogTableBody">
-              <!-- Filas dinamicas -->
+              <!-- Filas dinamicas con boton editar -->
             </tbody>
           </table>
         </div>
@@ -566,6 +598,246 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="closeSupplierListBtn">Cerrar</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal: Métodos de Pago Habilitados (Exclusivo Gerente) -->
+  <div class="modal-backdrop hidden" id="paymentMethodsModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Métodos de Pago Habilitados</div>
+        <button class="modal-close-btn" id="closePaymentMethodsModalBtn" type="button">&times;</button>
+      </div>
+      <form id="newPaymentMethodForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="newPaymentMethodNameInput">Agregar Nuevo Método de Pago</label>
+            <div style="display: flex; gap: 8px;">
+              <input type="text" id="newPaymentMethodNameInput" class="form-control" placeholder="Ej. Plin, PagoEfectivo, Tarjeta de Crédito">
+              <button type="submit" class="btn btn-primary" style="white-space: nowrap;">Agregar</button>
+            </div>
+            <div class="form-hint">Este método estará disponible al momento de registrar pagos.</div>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label>Métodos de Pago Registrados:</label>
+            <div id="paymentMethodsListContainer" style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+              <!-- Tarjetas dinamicas de metodos de pago con boton eliminar -->
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="closePaymentMethodsFooterBtn">Cerrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Registrar Cuenta o Tarjeta Bancaria (Exclusivo Gerente) -->
+  <div class="modal-backdrop hidden" id="newAccountModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Registrar Cuenta o Tarjeta Bancaria</div>
+        <button class="modal-close-btn" id="closeNewAccountModalBtn" type="button">&times;</button>
+      </div>
+      <form id="newAccountForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="accountBankInput">Entidad Financiera / Banco</label>
+            <input type="text" id="accountBankInput" class="form-control" required placeholder="Ej. Banco de Crédito del Perú (BCP), BBVA, Interbank, Scotiabank">
+          </div>
+
+          <div class="form-group">
+            <label for="accountTypeSelect">Tipo de Cuenta / Instrumento</label>
+            <select id="accountTypeSelect" class="form-control" required>
+              <option value="">Seleccione un tipo</option>
+              <option value="Cuenta Corriente">Cuenta Corriente</option>
+              <option value="Cuenta de Ahorros">Cuenta de Ahorros</option>
+              <option value="Tarjeta de Débito Empresarial">Tarjeta de Débito</option>
+              <option value="Tarjeta de Crédito Corporativa">Tarjeta de Crédito</option>
+              <option value="Billetera Digital Empresarial">Billetera Digital</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="accountHolderInput">Titular de la Cuenta</label>
+            <input type="text" id="accountHolderInput" class="form-control" required value="Carlos Mendoza" placeholder="Nombre completo del titular">
+          </div>
+
+          <div class="form-group">
+            <label for="accountIdentifierInput">Número de Cuenta / CCI / Terminación Enmascarada</label>
+            <input type="text" id="accountIdentifierInput" class="form-control" required placeholder="Ej. CTA: 191-8849201-0-45 o Terminación **** 4819">
+          </div>
+
+          <div class="form-group">
+            <label for="accountCurrencySelect">Moneda</label>
+            <select id="accountCurrencySelect" class="form-control" required>
+              <option value="PEN" selected>Soles (PEN)</option>
+              <option value="USD">Dólares (USD)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="accountStatusSelect">Estado</label>
+            <select id="accountStatusSelect" class="form-control" required>
+              <option value="Activa" selected>Activa</option>
+              <option value="Inactiva">Inactiva</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelNewAccountModalBtn">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar Cuenta</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Editar Proveedor Registrado -->
+  <div class="modal-backdrop hidden" id="editSupplierModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Editar Proveedor</div>
+        <button class="modal-close-btn" id="closeEditSupplierModalBtn" type="button">&times;</button>
+      </div>
+      <form id="editSupplierForm">
+        <div class="modal-body">
+          <input type="hidden" id="editSupplierId">
+
+          <div class="form-group">
+            <label for="editSupplierRucInput">RUC / Documento de Identidad</label>
+            <input type="text" id="editSupplierRucInput" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="editSupplierNameInput">Razón Social / Nombre Comercial</label>
+            <input type="text" id="editSupplierNameInput" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="editSupplierCategorySelect">Rubro / Categoría</label>
+            <select id="editSupplierCategorySelect" class="form-control" required>
+              <option value="Servicio">Servicio Público / Comunicaciones</option>
+              <option value="Impuesto">Entidad Tributaria / Impuesto</option>
+              <option value="Proveedor">Proveedor de Bienes e Insumos</option>
+              <option value="Préstamo">Entidad Bancaria / Préstamos</option>
+              <option value="Alquiler">Alquiler</option>
+              <option value="Mantenimiento">Mantenimiento</option>
+              <option value="Seguros">Seguros</option>
+              <option value="Telecomunicaciones">Telecomunicaciones</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="editSupplierContactInput">Persona de Contacto</label>
+            <input type="text" id="editSupplierContactInput" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="editSupplierPhoneInput">Teléfono Principal (Perú - 9 dígitos)</label>
+            <input type="tel" id="editSupplierPhoneInput" class="form-control" required maxlength="9" inputmode="numeric">
+            <div class="form-hint">Ingrese exactamente 9 dígitos numéricos (formato peruano).</div>
+          </div>
+
+          <div class="form-group">
+            <label for="editSupplierEmailInput">Correo Electrónico</label>
+            <input type="email" id="editSupplierEmailInput" class="form-control" required>
+          </div>
+
+          <div class="content-panel" style="margin-bottom: 0; background-color: var(--color-secondary-bg);">
+            <div style="padding: 12px;">
+              <div style="font-weight: 600; font-size: 14px; margin-bottom: 8px;">Configuración de Billetera Digital (Yape)</div>
+              <div class="form-group" style="margin-bottom: 8px;">
+                <label style="display: flex; align-items: center; gap: 8px; font-weight: normal; cursor: pointer;">
+                  <input type="checkbox" id="editSupplierHasYapeCheck"> El proveedor acepta pagos mediante Yape
+                </label>
+              </div>
+
+              <div id="editSupplierYapeFields" class="hidden">
+                <div class="form-group">
+                  <label for="editSupplierYapePhoneInput">Número Celular de Yape (Perú - 9 dígitos)</label>
+                  <input type="tel" id="editSupplierYapePhoneInput" class="form-control" maxlength="9" inputmode="numeric">
+                  <div class="form-hint">Ingrese exactamente 9 dígitos numéricos.</div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label for="editSupplierYapeHolderInput">Titular o Alias Registrado en Yape</label>
+                  <input type="text" id="editSupplierYapeHolderInput" class="form-control">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelEditSupplierModalBtn">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Editar Gasto u Obligacion Registrada (Asistente) -->
+  <div class="modal-backdrop hidden" id="editExpenseModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">Editar Gasto u Obligación</div>
+        <button class="modal-close-btn" id="closeEditExpenseModalBtn" type="button">&times;</button>
+      </div>
+      <form id="editExpenseForm">
+        <div class="modal-body">
+          <input type="hidden" id="editExpenseId">
+
+          <div class="form-group">
+            <label for="editExpenseReceiptIdInput">Identificación del Recibo / Código de Suministro</label>
+            <input type="text" id="editExpenseReceiptIdInput" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="editExpenseDescInput">Descripción del Gasto</label>
+            <input type="text" id="editExpenseDescInput" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="editExpenseSupplierSelect">Proveedor / Entidad Asociada</label>
+            <select id="editExpenseSupplierSelect" class="form-control" required></select>
+          </div>
+
+          <div class="form-group">
+            <label for="editExpenseTypeSelect">Tipo de Gasto</label>
+            <select id="editExpenseTypeSelect" class="form-control" required></select>
+          </div>
+
+          <div class="form-group">
+            <label for="editExpenseAmountInput">Monto (Soles)</label>
+            <input type="number" step="0.01" min="0.01" id="editExpenseAmountInput" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label for="editExpenseDueDateInput">Fecha de Vencimiento</label>
+            <input type="date" id="editExpenseDueDateInput" class="form-control" required>
+          </div>
+
+          <!-- Campos adicionales si ya fue pagado para corrección de datos -->
+          <div id="editExpensePaymentFields" class="hidden content-panel" style="background-color: var(--color-secondary-bg); padding: 12px; margin-bottom: 0;">
+            <div style="font-weight: 600; font-size: 14px; margin-bottom: 8px;">Datos del Pago Realizado (Para corrección de errores)</div>
+            <div class="form-group">
+              <label for="editExpensePaymentDateInput">Fecha del Pago</label>
+              <input type="date" id="editExpensePaymentDateInput" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="editExpensePaymentMethodSelect">Método de Pago Utilizado</label>
+              <select id="editExpensePaymentMethodSelect" class="form-control"></select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="editExpenseRefInput">Número de Operación / Constancia</label>
+              <input type="text" id="editExpenseRefInput" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelEditExpenseModalBtn">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </div>
+      </form>
     </div>
   </div>
 

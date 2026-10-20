@@ -579,12 +579,20 @@ def build_document():
             "val": "Cumple Criterio 2.4: Privacidad y aislamiento de credenciales bancarias personales del gerente."
         },
         {
+            "num": "Paso 7b",
+            "title": "Registro Dinámico de Cuentas y Tarjetas Bancarias del Gerente (Observación Cuentas)",
+            "hu": "HU-02: Administración de Instrumentos Bancarios de Gerencia",
+            "desc": "El Gerente cuenta con el botón 'Nueva Cuenta / Tarjeta' para registrar entidades financieras (BCP, BBVA, Scotiabank, Interbank), tipo de instrumento (Cuenta Corriente, Ahorros, Tarjeta Débito/Crédito), titular, número enmascarado y moneda (PEN/USD).",
+            "img": "07b_modal_nueva_cuenta_tarjeta.png",
+            "val": "Cumple Requerimiento: Registro dinámico y gestión de medios de pago bancarios por Gerencia."
+        },
+        {
             "num": "Paso 8",
-            "title": "Gobierno por Gerencia: Registro de Proveedor con Billetera Digital Yape (HU-04, Criterio 4.1)",
+            "title": "Gobierno por Gerencia: Registro de Proveedor y Validación Estricta de Teléfono en Perú (HU-04, Criterio 4.1)",
             "hu": "HU-04: Gobierno de Proveedores y Tipos de Gasto por Gerencia",
-            "desc": "Formulario exclusivo de Gerencia para dar de alta acreedores. Permite activar la casilla Yape, ingresando el número celular y el nombre del titular/alias para que el asistente cuente con la información oficial.",
+            "desc": "Formulario exclusivo de Gerencia para dar de alta acreedores. Se incluye validación estricta para teléfonos peruanos: únicamente se admiten números y exactamente 9 dígitos, bloqueando caracteres alfabéticos.",
             "img": "08_modal_nuevo_proveedor_yape.png",
-            "val": "Cumple Criterio 4.1: Registro centralizado de acreedores y configuración de billeteras digitales."
+            "val": "Cumple Criterio 4.1 y Validación Perú: Teléfono y número de Yape limitados a exactamente 9 dígitos numéricos."
         },
         {
             "num": "Paso 9",
@@ -595,20 +603,44 @@ def build_document():
             "val": "Cumple Criterio 4.2: Categorización dinámica y estandarizada de gastos definida por gerencia."
         },
         {
+            "num": "Paso 9b",
+            "title": "Habilitación y Gestión de Métodos de Pago por Gerencia (Observación Métodos de Pago)",
+            "hu": "HU-04 / HU-05: Medios de Pago Habilitados",
+            "desc": "El Gerente dispone del botón 'Métodos de Pago' para incorporar nuevas modalidades de cancelación (ej. Plin, PagoEfectivo, Tarjeta de Crédito Corporativa). Los métodos agregados se reflejan inmediatamente en el formulario de liquidación del Asistente.",
+            "img": "09b_modal_metodos_pago.png",
+            "val": "Cumple Requerimiento: Parametrización dinámica de métodos de pago autorizados por Gerencia."
+        },
+        {
             "num": "Paso 10",
             "title": "Catálogo Consolidado de Proveedores Registrados (HU-04, Criterio 4.3)",
             "hu": "HU-04: Gobierno de Proveedores y Tipos de Gasto por Gerencia",
-            "desc": "Directorio autorizado donde se detalla el RUC, razón social, rubro, contacto telefónico y si cuenta con Yape habilitado con su respectivo titular.",
+            "desc": "Directorio autorizado donde se detalla el RUC, razón social, rubro, contacto telefónico (9 dígitos) y estado de Yape con botón 'Editar' para mantenimiento.",
             "img": "10_catalogo_proveedores.png",
             "val": "Cumple Criterio 4.3: Directorio autorizado y transparente para el equipo administrativo."
         },
         {
+            "num": "Paso 10b",
+            "title": "Edición y Mantenimiento de Proveedores Registrados (Observación Edición Proveedores)",
+            "hu": "HU-04: Mantenimiento del Directorio de Proveedores",
+            "desc": "Permite corregir en cualquier momento la información comercial, razón social, teléfonos o configuración de billeteras digitales de los proveedores registrados sin necesidad de eliminarlos ni duplicarlos.",
+            "img": "10b_modal_editar_proveedor.png",
+            "val": "Cumple Requerimiento: Mantenimiento y actualización ágil de datos de proveedores."
+        },
+        {
             "num": "Paso 11",
-            "title": "Consola Operativa del Asistente con Filtros Dinámicos (HU-01, Criterio 1.4)",
-            "hu": "HU-01: Autenticación y Control de Acceso por Rol",
-            "desc": "El Asistente inicia sesión y accede a su consola de pagos del mes. Cuenta con filtros por Proveedor, Tipo de Gasto, Estado (Pendiente / Realizado / Todos) y Orden cronológico o por monto.",
+            "title": "Consola del Asistente con Alerta de Deudas Anteriores y N° Operación (HU-01, HU-02, Criterios 1.4, 2.1)",
+            "hu": "HU-01 / HU-02: Consola Operativa y Alertas Financieras",
+            "desc": "El Asistente inicia sesión y visualiza de inmediato un banner destacado de advertencia cuando existen obligaciones vencidas de meses pasados sin pagar, con acceso directo a revisarlas. Además, la tabla incluye la columna 'N° Operación' y filtros multidimensionales.",
             "img": "11_asistente_consola_octubre.png",
-            "val": "Cumple Criterio 1.4: Espacio de trabajo enfocado y sin distracciones para el asistente."
+            "val": "Cumple Criterio 1.4 y Observación Alerta: Alerta prominente de deudas de meses pasados y visibilidad de N° Operación."
+        },
+        {
+            "num": "Paso 11b",
+            "title": "Salto Rápido a Cualquier Periodo (Mes y Año) (Observación Navegación Temporal)",
+            "hu": "HU-02: Navegación Temporal Ágil sin Exceso de Clics",
+            "desc": "Mediante el selector directo de Mes y Año situado en la barra de navegación, el usuario puede saltar de inmediato a cualquier periodo histórico o futuro (ej. Septiembre 2026 o años lejanos como 2017) en un solo clic, sin requerir decenas de pulsaciones consecutivas.",
+            "img": "11b_salto_periodo_rapido.png",
+            "val": "Cumple Requerimiento: Salto directo y ágil a cualquier año y mes especificado."
         },
         {
             "num": "Paso 12",
@@ -640,11 +672,19 @@ def build_document():
         },
         {
             "num": "Paso 15",
-            "title": "Actualización Inmediata a Estado 'Realizado' (HU-05, Criterio 5.3)",
-            "hu": "HU-05: Liquidación de Pagos con Yape, Efectivo y Evidencia Fotográfica",
-            "desc": "Al confirmar el pago indicando el método y número de constancia, la obligación pasa al estado 'Realizado' y muestra la fecha y el método empleado. El registro se traslada a la lista de completados del Asistente y actualiza en tiempo real los totales en el Dashboard del Gerente.",
+            "title": "Actualización a Estado 'Realizado', N° de Operación y Visualización Conjunta de Titular y Voucher (HU-05, Criterio 5.3)",
+            "hu": "HU-05: Liquidación de Pagos y Auditoría Documental Simultánea",
+            "desc": "Al registrar el pago, se muestra claramente el N° de Operación en la tabla ('OP-9988221'). Además, se mantienen disponibles simultáneamente AMBOS botones: 'Ver Titular / DNI' y 'Ver Voucher', permitiendo auditar tanto la acreditación del recibo propio como el comprobante bancario del pago.",
             "img": "15_asistente_pago_completado.png",
-            "val": "Cumple Criterio 5.3: Actualización reactiva de estado y sincronización de balance."
+            "val": "Cumple Criterio 5.3 y Observaciones Compañero: N° Operación visible y acceso simultáneo a Titular y Voucher de pago."
+        },
+        {
+            "num": "Paso 15b",
+            "title": "Edición y Corrección de Gastos y Pagos por el Asistente (Observación Edición Pagos)",
+            "hu": "HU-03 / HU-05: Edición y Rectificación Administrativa",
+            "desc": "En caso de error en el importe, descripción, fecha de vencimiento o número de operación ingresado, el Asistente puede hacer clic en 'Editar' para rectificar los datos sin alterar la trazabilidad del sistema.",
+            "img": "15b_modal_editar_gasto_asistente.png",
+            "val": "Cumple Requerimiento: Flexibilidad administrativa para corrección de pagos registrados."
         },
         {
             "num": "Paso 16",

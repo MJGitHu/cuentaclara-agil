@@ -864,4 +864,63 @@ body {
   text-transform: uppercase;
 }
 
+/* ==========================================================================
+   Controles Adicionales: Salto de Periodo, Métodos de Pago y Evidencias
+   ========================================================================== */
+
+.period-jump-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--color-secondary-bg);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+}
+
+.payment-method-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background-color: var(--color-secondary-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.payment-method-name {
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.evidence-btns-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.evidence-btns-cell .btn-link {
+  text-align: left;
+}
+
+.table-actions-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+@media (max-width: 768px) {
+  .period-navigator {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .period-jump-container {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
 

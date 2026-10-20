@@ -576,10 +576,52 @@
     }
   };
 
+  const DEFAULT_PAYMENT_METHODS = [
+    'Transferencia Bancaria',
+    'Yape (Billetera Digital)',
+    'Efectivo',
+    'Tarjeta de Débito',
+    'Tarjeta de Crédito',
+    'Plin (Billetera Digital)',
+    'PagoEfectivo'
+  ];
+
+  const DEFAULT_ACCOUNTS = [
+    {
+      id: 'acc-1',
+      bank: 'Banco de Crédito del Perú (BCP)',
+      type: 'Cuenta Corriente Soles',
+      holder: 'Carlos Mendoza',
+      identifier: 'CTA: 191-8849201-0-45',
+      currency: 'PEN',
+      status: 'Activa'
+    },
+    {
+      id: 'acc-2',
+      bank: 'BBVA Continental',
+      type: 'Tarjeta Débito Empresarial',
+      holder: 'Carlos Mendoza',
+      identifier: 'Terminación **** 4819',
+      currency: 'PEN',
+      status: 'Activa'
+    },
+    {
+      id: 'acc-3',
+      bank: 'Interbank',
+      type: 'Cuenta de Ahorros Tributaria',
+      holder: 'Carlos Mendoza',
+      identifier: 'CTA: 200-3004819-2-11',
+      currency: 'PEN',
+      status: 'Activa'
+    }
+  ];
+
   const STORAGE_KEYS = {
     SUPPLIERS: 'cuentaclara_suppliers_v4',
     EXPENSES: 'cuentaclara_expenses_v4',
     TYPES: 'cuentaclara_types_v4',
+    METHODS: 'cuentaclara_methods_v4',
+    ACCOUNTS: 'cuentaclara_accounts_v4',
     SESSION: 'cuentaclara_session_v4'
   };
 
@@ -598,6 +640,12 @@
       }
       if (localStorage.getItem(STORAGE_KEYS.TYPES) === null) {
         localStorage.setItem(STORAGE_KEYS.TYPES, JSON.stringify(DEFAULT_EXPENSE_TYPES));
+      }
+      if (localStorage.getItem(STORAGE_KEYS.METHODS) === null) {
+        localStorage.setItem(STORAGE_KEYS.METHODS, JSON.stringify(DEFAULT_PAYMENT_METHODS));
+      }
+      if (localStorage.getItem(STORAGE_KEYS.ACCOUNTS) === null) {
+        localStorage.setItem(STORAGE_KEYS.ACCOUNTS, JSON.stringify([]));
       }
     },
 
@@ -626,6 +674,17 @@
       return newSupplier;
     },
 
+    updateSupplier(supplierData) {
+      const suppliers = this.getSuppliers();
+      const idx = suppliers.findIndex(s => s.id === supplierData.id);
+      if (idx !== -1) {
+        suppliers[idx] = { ...suppliers[idx], ...supplierData };
+        this.saveSuppliers(suppliers);
+        return suppliers[idx];
+      }
+      return null;
+    },
+
     getExpenseTypes() {
       const data = localStorage.getItem(STORAGE_KEYS.TYPES);
       return data ? JSON.parse(data) : DEFAULT_EXPENSE_TYPES;
@@ -639,6 +698,59 @@
         localStorage.setItem(STORAGE_KEYS.TYPES, JSON.stringify(types));
       }
       return types;
+    },
+
+    getPaymentMethods() {
+      const data = localStorage.getItem(STORAGE_KEYS.METHODS);
+      return data ? JSON.parse(data) : DEFAULT_PAYMENT_METHODS;
+    },
+
+    savePaymentMethods(methods) {
+      localStorage.setItem(STORAGE_KEYS.METHODS, JSON.stringify(methods));
+    },
+
+    addPaymentMethod(methodName) {
+      const methods = this.getPaymentMethods();
+      const clean = methodName.trim();
+      if (clean && !methods.includes(clean)) {
+        methods.push(clean);
+        this.savePaymentMethods(methods);
+      }
+      return methods;
+    },
+
+    deletePaymentMethod(methodName) {
+      let methods = this.getPaymentMethods();
+      methods = methods.filter(m => m !== methodName);
+      this.savePaymentMethods(methods);
+      return methods;
+    },
+
+    getAccounts() {
+      const data = localStorage.getItem(STORAGE_KEYS.ACCOUNTS);
+      return data ? JSON.parse(data) : [];
+    },
+
+    saveAccounts(accounts) {
+      localStorage.setItem(STORAGE_KEYS.ACCOUNTS, JSON.stringify(accounts));
+    },
+
+    addAccount(accountData) {
+      const accounts = this.getAccounts();
+      const newAccount = {
+        id: 'acc-' + Date.now(),
+        ...accountData
+      };
+      accounts.push(newAccount);
+      this.saveAccounts(accounts);
+      return newAccount;
+    },
+
+    deleteAccount(accountId) {
+      let accounts = this.getAccounts();
+      accounts = accounts.filter(a => a.id !== accountId);
+      this.saveAccounts(accounts);
+      return accounts;
     },
 
     getExpenses() {
@@ -669,6 +781,17 @@
       expenses.push(newExpense);
       this.saveExpenses(expenses);
       return newExpense;
+    },
+
+    updateExpense(expenseData) {
+      const expenses = this.getExpenses();
+      const idx = expenses.findIndex(e => e.id === expenseData.id);
+      if (idx !== -1) {
+        expenses[idx] = { ...expenses[idx], ...expenseData };
+        this.saveExpenses(expenses);
+        return expenses[idx];
+      }
+      return null;
     },
 
     markExpenseAsPaid(expenseId, paymentDate, paymentMethod, ref, photoData) {
@@ -703,12 +826,16 @@
       localStorage.setItem(STORAGE_KEYS.SUPPLIERS, JSON.stringify(DEFAULT_SUPPLIERS));
       localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(DEFAULT_EXPENSES));
       localStorage.setItem(STORAGE_KEYS.TYPES, JSON.stringify(DEFAULT_EXPENSE_TYPES));
+      localStorage.setItem(STORAGE_KEYS.METHODS, JSON.stringify(DEFAULT_PAYMENT_METHODS));
+      localStorage.setItem(STORAGE_KEYS.ACCOUNTS, JSON.stringify(DEFAULT_ACCOUNTS));
     },
 
     clearAllData() {
       localStorage.setItem(STORAGE_KEYS.SUPPLIERS, JSON.stringify([]));
       localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify([]));
       localStorage.setItem(STORAGE_KEYS.TYPES, JSON.stringify(DEFAULT_EXPENSE_TYPES));
+      localStorage.setItem(STORAGE_KEYS.METHODS, JSON.stringify(DEFAULT_PAYMENT_METHODS));
+      localStorage.setItem(STORAGE_KEYS.ACCOUNTS, JSON.stringify([]));
     },
 
     resetDemoData() {
@@ -840,6 +967,10 @@
     prevMonthBtn: document.getElementById('prevMonthBtn'),
     nextMonthBtn: document.getElementById('nextMonthBtn'),
     currentPeriodLabel: document.getElementById('currentPeriodLabel'),
+    jumpMonthSelect: document.getElementById('jumpMonthSelect'),
+    jumpYearInput: document.getElementById('jumpYearInput'),
+    applyPeriodJumpBtn: document.getElementById('applyPeriodJumpBtn'),
+    jumpCurrentMonthBtn: document.getElementById('jumpCurrentMonthBtn'),
 
     // Login
     loginView: document.getElementById('loginView'),
@@ -869,10 +1000,32 @@
     managerAllExpensesTableBody: document.getElementById('managerAllExpensesTableBody'),
     managerAllExpensesEmpty: document.getElementById('managerAllExpensesEmpty'),
 
-    // Acciones de Gerente
+    // Cuentas y Tarjetas Bancarias del Gerente
+    openNewAccountModalBtn: document.getElementById('openNewAccountModalBtn'),
+    managerAccountsTableBody: document.getElementById('managerAccountsTableBody'),
+    managerAccountsEmpty: document.getElementById('managerAccountsEmpty'),
+    newAccountModal: document.getElementById('newAccountModal'),
+    newAccountForm: document.getElementById('newAccountForm'),
+    accountBankInput: document.getElementById('accountBankInput'),
+    accountTypeSelect: document.getElementById('accountTypeSelect'),
+    accountHolderInput: document.getElementById('accountHolderInput'),
+    accountIdentifierInput: document.getElementById('accountIdentifierInput'),
+    accountCurrencySelect: document.getElementById('accountCurrencySelect'),
+    accountStatusSelect: document.getElementById('accountStatusSelect'),
+    closeNewAccountModalBtn: document.getElementById('closeNewAccountModalBtn'),
+    cancelNewAccountModalBtn: document.getElementById('cancelNewAccountModalBtn'),
+
+    // Acciones de Gerente y Métodos de Pago
     openGerenteNewSupplierModalBtn: document.getElementById('openGerenteNewSupplierModalBtn'),
     openNewExpenseTypeModalBtn: document.getElementById('openNewExpenseTypeModalBtn'),
     openSupplierListModalBtn: document.getElementById('openSupplierListModalBtn'),
+    openPaymentMethodsModalBtn: document.getElementById('openPaymentMethodsModalBtn'),
+    paymentMethodsModal: document.getElementById('paymentMethodsModal'),
+    newPaymentMethodForm: document.getElementById('newPaymentMethodForm'),
+    newPaymentMethodNameInput: document.getElementById('newPaymentMethodNameInput'),
+    paymentMethodsListContainer: document.getElementById('paymentMethodsListContainer'),
+    closePaymentMethodsModalBtn: document.getElementById('closePaymentMethodsModalBtn'),
+    closePaymentMethodsFooterBtn: document.getElementById('closePaymentMethodsFooterBtn'),
 
     // Asistente View
     asistenteView: document.getElementById('asistenteView'),
@@ -884,6 +1037,9 @@
     resetFiltersBtn: document.getElementById('resetFiltersBtn'),
     assistantPaymentsTableBody: document.getElementById('assistantPaymentsTableBody'),
     assistantPaymentsEmpty: document.getElementById('assistantPaymentsEmpty'),
+    asistenteOverdueAlert: document.getElementById('asistenteOverdueAlert'),
+    asistenteOverdueAlertText: document.getElementById('asistenteOverdueAlertText'),
+    btnGoToOverduePeriod: document.getElementById('btnGoToOverduePeriod'),
 
     // Modal: Registrar Pago
     recordPaymentModal: document.getElementById('recordPaymentModal'),
@@ -943,6 +1099,40 @@
     supplierYapeHolderInput: document.getElementById('supplierYapeHolderInput'),
     closeSupplierModalBtn: document.getElementById('closeSupplierModalBtn'),
     cancelSupplierModalBtn: document.getElementById('cancelSupplierModalBtn'),
+
+    // Modal: Editar Proveedor
+    editSupplierModal: document.getElementById('editSupplierModal'),
+    editSupplierForm: document.getElementById('editSupplierForm'),
+    editSupplierId: document.getElementById('editSupplierId'),
+    editSupplierRucInput: document.getElementById('editSupplierRucInput'),
+    editSupplierNameInput: document.getElementById('editSupplierNameInput'),
+    editSupplierCategorySelect: document.getElementById('editSupplierCategorySelect'),
+    editSupplierContactInput: document.getElementById('editSupplierContactInput'),
+    editSupplierPhoneInput: document.getElementById('editSupplierPhoneInput'),
+    editSupplierEmailInput: document.getElementById('editSupplierEmailInput'),
+    editSupplierHasYapeCheck: document.getElementById('editSupplierHasYapeCheck'),
+    editSupplierYapeFields: document.getElementById('editSupplierYapeFields'),
+    editSupplierYapePhoneInput: document.getElementById('editSupplierYapePhoneInput'),
+    editSupplierYapeHolderInput: document.getElementById('editSupplierYapeHolderInput'),
+    closeEditSupplierModalBtn: document.getElementById('closeEditSupplierModalBtn'),
+    cancelEditSupplierModalBtn: document.getElementById('cancelEditSupplierModalBtn'),
+
+    // Modal: Editar Gasto / Pago (Asistente)
+    editExpenseModal: document.getElementById('editExpenseModal'),
+    editExpenseForm: document.getElementById('editExpenseForm'),
+    editExpenseId: document.getElementById('editExpenseId'),
+    editExpenseReceiptIdInput: document.getElementById('editExpenseReceiptIdInput'),
+    editExpenseDescInput: document.getElementById('editExpenseDescInput'),
+    editExpenseSupplierSelect: document.getElementById('editExpenseSupplierSelect'),
+    editExpenseTypeSelect: document.getElementById('editExpenseTypeSelect'),
+    editExpenseAmountInput: document.getElementById('editExpenseAmountInput'),
+    editExpenseDueDateInput: document.getElementById('editExpenseDueDateInput'),
+    editExpensePaymentFields: document.getElementById('editExpensePaymentFields'),
+    editExpensePaymentDateInput: document.getElementById('editExpensePaymentDateInput'),
+    editExpensePaymentMethodSelect: document.getElementById('editExpensePaymentMethodSelect'),
+    editExpenseRefInput: document.getElementById('editExpenseRefInput'),
+    closeEditExpenseModalBtn: document.getElementById('closeEditExpenseModalBtn'),
+    cancelEditExpenseModalBtn: document.getElementById('cancelEditExpenseModalBtn'),
 
     // Modal: Nuevo Tipo de Gasto (Gerente)
     newExpenseTypeModal: document.getElementById('newExpenseTypeModal'),
@@ -1039,8 +1229,17 @@
         const supplierName = supplierMap.get(exp.supplierId) || 'No especificado';
         const isPaid = exp.status === 'realizado';
 
+        // N° Operación visible tanto para Gerente como Asistente
+        const opCell = isPaid && exp.ref
+          ? `<code class="receipt-id-tag">${escapeHtml(exp.ref)}</code>`
+          : '<span style="color: var(--color-text-muted);">-</span>';
+
+        // Ambos botones visibles a la vez cuando está pagado (Observación Compañero)
         const proofCell = isPaid
-          ? `<button type="button" class="btn-link view-receipt-btn" data-id="${exp.id}">Ver Voucher</button>`
+          ? `<div class="evidence-btns-cell">
+               <button type="button" class="btn-link view-titular-btn" data-id="${exp.id}">Ver Titular / DNI</button>
+               <button type="button" class="btn-link view-receipt-btn" data-id="${exp.id}" style="color: #059669; font-weight: 600;">Ver Voucher</button>
+             </div>`
           : `<button type="button" class="btn-link view-titular-btn" data-id="${exp.id}">Ver Titular / DNI</button>`;
 
         tr.innerHTML = `
@@ -1050,6 +1249,7 @@
           <td><span class="badge badge-type">${escapeHtml(exp.type)}</span></td>
           <td>${formatDate(exp.dueDate)}</td>
           <td class="amount-col">${formatCurrency(exp.amount)}</td>
+          <td>${opCell}</td>
           <td>${proofCell}</td>
           <td><span class="badge ${isPaid ? 'badge-paid' : 'badge-pending'}">${isPaid ? 'Realizado' : 'Pendiente'}</span></td>
         `;
@@ -1069,6 +1269,111 @@
           const id = btn.getAttribute('data-id');
           showPaymentPhoto(id);
         });
+      });
+    }
+
+    // Renderizar cuentas bancarias dinámicas del gerente
+    renderManagerAccounts();
+  }
+
+  // ==========================================================================
+  // Renderizado: Cuentas Bancarias y Tarjetas del Gerente
+  // ==========================================================================
+
+  function renderManagerAccounts() {
+    if (!DOM.managerAccountsTableBody) return;
+    const accounts = Store.getAccounts();
+    DOM.managerAccountsTableBody.innerHTML = '';
+
+    if (accounts.length === 0) {
+      if (DOM.managerAccountsEmpty) DOM.managerAccountsEmpty.classList.remove('hidden');
+    } else {
+      if (DOM.managerAccountsEmpty) DOM.managerAccountsEmpty.classList.add('hidden');
+      accounts.forEach(acc => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${escapeHtml(acc.bank)}</strong></td>
+          <td>${escapeHtml(acc.type)}</td>
+          <td>${escapeHtml(acc.holder)}</td>
+          <td><code>${escapeHtml(acc.identifier)}</code></td>
+          <td><span class="badge badge-type">${escapeHtml(acc.currency)}</span></td>
+          <td><span class="badge ${acc.status === 'Activa' ? 'badge-paid' : 'badge-pending'}">${escapeHtml(acc.status)}</span></td>
+          <td style="text-align: right;">
+            <button type="button" class="btn btn-secondary btn-sm delete-account-btn" data-id="${acc.id}">Eliminar</button>
+          </td>
+        `;
+        DOM.managerAccountsTableBody.appendChild(tr);
+      });
+
+      DOM.managerAccountsTableBody.querySelectorAll('.delete-account-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          if (confirm('¿Está seguro de eliminar esta cuenta bancaria o tarjeta?')) {
+            Store.deleteAccount(id);
+            renderManagerAccounts();
+            showToast('Cuenta eliminada de la base de datos.', 'info');
+          }
+        });
+      });
+    }
+  }
+
+  // ==========================================================================
+  // Renderizado: Métodos de Pago Habilitados (Gerente)
+  // ==========================================================================
+
+  function renderPaymentMethods() {
+    if (!DOM.paymentMethodsListContainer) return;
+    const methods = Store.getPaymentMethods();
+    DOM.paymentMethodsListContainer.innerHTML = '';
+
+    methods.forEach(method => {
+      const item = document.createElement('div');
+      item.className = 'payment-method-item';
+      item.innerHTML = `
+        <span class="payment-method-name">${escapeHtml(method)}</span>
+        <button type="button" class="btn btn-secondary btn-sm delete-method-btn" data-name="${escapeHtml(method)}">Eliminar</button>
+      `;
+      DOM.paymentMethodsListContainer.appendChild(item);
+    });
+
+    DOM.paymentMethodsListContainer.querySelectorAll('.delete-method-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const name = btn.getAttribute('data-name');
+        if (confirm(`¿Desea eliminar el método de pago "${name}"?`)) {
+          Store.deletePaymentMethod(name);
+          renderPaymentMethods();
+          updatePaymentMethodSelects();
+          showToast(`Método de pago "${name}" eliminado.`, 'info');
+        }
+      });
+    });
+  }
+
+  function updatePaymentMethodSelects() {
+    const methods = Store.getPaymentMethods();
+
+    // Selector en Modal Registrar Pago
+    if (DOM.paymentMethodSelect) {
+      const currentVal = DOM.paymentMethodSelect.value;
+      DOM.paymentMethodSelect.innerHTML = '<option value="">Seleccione un método</option>';
+      methods.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = m;
+        DOM.paymentMethodSelect.appendChild(opt);
+      });
+      DOM.paymentMethodSelect.value = currentVal;
+    }
+
+    // Selector en Modal Editar Pago
+    if (DOM.editExpensePaymentMethodSelect) {
+      DOM.editExpensePaymentMethodSelect.innerHTML = '<option value="">Seleccione un método</option>';
+      methods.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m;
+        opt.textContent = m;
+        DOM.editExpensePaymentMethodSelect.appendChild(opt);
       });
     }
   }
@@ -1099,6 +1404,17 @@
       opt.textContent = t;
       DOM.expenseTypeSelect.appendChild(opt);
     });
+
+    // Selector en Modal Editar Gasto
+    if (DOM.editExpenseTypeSelect) {
+      DOM.editExpenseTypeSelect.innerHTML = '<option value="">Seleccione un tipo</option>';
+      types.forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        DOM.editExpenseTypeSelect.appendChild(opt);
+      });
+    }
 
     // Lista de tipos en modal de gerente
     DOM.currentExpenseTypesList.innerHTML = '';
@@ -1132,6 +1448,17 @@
       opt.textContent = `${s.name} (${s.category})${s.hasYape ? ' - Acepta Yape' : ''}`;
       DOM.expenseSupplierSelect.appendChild(opt);
     });
+
+    // Selector en Modal Editar Gasto
+    if (DOM.editExpenseSupplierSelect) {
+      DOM.editExpenseSupplierSelect.innerHTML = '<option value="">Seleccione un proveedor</option>';
+      suppliers.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.id;
+        opt.textContent = `${s.name} (${s.category})`;
+        DOM.editExpenseSupplierSelect.appendChild(opt);
+      });
+    }
   }
 
   function renderAssistantPayments() {
@@ -1140,6 +1467,21 @@
     const supplierMap = new Map(suppliers.map(s => [s.id, s.name]));
 
     const periodKey = getActivePeriodKey(); // Ej. '2026-10'
+
+    // Alerta de deudas pendientes de meses anteriores para el Asistente (Observación Compañero)
+    const overdueExpenses = expenses.filter(e => {
+      return e.status === 'pendiente' && e.dueDate && e.dueDate < `${periodKey}-01`;
+    });
+
+    if (DOM.asistenteOverdueAlert) {
+      if (overdueExpenses.length > 0) {
+        const totalOverdue = overdueExpenses.reduce((sum, e) => sum + parseFloat(e.amount), 0);
+        DOM.asistenteOverdueAlertText.textContent = `Existen ${overdueExpenses.length} deuda(s) vencida(s) de meses anteriores por un total de ${formatCurrency(totalOverdue)}.`;
+        DOM.asistenteOverdueAlert.classList.remove('hidden');
+      } else {
+        DOM.asistenteOverdueAlert.classList.add('hidden');
+      }
+    }
 
     const supplierFilter = DOM.filterSupplier.value;
     const typeFilter = DOM.filterType.value;
@@ -1188,17 +1530,30 @@
         const supplierName = supplierMap.get(exp.supplierId) || 'No especificado';
         const isPaid = exp.status === 'realizado';
 
+        // N° Operación visible tanto para Gerente como Asistente
+        const opCell = isPaid && exp.ref
+          ? `<code class="receipt-id-tag">${escapeHtml(exp.ref)}</code>`
+          : '<span style="color: var(--color-text-muted);">-</span>';
+
+        // Ambos botones visibles a la vez cuando está pagado
         const titularCell = `
           <button type="button" class="btn-link view-titular-btn" data-id="${exp.id}">Ver Titular / DNI</button>
         `;
 
         const receiptCell = isPaid
-          ? `<button type="button" class="btn-link view-receipt-btn" data-id="${exp.id}">Ver Voucher</button>`
-          : '<span class="form-hint">Pendiente</span>';
+          ? `<button type="button" class="btn-link view-receipt-btn" data-id="${exp.id}" style="color: #059669; font-weight: 600;">Ver Voucher</button>`
+          : '<span class="form-hint">Sin voucher</span>';
 
-        const actionCell = isPaid
-          ? `<span style="color: var(--color-text-muted); font-size: 13px;">Pagado el ${formatDate(exp.paymentDate)}</span>`
-          : `<button type="button" class="btn btn-primary btn-sm record-btn" data-id="${exp.id}">Registrar Pago</button>`;
+        // Acciones: Botón de editar gasto/pago en caso de equivocación + acción de registrar pago
+        const actionCell = `
+          <div class="table-actions-cell">
+            <button type="button" class="btn btn-secondary btn-sm edit-expense-btn" data-id="${exp.id}">Editar</button>
+            ${isPaid
+              ? `<span style="color: var(--color-text-muted); font-size: 12px; margin-left: 4px;">Pagado (${formatDate(exp.paymentDate)})</span>`
+              : `<button type="button" class="btn btn-primary btn-sm record-btn" data-id="${exp.id}">Registrar Pago</button>`
+            }
+          </div>
+        `;
 
         tr.innerHTML = `
           <td><span class="receipt-id-tag">${escapeHtml(exp.receiptId || 'S/N')}</span></td>
@@ -1208,6 +1563,7 @@
           <td>${formatDate(exp.dueDate)}</td>
           <td class="amount-col">${formatCurrency(exp.amount)}</td>
           <td><span class="badge ${isPaid ? 'badge-paid' : 'badge-pending'}">${isPaid ? 'Realizado' : 'Pendiente'}</span></td>
+          <td>${opCell}</td>
           <td>${titularCell}</td>
           <td>${receiptCell}</td>
           <td style="text-align: right;">${actionCell}</td>
@@ -1220,6 +1576,13 @@
         btn.addEventListener('click', () => {
           const id = btn.getAttribute('data-id');
           openRecordPaymentModal(id);
+        });
+      });
+
+      DOM.assistantPaymentsTableBody.querySelectorAll('.edit-expense-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          openEditExpenseModal(id);
         });
       });
 
@@ -1245,26 +1608,43 @@
     suppliers.forEach(s => {
       const tr = document.createElement('tr');
       const yapeInfo = s.hasYape
-        ? `<span class="badge badge-paid">Sí</span> (${escapeHtml(s.yapePhone)} - ${escapeHtml(s.yapeHolder)})`
+        ? `<span class="badge badge-paid">Sí</span> (${escapeHtml(s.yapePhone || '-')})`
         : '<span class="badge badge-type">No</span>';
 
       tr.innerHTML = `
         <td><strong>${escapeHtml(s.ruc)}</strong></td>
         <td>${escapeHtml(s.name)}</td>
         <td><span class="badge badge-type">${escapeHtml(s.category)}</span></td>
-        <td>${escapeHtml(s.contact)} (${escapeHtml(s.phone)})</td>
+        <td>${escapeHtml(s.contact)}</td>
+        <td><code>${escapeHtml(s.phone)}</code></td>
         <td>${yapeInfo}</td>
+        <td style="text-align: right;">
+          <button type="button" class="btn btn-secondary btn-sm edit-supplier-btn" data-id="${s.id}">Editar</button>
+        </td>
       `;
       DOM.supplierCatalogTableBody.appendChild(tr);
+    });
+
+    DOM.supplierCatalogTableBody.querySelectorAll('.edit-supplier-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        openEditSupplierModal(id);
+      });
     });
   }
 
   // ==========================================================================
-  // Actualización de Vistas según Periodo
+  // Sincronización y Navegación de Periodo
   // ==========================================================================
+
+  function syncPeriodJumpInputs() {
+    if (DOM.jumpMonthSelect) DOM.jumpMonthSelect.value = String(activePeriodMonth);
+    if (DOM.jumpYearInput) DOM.jumpYearInput.value = String(activePeriodYear);
+  }
 
   function updatePeriodViews() {
     DOM.currentPeriodLabel.textContent = getActivePeriodLabel();
+    syncPeriodJumpInputs();
 
     const activeSession = Store.getSession();
     if (activeSession) {
@@ -1275,6 +1655,7 @@
       }
     }
   }
+
 
   // ==========================================================================
   // Gestión de Modales y Reglas de Negocio
@@ -1415,6 +1796,120 @@
 
   function closeSupplierListModal() {
     DOM.supplierListModal.classList.add('hidden');
+  }
+
+  // Modales de Métodos de Pago y Cuentas Bancarias (Gerente)
+  function openPaymentMethodsModal() {
+    renderPaymentMethods();
+    DOM.newPaymentMethodNameInput.value = '';
+    DOM.paymentMethodsModal.classList.remove('hidden');
+  }
+
+  function closePaymentMethodsModal() {
+    DOM.paymentMethodsModal.classList.add('hidden');
+    DOM.newPaymentMethodForm.reset();
+  }
+
+  function openNewAccountModal() {
+    DOM.newAccountForm.reset();
+    DOM.accountHolderInput.value = 'Carlos Mendoza';
+    DOM.accountCurrencySelect.value = 'PEN';
+    DOM.accountStatusSelect.value = 'Activa';
+    DOM.newAccountModal.classList.remove('hidden');
+  }
+
+  function closeNewAccountModal() {
+    DOM.newAccountModal.classList.add('hidden');
+    DOM.newAccountForm.reset();
+  }
+
+  // Modales de Edición (Proveedores y Gastos)
+  function openEditSupplierModal(supplierId) {
+    const s = Store.getSupplierById(supplierId);
+    if (!s) return;
+
+    DOM.editSupplierId.value = s.id;
+    DOM.editSupplierRucInput.value = s.ruc || '';
+    DOM.editSupplierNameInput.value = s.name || '';
+    DOM.editSupplierCategorySelect.value = s.category || 'Proveedor';
+    DOM.editSupplierContactInput.value = s.contact || '';
+    DOM.editSupplierPhoneInput.value = s.phone ? s.phone.replace(/\D/g, '').slice(0, 9) : '';
+    DOM.editSupplierEmailInput.value = s.email || '';
+
+    DOM.editSupplierHasYapeCheck.checked = Boolean(s.hasYape);
+    if (s.hasYape) {
+      DOM.editSupplierYapeFields.classList.remove('hidden');
+      DOM.editSupplierYapePhoneInput.value = s.yapePhone ? s.yapePhone.replace(/\D/g, '').slice(0, 9) : '';
+      DOM.editSupplierYapeHolderInput.value = s.yapeHolder || '';
+    } else {
+      DOM.editSupplierYapeFields.classList.add('hidden');
+      DOM.editSupplierYapePhoneInput.value = '';
+      DOM.editSupplierYapeHolderInput.value = '';
+    }
+
+    DOM.editSupplierModal.classList.remove('hidden');
+  }
+
+  function closeEditSupplierModal() {
+    DOM.editSupplierModal.classList.add('hidden');
+    DOM.editSupplierForm.reset();
+  }
+
+  function openEditExpenseModal(expenseId) {
+    const exp = Store.getExpenseById(expenseId);
+    if (!exp) return;
+
+    updateSupplierSelects();
+    updateTypeSelects();
+    updatePaymentMethodSelects();
+
+    DOM.editExpenseId.value = exp.id;
+    DOM.editExpenseReceiptIdInput.value = exp.receiptId || '';
+    DOM.editExpenseDescInput.value = exp.description || '';
+    DOM.editExpenseSupplierSelect.value = exp.supplierId || '';
+    DOM.editExpenseTypeSelect.value = exp.type || '';
+    DOM.editExpenseAmountInput.value = exp.amount;
+    DOM.editExpenseDueDateInput.value = exp.dueDate || '';
+
+    if (exp.status === 'realizado') {
+      DOM.editExpensePaymentFields.classList.remove('hidden');
+      DOM.editExpensePaymentDateInput.value = exp.paymentDate || '';
+      DOM.editExpensePaymentMethodSelect.value = exp.paymentMethod || '';
+      DOM.editExpenseRefInput.value = exp.ref || '';
+    } else {
+      DOM.editExpensePaymentFields.classList.add('hidden');
+      DOM.editExpensePaymentDateInput.value = '';
+      DOM.editExpensePaymentMethodSelect.value = '';
+      DOM.editExpenseRefInput.value = '';
+    }
+
+    DOM.editExpenseModal.classList.remove('hidden');
+  }
+
+  function closeEditExpenseModal() {
+    DOM.editExpenseModal.classList.add('hidden');
+    DOM.editExpenseForm.reset();
+  }
+
+  // Validación y Sanitización Estricta de Teléfonos Perú (9 dígitos numéricos)
+  function isValidPeruPhone(phone) {
+    return /^[0-9]{9}$/.test(phone);
+  }
+
+  function setupPhoneInputSanitizers() {
+    const phoneInputs = [
+      DOM.supplierPhoneInput,
+      DOM.supplierYapePhoneInput,
+      DOM.editSupplierPhoneInput,
+      DOM.editSupplierYapePhoneInput
+    ];
+    phoneInputs.forEach(input => {
+      if (input) {
+        input.addEventListener('input', function () {
+          this.value = this.value.replace(/\D/g, '').slice(0, 9);
+        });
+      }
+    });
   }
 
   // ==========================================================================
@@ -1586,6 +2081,7 @@
         Store.loadDemoData();
         updateSupplierSelects();
         updateTypeSelects();
+        updatePaymentMethodSelects();
         updatePeriodViews();
         showToast('Datos de prueba cargados exitosamente.', 'success');
       });
@@ -1596,10 +2092,250 @@
         Store.clearAllData();
         updateSupplierSelects();
         updateTypeSelects();
+        updatePaymentMethodSelects();
         updatePeriodViews();
         showToast('Base de datos vaciada. Sistema limpio para exposición.', 'info');
       });
     }
+
+    // Salto Directo a Periodo (Mes y Año sin exceso de clics)
+    if (DOM.applyPeriodJumpBtn) {
+      DOM.applyPeriodJumpBtn.addEventListener('click', function () {
+        const m = parseInt(DOM.jumpMonthSelect.value, 10);
+        const y = parseInt(DOM.jumpYearInput.value, 10);
+        if (!isNaN(m) && !isNaN(y)) {
+          activePeriodMonth = m;
+          activePeriodYear = y;
+          updatePeriodViews();
+          showToast(`Visualizando periodo: ${getActivePeriodLabel()}`, 'info');
+        }
+      });
+    }
+
+    if (DOM.jumpCurrentMonthBtn) {
+      DOM.jumpCurrentMonthBtn.addEventListener('click', function () {
+        activePeriodYear = 2026;
+        activePeriodMonth = 9; // Octubre 2026
+        updatePeriodViews();
+        showToast(`Periodo reestablecido a: ${getActivePeriodLabel()}`, 'info');
+      });
+    }
+
+    // Alerta de deudas pendientes en Asistente -> Botón Ver Deudas Anteriores
+    if (DOM.btnGoToOverduePeriod) {
+      DOM.btnGoToOverduePeriod.addEventListener('click', function () {
+        const expenses = Store.getExpenses();
+        const periodKey = getActivePeriodKey();
+        const overdue = expenses.filter(e => e.status === 'pendiente' && e.dueDate && e.dueDate < `${periodKey}-01`);
+        if (overdue.length > 0) {
+          const sorted = [...overdue].sort((a, b) => b.dueDate.localeCompare(a.dueDate));
+          const parts = sorted[0].dueDate.split('-');
+          activePeriodYear = parseInt(parts[0], 10);
+          activePeriodMonth = parseInt(parts[1], 10) - 1;
+        } else {
+          changePeriod(-1);
+        }
+        updatePeriodViews();
+        showToast(`Cambiado al periodo con deudas vencidas: ${getActivePeriodLabel()}`, 'info');
+      });
+    }
+
+    // Modal: Métodos de Pago Habilitados (Gerente)
+    if (DOM.openPaymentMethodsModalBtn) {
+      DOM.openPaymentMethodsModalBtn.addEventListener('click', openPaymentMethodsModal);
+    }
+    if (DOM.closePaymentMethodsModalBtn) {
+      DOM.closePaymentMethodsModalBtn.addEventListener('click', closePaymentMethodsModal);
+    }
+    if (DOM.closePaymentMethodsFooterBtn) {
+      DOM.closePaymentMethodsFooterBtn.addEventListener('click', closePaymentMethodsModal);
+    }
+
+    if (DOM.newPaymentMethodForm) {
+      DOM.newPaymentMethodForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = DOM.newPaymentMethodNameInput.value.trim();
+        if (!name) return;
+        Store.addPaymentMethod(name);
+        DOM.newPaymentMethodNameInput.value = '';
+        renderPaymentMethods();
+        updatePaymentMethodSelects();
+        showToast(`Método de pago "${name}" agregado exitosamente.`, 'success');
+      });
+    }
+
+    // Modal: Registrar Cuenta o Tarjeta Bancaria (Gerente)
+    if (DOM.openNewAccountModalBtn) {
+      DOM.openNewAccountModalBtn.addEventListener('click', openNewAccountModal);
+    }
+    if (DOM.closeNewAccountModalBtn) {
+      DOM.closeNewAccountModalBtn.addEventListener('click', closeNewAccountModal);
+    }
+    if (DOM.cancelNewAccountModalBtn) {
+      DOM.cancelNewAccountModalBtn.addEventListener('click', closeNewAccountModal);
+    }
+
+    if (DOM.newAccountForm) {
+      DOM.newAccountForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const bank = DOM.accountBankInput.value.trim();
+        const type = DOM.accountTypeSelect.value;
+        const holder = DOM.accountHolderInput.value.trim();
+        const identifier = DOM.accountIdentifierInput.value.trim();
+        const currency = DOM.accountCurrencySelect.value;
+        const status = DOM.accountStatusSelect.value;
+
+        if (!bank || !type || !holder || !identifier) {
+          alert('Por favor complete todos los datos requeridos de la cuenta.');
+          return;
+        }
+
+        Store.addAccount({
+          bank,
+          type,
+          holder,
+          identifier,
+          currency,
+          status
+        });
+
+        closeNewAccountModal();
+        renderManagerAccounts();
+        showToast('Cuenta bancaria o tarjeta guardada con éxito.', 'success');
+      });
+    }
+
+    // Modal: Editar Proveedor
+    if (DOM.closeEditSupplierModalBtn) {
+      DOM.closeEditSupplierModalBtn.addEventListener('click', closeEditSupplierModal);
+    }
+    if (DOM.cancelEditSupplierModalBtn) {
+      DOM.cancelEditSupplierModalBtn.addEventListener('click', closeEditSupplierModal);
+    }
+
+    if (DOM.editSupplierHasYapeCheck) {
+      DOM.editSupplierHasYapeCheck.addEventListener('change', function () {
+        if (DOM.editSupplierHasYapeCheck.checked) {
+          DOM.editSupplierYapeFields.classList.remove('hidden');
+        } else {
+          DOM.editSupplierYapeFields.classList.add('hidden');
+        }
+      });
+    }
+
+    if (DOM.editSupplierForm) {
+      DOM.editSupplierForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const id = DOM.editSupplierId.value;
+        const ruc = DOM.editSupplierRucInput.value.trim();
+        const name = DOM.editSupplierNameInput.value.trim();
+        const category = DOM.editSupplierCategorySelect.value;
+        const contact = DOM.editSupplierContactInput.value.trim();
+        const phone = DOM.editSupplierPhoneInput.value.trim();
+        const email = DOM.editSupplierEmailInput.value.trim();
+
+        const hasYape = DOM.editSupplierHasYapeCheck.checked;
+        const yapePhone = DOM.editSupplierYapePhoneInput.value.trim();
+        const yapeHolder = DOM.editSupplierYapeHolderInput.value.trim();
+
+        if (!ruc || !name || !category || !contact || !phone || !email) {
+          alert('Por favor complete todos los campos obligatorios del proveedor.');
+          return;
+        }
+
+        if (!isValidPeruPhone(phone)) {
+          alert('El teléfono principal debe contener exactamente 9 dígitos numéricos (formato Perú).');
+          return;
+        }
+
+        if (hasYape && yapePhone && !isValidPeruPhone(yapePhone)) {
+          alert('El número celular de Yape debe contener exactamente 9 dígitos numéricos (formato Perú).');
+          return;
+        }
+
+        Store.updateSupplier({
+          id,
+          ruc,
+          name,
+          category,
+          contact,
+          phone,
+          email,
+          hasYape,
+          yapePhone: hasYape ? yapePhone : '',
+          yapeHolder: hasYape ? yapeHolder : ''
+        });
+
+        closeEditSupplierModal();
+        renderSupplierCatalog();
+        updateSupplierSelects();
+
+        const user = Store.getSession();
+        if (user && user.role === 'gerente') {
+          renderGerenteDashboard();
+        } else {
+          renderAssistantPayments();
+        }
+        showToast(`Proveedor "${name}" actualizado con éxito.`, 'success');
+      });
+    }
+
+    // Modal: Editar Gasto u Obligación (Asistente)
+    if (DOM.closeEditExpenseModalBtn) {
+      DOM.closeEditExpenseModalBtn.addEventListener('click', closeEditExpenseModal);
+    }
+    if (DOM.cancelEditExpenseModalBtn) {
+      DOM.cancelEditExpenseModalBtn.addEventListener('click', closeEditExpenseModal);
+    }
+
+    if (DOM.editExpenseForm) {
+      DOM.editExpenseForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const id = DOM.editExpenseId.value;
+        const receiptId = DOM.editExpenseReceiptIdInput.value.trim();
+        const description = DOM.editExpenseDescInput.value.trim();
+        const supplierId = DOM.editExpenseSupplierSelect.value;
+        const type = DOM.editExpenseTypeSelect.value;
+        const amount = parseFloat(DOM.editExpenseAmountInput.value);
+        const dueDate = DOM.editExpenseDueDateInput.value;
+
+        if (!receiptId || !description || !supplierId || !type || isNaN(amount) || !dueDate) {
+          alert('Por favor complete todos los campos requeridos del gasto.');
+          return;
+        }
+
+        const existing = Store.getExpenseById(id);
+        const updateData = {
+          id,
+          receiptId,
+          description,
+          supplierId,
+          type,
+          amount,
+          dueDate
+        };
+
+        if (existing && existing.status === 'realizado') {
+          updateData.paymentDate = DOM.editExpensePaymentDateInput.value || existing.paymentDate;
+          updateData.paymentMethod = DOM.editExpensePaymentMethodSelect.value || existing.paymentMethod;
+          updateData.ref = DOM.editExpenseRefInput.value.trim() || null;
+        }
+
+        Store.updateExpense(updateData);
+        closeEditExpenseModal();
+
+        const user = Store.getSession();
+        if (user && user.role === 'gerente') {
+          renderGerenteDashboard();
+        } else {
+          renderAssistantPayments();
+        }
+        showToast(`Obligación "${description}" actualizada correctamente.`, 'success');
+      });
+    }
+
+    // Inicializar sanitizadores de teléfonos de 9 dígitos en tiempo real
+    setupPhoneInputSanitizers();
 
     // Modal: Registrar Pago
     DOM.closePaymentModalBtn.addEventListener('click', closeRecordPaymentModal);
@@ -1722,6 +2458,16 @@
 
       if (!ruc || !name || !category || !contact || !phone || !email) {
         alert('Por favor complete todos los campos obligatorios del proveedor.');
+        return;
+      }
+
+      if (!isValidPeruPhone(phone)) {
+        alert('El teléfono principal debe contener exactamente 9 dígitos numéricos (formato Perú).');
+        return;
+      }
+
+      if (hasYape && yapePhone && !isValidPeruPhone(yapePhone)) {
+        alert('El número celular de Yape debe contener exactamente 9 dígitos numéricos (formato Perú).');
         return;
       }
 
