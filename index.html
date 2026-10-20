@@ -14,6 +14,8 @@
       <div class="brand-title">CuentaClara</div>
     </div>
 
+    <span id="connectionStatus" class="connection-status connection-syncing">Conectando al servidor...</span>
+
     <div class="header-user-actions hidden" id="userHeaderActions">
       <div class="user-badge" id="userBadgeInfo"></div>
       <button class="btn btn-secondary btn-sm" id="logoutBtn" type="button">Cerrar Sesión</button>
@@ -472,7 +474,7 @@
         <div class="modal-body">
           <div class="form-group">
             <label for="supplierRucInput">RUC / Documento de Identidad</label>
-            <input type="text" id="supplierRucInput" class="form-control" required placeholder="Ej. 20100128218">
+            <input type="text" id="supplierRucInput" class="form-control" required inputmode="numeric" maxlength="11" pattern="[0-9]{1,11}" title="Ingrese máximo 11 caracteres numéricos" placeholder="Ej. 20100128218">
           </div>
 
           <div class="form-group">
@@ -493,7 +495,7 @@
 
           <div class="form-group">
             <label for="supplierContactInput">Persona de Contacto</label>
-            <input type="text" id="supplierContactInput" class="form-control" required placeholder="Ej. Atención al Cliente / Ejecutivo">
+            <input type="text" id="supplierContactInput" class="form-control" required pattern="[^0-9]*" title="La persona de contacto no puede contener números" placeholder="Ej. Atención al Cliente / Ejecutivo">
           </div>
 
           <div class="form-group">
@@ -520,8 +522,8 @@
               <div id="supplierYapeFields" class="hidden">
                 <div class="form-group">
                   <label for="supplierYapePhoneInput">Número Celular de Yape (Perú - 9 dígitos)</label>
-                  <input type="tel" id="supplierYapePhoneInput" class="form-control" placeholder="Ej. 987654321" maxlength="9" inputmode="numeric">
-                  <div class="form-hint">Ingrese exactamente 9 dígitos numéricos.</div>
+                  <input type="tel" id="supplierYapePhoneInput" class="form-control" placeholder="Ej. 987654321" maxlength="9" inputmode="numeric" pattern="9[0-9]{8}" title="El número de Yape debe tener 9 dígitos y comenzar con 9">
+                  <div class="form-hint">Ingrese 9 dígitos numéricos; debe comenzar con 9.</div>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 0;">
@@ -705,7 +707,7 @@
 
           <div class="form-group">
             <label for="editSupplierRucInput">RUC / Documento de Identidad</label>
-            <input type="text" id="editSupplierRucInput" class="form-control" required>
+            <input type="text" id="editSupplierRucInput" class="form-control" required inputmode="numeric" maxlength="11" pattern="[0-9]{1,11}" title="Ingrese máximo 11 caracteres numéricos">
           </div>
 
           <div class="form-group">
@@ -729,7 +731,7 @@
 
           <div class="form-group">
             <label for="editSupplierContactInput">Persona de Contacto</label>
-            <input type="text" id="editSupplierContactInput" class="form-control" required>
+            <input type="text" id="editSupplierContactInput" class="form-control" required pattern="[^0-9]*" title="La persona de contacto no puede contener números">
           </div>
 
           <div class="form-group">
@@ -755,8 +757,8 @@
               <div id="editSupplierYapeFields" class="hidden">
                 <div class="form-group">
                   <label for="editSupplierYapePhoneInput">Número Celular de Yape (Perú - 9 dígitos)</label>
-                  <input type="tel" id="editSupplierYapePhoneInput" class="form-control" maxlength="9" inputmode="numeric">
-                  <div class="form-hint">Ingrese exactamente 9 dígitos numéricos.</div>
+                  <input type="tel" id="editSupplierYapePhoneInput" class="form-control" maxlength="9" inputmode="numeric" pattern="9[0-9]{8}" title="El número de Yape debe tener 9 dígitos y comenzar con 9">
+                  <div class="form-hint">Ingrese 9 dígitos numéricos; debe comenzar con 9.</div>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 0;">

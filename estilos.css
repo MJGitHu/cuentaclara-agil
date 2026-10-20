@@ -73,6 +73,23 @@ body {
   letter-spacing: -0.5px;
 }
 
+.connection-status {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.connection-online {
+  color: var(--color-success);
+}
+
+.connection-syncing {
+  color: var(--color-accent);
+}
+
+.connection-offline {
+  color: var(--color-danger);
+}
+
 .header-user-actions {
   display: flex;
   align-items: center;
@@ -824,6 +841,11 @@ body {
   border: 1px solid var(--color-primary-light);
 }
 
+.toast-notification.toast-error {
+  background-color: var(--color-danger);
+  border: 1px solid var(--color-danger-bg);
+}
+
 /* ==========================================================================
    Barra Discreta de Demostración (Atajo Secreto Ctrl+Shift+D)
    ========================================================================== */
@@ -921,6 +943,4 @@ body {
     justify-content: center;
   }
 }
-
-
 

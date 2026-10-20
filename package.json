@@ -4,7 +4,8 @@
   "description": "Sistema de gestion de pagos para gerencia y asistencia administrativa",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "tunnel": "npx --yes localtunnel --port 3000"
   },
   "keywords": [
     "gestion-pagos",

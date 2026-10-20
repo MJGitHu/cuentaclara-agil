@@ -625,6 +625,209 @@
     SESSION: 'cuentaclara_session_v4'
   };
 
+  const SHARED_DATA_KEYS = {
+    suppliers: STORAGE_KEYS.SUPPLIERS,
+    expenses: STORAGE_KEYS.EXPENSES,
+    types: STORAGE_KEYS.TYPES,
+    methods: STORAGE_KEYS.METHODS,
+    accounts: STORAGE_KEYS.ACCOUNTS
+  };
+
+  let syncController = null;
+
+  function saveSharedData(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+    if (syncController) syncController.schedule();
+  }
+
+  function readSharedState() {
+    const state = {};
+    Object.keys(SHARED_DATA_KEYS).forEach(name => {
+      const saved = localStorage.getItem(SHARED_DATA_KEYS[name]);
+      state[name] = saved ? JSON.parse(saved) : [];
+    });
+    return state;
+  }
+
+  function applySharedState(state) {
+    Object.keys(SHARED_DATA_KEYS).forEach(name => {
+      if (state[name] !== undefined) {
+        localStorage.setItem(SHARED_DATA_KEYS[name], JSON.stringify(state[name]));
+      }
+    });
+  }
+
+  function statesEqual(first, second) {
+    return JSON.stringify(first) === JSON.stringify(second);
+  }
+
+  function mergeSharedState(base, local, remote) {
+    const merged = {};
+    Object.keys(SHARED_DATA_KEYS).forEach(name => {
+      const original = base[name] || [];
+      const localItems = local[name] || [];
+      const remoteItems = remote[name] || [];
+      const isObjectList = original.concat(localItems, remoteItems)
+        .some(item => item && typeof item === 'object' && item.id !== undefined);
+
+      if (!isObjectList) {
+        merged[name] = statesEqual(original, localItems) ? remoteItems : localItems;
+        return;
+      }
+
+      const idOf = item => String(item.id);
+      const originalById = new Map(original.map(item => [idOf(item), item]));
+      const localById = new Map(localItems.map(item => [idOf(item), item]));
+      const remoteById = new Map(remoteItems.map(item => [idOf(item), item]));
+      const allIds = new Set([...originalById.keys(), ...localById.keys(), ...remoteById.keys()]);
+      const result = [];
+
+      allIds.forEach(id => {
+        const oldValue = originalById.get(id);
+        const localValue = localById.get(id);
+        const remoteValue = remoteById.get(id);
+        const localChanged = !statesEqual(oldValue, localValue);
+        const chosen = localChanged ? localValue : remoteValue;
+        if (chosen !== undefined) result.push(chosen);
+      });
+      merged[name] = result;
+    });
+    return merged;
+  }
+
+  function setConnectionStatus(status) {
+    const element = document.getElementById('connectionStatus');
+    if (!element) return;
+    element.textContent = status === 'online' ? 'Conectado al servidor' :
+      status === 'syncing' ? 'Sincronizando...' : 'Sin conexión al servidor';
+    element.className = `connection-status connection-${status}`;
+  }
+
+  function createSyncController() {
+    let revision = 0;
+    let baseState = null;
+    let enabled = false;
+    let dirty = false;
+    let publishing = false;
+    let pollTimer = null;
+    let publishTimer = null;
+    let offlineNotified = false;
+
+    async function requestState() {
+      const response = await fetch('/api/state', { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Error al consultar el servidor (${response.status}).`);
+      return response.json();
+    }
+
+    async function publish() {
+      if (!enabled || publishing || !dirty) return;
+      publishing = true;
+      dirty = false;
+      setConnectionStatus('syncing');
+      let state = readSharedState();
+
+      try {
+        let response = await fetch('/api/state', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ revision, state })
+        });
+        let result = await response.json();
+
+        if (response.status === 409) {
+          state = mergeSharedState(baseState || result.state, state, result.state);
+          applySharedState(state);
+          revision = result.revision;
+          baseState = result.state;
+          response = await fetch('/api/state', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ revision, state })
+          });
+          result = await response.json();
+        }
+
+        if (!response.ok) throw new Error(result.error || `Error al guardar (${response.status}).`);
+        revision = result.revision;
+        baseState = result.state;
+        offlineNotified = false;
+        setConnectionStatus('online');
+      } catch (error) {
+        dirty = true;
+        setConnectionStatus('offline');
+        if (!offlineNotified) {
+          showToast('No se pudo sincronizar con el servidor. Se reintentará automáticamente.', 'error');
+          offlineNotified = true;
+        }
+        console.error('Error de sincronización:', error);
+      } finally {
+        publishing = false;
+        if (dirty) schedule();
+      }
+    }
+
+    function schedule() {
+      dirty = true;
+      clearTimeout(publishTimer);
+      publishTimer = setTimeout(publish, 300);
+    }
+
+    async function refresh() {
+      try {
+        const result = await requestState();
+        if (result.state && result.revision > revision) {
+          if (dirty || publishing) {
+            await publish();
+            return;
+          }
+          applySharedState(result.state);
+          baseState = result.state;
+          revision = result.revision;
+          const session = Store.getSession();
+          if (session) setAuthenticatedView(session);
+        }
+        offlineNotified = false;
+        setConnectionStatus('online');
+      } catch (error) {
+        setConnectionStatus('offline');
+        if (!offlineNotified) {
+          showToast('Se perdió la conexión con el servidor. Los cambios locales se sincronizarán al reconectar.', 'error');
+          offlineNotified = true;
+        }
+        console.error('Error al actualizar datos compartidos:', error);
+      }
+    }
+
+    return {
+      async start() {
+        try {
+          const result = await requestState();
+          revision = result.revision;
+          if (result.state) {
+            applySharedState(result.state);
+            baseState = result.state;
+          } else {
+            baseState = readSharedState();
+            dirty = true;
+            enabled = true;
+            await publish();
+          }
+          enabled = true;
+          setConnectionStatus('online');
+        } catch (error) {
+          enabled = true;
+          baseState = readSharedState();
+          setConnectionStatus('offline');
+          console.error('No se pudo iniciar la sincronización:', error);
+        }
+
+        pollTimer = setInterval(refresh, 3000);
+        if (dirty) schedule();
+      },
+      schedule
+    };
+  }
+
   // ==========================================================================
   // Almacenamiento Local (Store)
   // ==========================================================================
@@ -655,7 +858,7 @@
     },
 
     saveSuppliers(suppliers) {
-      localStorage.setItem(STORAGE_KEYS.SUPPLIERS, JSON.stringify(suppliers));
+      saveSharedData(STORAGE_KEYS.SUPPLIERS, suppliers);
     },
 
     getSupplierById(id) {
@@ -695,7 +898,7 @@
       const cleanName = typeName.trim();
       if (!types.includes(cleanName)) {
         types.push(cleanName);
-        localStorage.setItem(STORAGE_KEYS.TYPES, JSON.stringify(types));
+        saveSharedData(STORAGE_KEYS.TYPES, types);
       }
       return types;
     },
@@ -706,7 +909,7 @@
     },
 
     savePaymentMethods(methods) {
-      localStorage.setItem(STORAGE_KEYS.METHODS, JSON.stringify(methods));
+      saveSharedData(STORAGE_KEYS.METHODS, methods);
     },
 
     addPaymentMethod(methodName) {
@@ -732,7 +935,7 @@
     },
 
     saveAccounts(accounts) {
-      localStorage.setItem(STORAGE_KEYS.ACCOUNTS, JSON.stringify(accounts));
+      saveSharedData(STORAGE_KEYS.ACCOUNTS, accounts);
     },
 
     addAccount(accountData) {
@@ -759,7 +962,7 @@
     },
 
     saveExpenses(expenses) {
-      localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(expenses));
+      saveSharedData(STORAGE_KEYS.EXPENSES, expenses);
     },
 
     getExpenseById(id) {
@@ -823,19 +1026,19 @@
     },
 
     loadDemoData() {
-      localStorage.setItem(STORAGE_KEYS.SUPPLIERS, JSON.stringify(DEFAULT_SUPPLIERS));
-      localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(DEFAULT_EXPENSES));
-      localStorage.setItem(STORAGE_KEYS.TYPES, JSON.stringify(DEFAULT_EXPENSE_TYPES));
-      localStorage.setItem(STORAGE_KEYS.METHODS, JSON.stringify(DEFAULT_PAYMENT_METHODS));
-      localStorage.setItem(STORAGE_KEYS.ACCOUNTS, JSON.stringify(DEFAULT_ACCOUNTS));
+      saveSharedData(STORAGE_KEYS.SUPPLIERS, DEFAULT_SUPPLIERS);
+      saveSharedData(STORAGE_KEYS.EXPENSES, DEFAULT_EXPENSES);
+      saveSharedData(STORAGE_KEYS.TYPES, DEFAULT_EXPENSE_TYPES);
+      saveSharedData(STORAGE_KEYS.METHODS, DEFAULT_PAYMENT_METHODS);
+      saveSharedData(STORAGE_KEYS.ACCOUNTS, DEFAULT_ACCOUNTS);
     },
 
     clearAllData() {
-      localStorage.setItem(STORAGE_KEYS.SUPPLIERS, JSON.stringify([]));
-      localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify([]));
-      localStorage.setItem(STORAGE_KEYS.TYPES, JSON.stringify(DEFAULT_EXPENSE_TYPES));
-      localStorage.setItem(STORAGE_KEYS.METHODS, JSON.stringify(DEFAULT_PAYMENT_METHODS));
-      localStorage.setItem(STORAGE_KEYS.ACCOUNTS, JSON.stringify([]));
+      saveSharedData(STORAGE_KEYS.SUPPLIERS, []);
+      saveSharedData(STORAGE_KEYS.EXPENSES, []);
+      saveSharedData(STORAGE_KEYS.TYPES, DEFAULT_EXPENSE_TYPES);
+      saveSharedData(STORAGE_KEYS.METHODS, DEFAULT_PAYMENT_METHODS);
+      saveSharedData(STORAGE_KEYS.ACCOUNTS, []);
     },
 
     resetDemoData() {
@@ -1896,6 +2099,14 @@
     return /^[0-9]{9}$/.test(phone);
   }
 
+  function isValidYapePhone(phone) {
+    return /^9[0-9]{8}$/.test(phone);
+  }
+
+  function isValidIdentityNumber(value) {
+    return /^[0-9]{1,11}$/.test(value);
+  }
+
   function setupPhoneInputSanitizers() {
     const phoneInputs = [
       DOM.supplierPhoneInput,
@@ -1906,7 +2117,18 @@
     phoneInputs.forEach(input => {
       if (input) {
         input.addEventListener('input', function () {
-          this.value = this.value.replace(/\D/g, '').slice(0, 9);
+          const digits = this.value.replace(/\D/g, '').slice(0, 9);
+          this.value = input === DOM.supplierYapePhoneInput || input === DOM.editSupplierYapePhoneInput
+            ? (digits.startsWith('9') ? digits : '')
+            : digits;
+        });
+      }
+    });
+
+    [DOM.supplierContactInput, DOM.editSupplierContactInput].forEach(input => {
+      if (input) {
+        input.addEventListener('input', function () {
+          this.value = this.value.replace(/[0-9]/g, '');
         });
       }
     });
@@ -2224,6 +2446,10 @@
     }
 
     if (DOM.editSupplierForm) {
+      DOM.editSupplierRucInput.addEventListener('input', function () {
+        this.value = this.value.replace(/\D/g, '').slice(0, 11);
+      });
+
       DOM.editSupplierForm.addEventListener('submit', function (e) {
         e.preventDefault();
         const id = DOM.editSupplierId.value;
@@ -2243,13 +2469,18 @@
           return;
         }
 
+        if (!isValidIdentityNumber(ruc)) {
+          alert('El RUC / documento de identidad debe contener máximo 11 caracteres numéricos.');
+          return;
+        }
+
         if (!isValidPeruPhone(phone)) {
           alert('El teléfono principal debe contener exactamente 9 dígitos numéricos (formato Perú).');
           return;
         }
 
-        if (hasYape && yapePhone && !isValidPeruPhone(yapePhone)) {
-          alert('El número celular de Yape debe contener exactamente 9 dígitos numéricos (formato Perú).');
+        if (hasYape && yapePhone && !isValidYapePhone(yapePhone)) {
+          alert('El número celular de Yape debe contener 9 dígitos numéricos y comenzar con 9.');
           return;
         }
 
@@ -2443,6 +2674,10 @@
       }
     });
 
+    DOM.supplierRucInput.addEventListener('input', function () {
+      this.value = this.value.replace(/\D/g, '').slice(0, 11);
+    });
+
     DOM.newSupplierForm.addEventListener('submit', function (e) {
       e.preventDefault();
       const ruc = DOM.supplierRucInput.value.trim();
@@ -2461,13 +2696,18 @@
         return;
       }
 
+      if (!isValidIdentityNumber(ruc)) {
+        alert('El RUC / documento de identidad debe contener máximo 11 caracteres numéricos.');
+        return;
+      }
+
       if (!isValidPeruPhone(phone)) {
         alert('El teléfono principal debe contener exactamente 9 dígitos numéricos (formato Perú).');
         return;
       }
 
-      if (hasYape && yapePhone && !isValidPeruPhone(yapePhone)) {
-        alert('El número celular de Yape debe contener exactamente 9 dígitos numéricos (formato Perú).');
+      if (hasYape && yapePhone && !isValidYapePhone(yapePhone)) {
+        alert('El número celular de Yape debe contener 9 dígitos numéricos y comenzar con 9.');
         return;
       }
 
@@ -2519,8 +2759,10 @@
   // Inicialización
   // ==========================================================================
 
-  function init() {
+  async function init() {
     Store.init();
+    syncController = createSyncController();
+    await syncController.start();
     attachEvents();
 
     const activeSession = Store.getSession();
