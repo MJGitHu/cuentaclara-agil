@@ -58,10 +58,10 @@ A partir de la sesión de feedback y refinamiento con el cliente (profesor), se 
     2. *Total Pagado del Mes:* Monto de obligaciones canceladas en dicho mes.
     3. *Deudas Vencidas Anteriores:* Monto acumulado de obligaciones de meses pasados que permanecen en mora.
     4. *Próximo Vencimiento:* Fecha límite más cercana, concepto e importe a liquidar.
-* **Criterio 2.2 (Vista Conjunta en la Misma Pantalla):**
-  - **Dado** que existen gastos registrados,
+* **Criterio 2.2 (Vista Unificada en la Misma Pantalla):**
+  - **Dado** que existen compromisos financieros registrados en el mes,
   - **Cuando** el Gerente revisa su panel,
-  - **Entonces** visualiza simultáneamente en la misma pantalla la tabla de "Pagos Pendientes del Periodo" y la tabla de "Pagos Realizados del Periodo", sin pestañas que oculten información.
+  - **Entonces** visualiza todas las obligaciones y pagos del periodo consolidados en una sola tabla unificada ('Obligaciones y Pagos del Periodo'), con el estado (Pendiente o Realizado) indicado claramente a la derecha, sin dividirlas en tablas separadas ni pestañas intermedias.
 * **Criterio 2.3 (Navegación de Meses):**
   - **Dado** que el Gerente se encuentra en el mes actual (Octubre 2026),
   - **Cuando** pulsa "< Mes Anterior",
@@ -74,7 +74,7 @@ A partir de la sesión de feedback y refinamiento con el cliente (profesor), se 
   - `SUB-06` (Desarrollador 2 - 2h): Maquetar componente de navegación temporal (period-navigator) con botones anterior/siguiente.
   - `SUB-07` (Desarrollador 3 - 2h): Programar funciones de fechas (changePeriod, getActivePeriodKey) para Septiembre, Octubre y Noviembre.
   - `SUB-08` (Desarrollador 3 - 3h): Desarrollar algoritmos de agregación financiera para cálculo dinámico de los 4 KPIs en Dashboard.
-  - `SUB-09` (Desarrollador 1 - 3h): Construir tablas sincronizadas en el DOM para renderizar pagos pendientes y realizados juntos.
+  - `SUB-09` (Desarrollador 1 - 3h): Construir tabla consolidada en el DOM para renderizar todas las obligaciones y pagos del periodo.
   - `SUB-10` (Desarrollador 4 - 2h): Codificar sección de cuentas bancarias confidenciales con lógica de aislamiento para el Asistente.
   - `SUB-11` (Desarrollador 5 - 2h): Ejecutar pruebas de recálculo dinámico de métricas y filtrado temporal al cambiar de mes.
 
@@ -164,7 +164,7 @@ A partir de la sesión de feedback y refinamiento con el cliente (profesor), se 
 | **SUB-06** | HU-02 | Maquetar componente de navegación temporal (period-navigator) con botones anterior/siguiente | Prototipado | 2h | Desarrollador 2 |
 | **SUB-07** | HU-02 | Programar funciones de fechas (changePeriod, getActivePeriodKey) para Septiembre, Octubre y Noviembre | Codificación | 2h | Desarrollador 3 |
 | **SUB-08** | HU-02 | Desarrollar algoritmos de agregación financiera para cálculo dinámico de los 4 KPIs en Dashboard | Codificación | 3h | Desarrollador 3 |
-| **SUB-09** | HU-02 | Construir tablas sincronizadas en el DOM para renderizar pagos pendientes y realizados juntos | Codificación | 3h | Desarrollador 1 |
+| **SUB-09** | HU-02 | Construir tabla consolidada en el DOM para renderizar todas las obligaciones y pagos del periodo | Codificación | 3h | Desarrollador 1 |
 | **SUB-10** | HU-02 | Codificar sección de cuentas bancarias confidenciales con lógica de aislamiento para el Asistente | Codificación | 2h | Desarrollador 4 |
 | **SUB-11** | HU-02 | Ejecutar pruebas de recálculo dinámico de métricas y filtrado temporal al cambiar de mes | Test | 2h | Desarrollador 5 |
 | **SUB-12** | HU-03 | Definir e inicializar esquema en localStorage con atributos receiptId y fotos base64/SVG | Análisis y diseño | 2h | Desarrollador 4 |
@@ -218,7 +218,7 @@ A partir de la sesión de feedback y refinamiento con el cliente (profesor), se 
 1. **Acceso al Sistema:** Ingrese su usuario (`gerente`) y contraseña (`gerente123`).
 2. **Navegación de Meses:** En la barra superior use `< Mes Anterior` y `Próximo Mes >` para auditar Septiembre, Octubre o Noviembre 2026.
 3. **Monitoreo de 4 KPIs:** Revise en una sola mirada el Total Pendiente, Total Pagado, Deudas Vencidas Anteriores (alerta de morosidad) y Próximo Vencimiento.
-4. **Inspección Conjunta de Listas:** En la misma pantalla revise la tabla de pendientes (con botón para ver foto del DNI del titular) y la tabla de realizados (con botón para ver foto del voucher bancario).
+4. **Inspección de Obligaciones y Pagos del Periodo:** En una sola tabla unificada revise todos los compromisos del mes, con el estado claramente visible a la derecha (Pendiente o Realizado) y acceso directo a la comprobación de titularidad (DNI) o comprobante archivado (Voucher).
 5. **Configuración del Negocio:**
    - **Nuevo Proveedor:** Registre acreedores y active la casilla Yape para fijar el número y titular.
    - **Nuevo Tipo de Gasto:** Registre categorías adicionales (ej. Seguros, Alquiler, Mantenimiento).

@@ -113,57 +113,30 @@
         </div>
       </div>
 
-      <!-- Tabla 1: Pagos Pendientes del Mes -->
+      <!-- Tabla Única Consolidada: Todas las Obligaciones y Pagos del Periodo -->
       <div class="content-panel">
         <div class="panel-body">
-          <h3 class="section-title" style="margin-bottom: 16px;">Pagos Pendientes del Periodo</h3>
+          <h3 class="section-title" style="margin-bottom: 16px;">Obligaciones y Pagos del Periodo</h3>
           <div class="table-responsive">
             <table class="data-table">
               <thead>
                 <tr>
                   <th>N° Recibo / Código</th>
                   <th>Descripción</th>
-                  <th>Proveedor</th>
+                  <th>Proveedor / Entidad</th>
                   <th>Tipo</th>
                   <th>Vencimiento</th>
                   <th style="text-align: right;">Monto</th>
-                  <th>Titularidad</th>
+                  <th>Comprobante / Titularidad</th>
                   <th>Estado</th>
                 </tr>
               </thead>
-              <tbody id="managerPendingTableBody">
-                <!-- Filas dinamicas -->
+              <tbody id="managerAllExpensesTableBody">
+                <!-- Filas dinamicas consolidadas -->
               </tbody>
             </table>
           </div>
-          <div id="managerPendingEmpty" class="empty-state hidden">No hay pagos pendientes para este periodo.</div>
-        </div>
-      </div>
-
-      <!-- Tabla 2: Pagos Realizados del Mes (Juntos en la Misma Pantalla) -->
-      <div class="content-panel">
-        <div class="panel-body">
-          <h3 class="section-title" style="margin-bottom: 16px;">Pagos Realizados del Periodo</h3>
-          <div class="table-responsive">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>N° Recibo / Código</th>
-                  <th>Descripción</th>
-                  <th>Proveedor</th>
-                  <th>Fecha de Pago</th>
-                  <th>Método</th>
-                  <th style="text-align: right;">Monto</th>
-                  <th>Comprobante</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody id="managerPaidTableBody">
-                <!-- Filas dinamicas -->
-              </tbody>
-            </table>
-          </div>
-          <div id="managerPaidEmpty" class="empty-state hidden">No hay pagos realizados registrados en este periodo.</div>
+          <div id="managerAllExpensesEmpty" class="empty-state hidden">No hay obligaciones ni pagos registrados para este periodo.</div>
         </div>
       </div>
 
@@ -334,7 +307,6 @@
               <option value="Transferencia Bancaria">Transferencia Bancaria</option>
               <option value="Yape (Billetera Digital)">Yape (Billetera Digital)</option>
               <option value="Efectivo">Efectivo</option>
-              <option value="Cheque">Cheque</option>
               <option value="Tarjeta de Débito">Tarjeta de Débito</option>
             </select>
           </div>

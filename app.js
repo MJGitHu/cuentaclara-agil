@@ -572,10 +572,8 @@
     kpiManagerOverdueCount: document.getElementById('kpiManagerOverdueCount'),
     kpiManagerNextDate: document.getElementById('kpiManagerNextDate'),
     kpiManagerNextDesc: document.getElementById('kpiManagerNextDesc'),
-    managerPendingTableBody: document.getElementById('managerPendingTableBody'),
-    managerPendingEmpty: document.getElementById('managerPendingEmpty'),
-    managerPaidTableBody: document.getElementById('managerPaidTableBody'),
-    managerPaidEmpty: document.getElementById('managerPaidEmpty'),
+    managerAllExpensesTableBody: document.getElementById('managerAllExpensesTableBody'),
+    managerAllExpensesEmpty: document.getElementById('managerAllExpensesEmpty'),
 
     // Acciones de Gerente
     openGerenteNewSupplierModalBtn: document.getElementById('openGerenteNewSupplierModalBtn'),
@@ -727,16 +725,30 @@
       DOM.kpiManagerNextDesc.textContent = 'Todas las obligaciones del periodo están al día.';
     }
 
-    // Tabla 1: Pagos Pendientes del Mes
-    DOM.managerPendingTableBody.innerHTML = '';
-    if (pendingExpenses.length === 0) {
-      DOM.managerPendingEmpty.classList.remove('hidden');
+    // Tabla Única Consolidada: Todas las Obligaciones y Pagos del Periodo
+    DOM.managerAllExpensesTableBody.innerHTML = '';
+    if (periodExpenses.length === 0) {
+      DOM.managerAllExpensesEmpty.classList.remove('hidden');
     } else {
-      DOM.managerPendingEmpty.classList.add('hidden');
-      pendingExpenses.sort((a, b) => a.dueDate.localeCompare(b.dueDate));
-      pendingExpenses.forEach(exp => {
+      DOM.managerAllExpensesEmpty.classList.add('hidden');
+
+      // Ordenar: Pendientes primero por fecha de vencimiento, luego realizados
+      const sortedExpenses = [...periodExpenses].sort((a, b) => {
+        if (a.status !== b.status) {
+          return a.status === 'pendiente' ? -1 : 1;
+        }
+        return a.dueDate.localeCompare(b.dueDate);
+      });
+
+      sortedExpenses.forEach(exp => {
         const tr = document.createElement('tr');
         const supplierName = supplierMap.get(exp.supplierId) || 'No especificado';
+        const isPaid = exp.status === 'realizado';
+
+        const proofCell = isPaid
+          ? `<button type="button" class="btn-link view-receipt-btn" data-id="${exp.id}">Ver Voucher</button>`
+          : `<button type="button" class="btn-link view-titular-btn" data-id="${exp.id}">Ver Titular / DNI</button>`;
+
         tr.innerHTML = `
           <td><span class="receipt-id-tag">${escapeHtml(exp.receiptId || 'S/N')}</span></td>
           <td><strong>${escapeHtml(exp.description)}</strong></td>
@@ -744,55 +756,27 @@
           <td><span class="badge badge-type">${escapeHtml(exp.type)}</span></td>
           <td>${formatDate(exp.dueDate)}</td>
           <td class="amount-col">${formatCurrency(exp.amount)}</td>
-          <td>
-            <button type="button" class="btn-link view-titular-btn" data-id="${exp.id}">Ver Titular / DNI</button>
-          </td>
-          <td><span class="badge badge-pending">Pendiente</span></td>
+          <td>${proofCell}</td>
+          <td><span class="badge ${isPaid ? 'badge-paid' : 'badge-pending'}">${isPaid ? 'Realizado' : 'Pendiente'}</span></td>
         `;
-        DOM.managerPendingTableBody.appendChild(tr);
+        DOM.managerAllExpensesTableBody.appendChild(tr);
+      });
+
+      // Eventos de visualización de evidencias
+      DOM.managerAllExpensesTableBody.querySelectorAll('.view-titular-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          showTitularPhoto(id);
+        });
+      });
+
+      DOM.managerAllExpensesTableBody.querySelectorAll('.view-receipt-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          showPaymentPhoto(id);
+        });
       });
     }
-
-    // Tabla 2: Pagos Realizados del Mes (Juntos en la misma pantalla)
-    DOM.managerPaidTableBody.innerHTML = '';
-    if (paidExpenses.length === 0) {
-      DOM.managerPaidEmpty.classList.remove('hidden');
-    } else {
-      DOM.managerPaidEmpty.classList.add('hidden');
-      paidExpenses.sort((a, b) => (b.paymentDate || '').localeCompare(a.paymentDate || ''));
-      paidExpenses.forEach(exp => {
-        const tr = document.createElement('tr');
-        const supplierName = supplierMap.get(exp.supplierId) || 'No especificado';
-        tr.innerHTML = `
-          <td><span class="receipt-id-tag">${escapeHtml(exp.receiptId || 'S/N')}</span></td>
-          <td><strong>${escapeHtml(exp.description)}</strong></td>
-          <td>${escapeHtml(supplierName)}</td>
-          <td>${formatDate(exp.paymentDate)}</td>
-          <td>${escapeHtml(exp.paymentMethod || 'No especificado')} ${exp.ref ? `<span class="form-hint">(${escapeHtml(exp.ref)})</span>` : ''}</td>
-          <td class="amount-col">${formatCurrency(exp.amount)}</td>
-          <td>
-            <button type="button" class="btn-link view-receipt-btn" data-id="${exp.id}">Ver Voucher</button>
-          </td>
-          <td><span class="badge badge-paid">Realizado</span></td>
-        `;
-        DOM.managerPaidTableBody.appendChild(tr);
-      });
-    }
-
-    // Eventos de visualización de evidencias
-    DOM.managerPendingTableBody.querySelectorAll('.view-titular-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-id');
-        showTitularPhoto(id);
-      });
-    });
-
-    DOM.managerPaidTableBody.querySelectorAll('.view-receipt-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-id');
-        showPaymentPhoto(id);
-      });
-    });
   }
 
   // ==========================================================================

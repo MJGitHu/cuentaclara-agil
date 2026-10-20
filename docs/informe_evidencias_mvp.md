@@ -62,10 +62,10 @@ Para solucionar este problema, el Gerente contrató a un Asistente administrativ
     - **Dado** que el Gerente ha iniciado sesión en un periodo mensual,
     - **Cuando** visualiza el dashboard principal,
     - **Entonces** observa cuatro tarjetas de indicadores: Total Pendiente del Mes, Total Pagado del Mes, Deudas Vencidas Anteriores (alerta moratoria) y Próximo Vencimiento con descripción e importe.
-  - **Criterio 2.2 (Vista Conjunta en la Misma Pantalla):**
-    - **Dado** que existen gastos registrados,
+  - **Criterio 2.2 (Vista Unificada en la Misma Pantalla):**
+    - **Dado** que existen compromisos financieros registrados en el mes,
     - **Cuando** el Gerente revisa su panel,
-    - **Entonces** visualiza simultáneamente en la misma pantalla la tabla de "Pagos Pendientes del Periodo" y la tabla de "Pagos Realizados del Periodo", sin pestañas intermedias.
+    - **Entonces** visualiza todas las obligaciones y pagos del periodo consolidados en una sola tabla unificada ('Obligaciones y Pagos del Periodo'), con el estado (Pendiente o Realizado) indicado claramente a la derecha, sin dividirlas en tablas separadas ni pestañas intermedias.
   - **Criterio 2.3 (Navegación de Meses):**
     - **Dado** que el Gerente se encuentra en el mes actual (Octubre 2026),
     - **Cuando** pulsa "< Mes Anterior", la pantalla se actualiza con los datos de Septiembre 2026; y al presionar "Próximo Mes >", avanza hacia Noviembre 2026 recalculando los 4 KPIs al instante.
@@ -77,7 +77,7 @@ Para solucionar este problema, el Gerente contrató a un Asistente administrativ
   - `SUB-06` (Desarrollador 2 - 2h): Maquetar componente de navegación temporal (period-navigator) con botones anterior/siguiente.
   - `SUB-07` (Desarrollador 3 - 2h): Programar funciones de fechas (changePeriod, getActivePeriodKey) para Septiembre, Octubre y Noviembre.
   - `SUB-08` (Desarrollador 3 - 3h): Desarrollar algoritmos de agregación financiera para cálculo dinámico de los 4 KPIs en Dashboard.
-  - `SUB-09` (Desarrollador 1 - 3h): Construir tablas sincronizadas en el DOM para renderizar pagos pendientes y realizados juntos.
+  - `SUB-09` (Desarrollador 1 - 3h): Construir tabla consolidada en el DOM para renderizar todas las obligaciones y pagos del periodo.
   - `SUB-10` (Desarrollador 4 - 2h): Codificar sección de cuentas bancarias confidenciales con lógica de aislamiento para el Asistente.
   - `SUB-11` (Desarrollador 5 - 2h): Ejecutar pruebas de recálculo dinámico de métricas y filtrado temporal al cambiar de mes.
 
@@ -170,7 +170,7 @@ Para solucionar este problema, el Gerente contrató a un Asistente administrativ
 | **SUB-06** | HU-02 | Maquetar componente de navegación temporal (period-navigator) con botones anterior/siguiente | Prototipado | 2h | Desarrollador 2 |
 | **SUB-07** | HU-02 | Programar funciones de fechas (changePeriod, getActivePeriodKey) para Septiembre, Octubre y Noviembre | Codificación | 2h | Desarrollador 3 |
 | **SUB-08** | HU-02 | Desarrollar algoritmos de agregación financiera para cálculo dinámico de los 4 KPIs en Dashboard | Codificación | 3h | Desarrollador 3 |
-| **SUB-09** | HU-02 | Construir tablas sincronizadas en el DOM para renderizar pagos pendientes y realizados juntos | Codificación | 3h | Desarrollador 1 |
+| **SUB-09** | HU-02 | Construir tabla consolidada en el DOM para renderizar todas las obligaciones y pagos del periodo | Codificación | 3h | Desarrollador 1 |
 | **SUB-10** | HU-02 | Codificar sección de cuentas bancarias confidenciales con lógica de aislamiento para el Asistente | Codificación | 2h | Desarrollador 4 |
 | **SUB-11** | HU-02 | Ejecutar pruebas de recálculo dinámico de métricas y filtrado temporal al cambiar de mes | Test | 2h | Desarrollador 5 |
 | **SUB-12** | HU-03 | Definir e inicializar esquema en localStorage con atributos receiptId y fotos base64/SVG | Análisis y diseño | 2h | Desarrollador 4 |
@@ -223,7 +223,7 @@ Para solucionar este problema, el Gerente contrató a un Asistente administrativ
 1. **Ingreso:** Inicie sesión con usuario `gerente` y clave `gerente123`.
 2. **Navegación de Meses:** Use los controles `< Mes Anterior` y `Próximo Mes >` para alternar entre Septiembre, Octubre y Noviembre 2026.
 3. **Monitoreo de 4 KPIs:** Revise Total Pendiente del mes, Total Pagado del mes, Deudas Vencidas Anteriores (alerta de moras) y Próximo Vencimiento.
-4. **Auditoría Unificada:** Revise en la misma pantalla las tablas de pendientes (botón `Ver Titular / DNI`) y realizados (botón `Ver Voucher`).
+4. **Auditoría Unificada:** Revise en una sola tabla consolidada todas las obligaciones del mes, observando a la derecha el estado ('Pendiente' o 'Realizado') y los accesos a los comprobantes de titularidad ('Ver Titular / DNI') o pagos ('Ver Voucher').
 5. **Gobierno del Negocio:** Dé de alta proveedores activando la casilla de Yape (celular y titular) y registre nuevos tipos de gasto.
 6. **Cierre de Sesión:** Pulse `Cerrar Sesión` para proteger la privacidad de sus instrumentos bancarios personales.
 
@@ -254,9 +254,9 @@ Para solucionar este problema, el Gerente contrató a un Asistente administrativ
 
 ---
 
-### Paso 3: Dashboard del Gerente con 4 KPIs y Pantalla Unificada (HU-01, HU-02, Criterios 1.3, 2.1, 2.2)
+### Paso 3: Dashboard del Gerente con 4 KPIs y Tabla Única Consolidada (HU-01, HU-02, Criterios 1.3, 2.1, 2.2)
 - **Historia:** HU-02: Dashboard Ejecutivo del Gerente y Navegación Temporal
-- **Descripción:** Visualización de los 4 indicadores clave (Total Pendiente: S/ 6,370.35, Total Pagado: S/ 3,550.00, Deudas Vencidas Anteriores: S/ 195.00 y Próximo Vencimiento: 18/10/2026). Debajo, en la misma pantalla, se despliegan juntas las tablas de pendientes y realizados.
+- **Descripción:** Visualización de los 4 indicadores clave (Total Pendiente: S/ 6,370.35, Total Pagado: S/ 3,550.00, Deudas Vencidas Anteriores: S/ 195.00 y Próximo Vencimiento: 18/10/2026). Debajo, en la misma ventana, se consolidan todas las obligaciones y pagos en una sola tabla unificada, mostrando a la derecha el estado ('Pendiente' o 'Realizado') con sus respectivos comprobantes y titularidad.
 - **Captura:** ![Paso 3](evidencias/03_gerente_dashboard_octubre.png)
 - **Resultado:** *Cumplido (Criterios 2.1 y 2.2).*
 

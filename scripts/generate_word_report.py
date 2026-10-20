@@ -255,7 +255,7 @@ def build_document():
             "narrative": "Como Gerente,\nQuiero visualizar en una sola pantalla 4 métricas financieras consolidadas y alternar entre periodos mensuales,\nPara auditar de inmediato qué compromisos tengo en el mes, qué deudas antiguas arrastro y qué pagos ya fueron atendidos.",
             "criteria": [
                 ("Criterio 2.1 (4 KPIs Financieros Obligatorios):", "Dado que el Gerente ha iniciado sesión en un periodo mensual,\nCuando visualiza el dashboard principal,\nEntonces observa cuatro tarjetas de indicadores: Total Pendiente del Mes, Total Pagado del Mes, Deudas Vencidas Anteriores (alerta moratoria) y Próximo Vencimiento con descripción e importe."),
-                ("Criterio 2.2 (Vista Conjunta en la Misma Pantalla):", "Dado que existen gastos registrados,\nCuando el Gerente revisa su panel,\nEntonces visualiza simultáneamente en la misma pantalla la tabla de 'Pagos Pendientes del Periodo' y la tabla de 'Pagos Realizados del Periodo', sin pestañas intermedias."),
+                ("Criterio 2.2 (Vista Unificada en la Misma Pantalla):", "Dado que existen compromisos financieros registrados en el mes,\nCuando el Gerente revisa su panel,\nEntonces visualiza todas las obligaciones y pagos del periodo consolidados en una sola tabla unificada ('Obligaciones y Pagos del Periodo'), con el estado (Pendiente o Realizado) indicado claramente a la derecha, sin dividirlas en tablas separadas ni pestañas intermedias."),
                 ("Criterio 2.3 (Navegación de Meses):", "Dado que el Gerente se encuentra en el mes actual (Octubre 2026),\nCuando pulsa '< Mes Anterior', la pantalla se actualiza con los datos de Septiembre 2026; y al presionar 'Próximo Mes >', avanza hacia Noviembre 2026 recalculando los 4 KPIs al instante."),
                 ("Criterio 2.4 (Privacidad de Cuentas Personales):", "Dado que el Gerente mantiene cuentas bancarias personales,\nCuando consulta su sesión,\nEntonces visualiza su panel confidencial de cuentas y tarjetas, el cual permanece 100% oculto e inaccesible para la vista del asistente.")
             ],
@@ -263,7 +263,7 @@ def build_document():
                 ("SUB-06 (Desarrollador 2 - 2h):", "Maquetar componente de navegación temporal (period-navigator) con botones anterior/siguiente."),
                 ("SUB-07 (Desarrollador 3 - 2h):", "Programar funciones de fechas (changePeriod, getActivePeriodKey) para Septiembre, Octubre y Noviembre."),
                 ("SUB-08 (Desarrollador 3 - 3h):", "Desarrollar algoritmos de agregación financiera para cálculo dinámico de los 4 KPIs en Dashboard."),
-                ("SUB-09 (Desarrollador 1 - 3h):", "Construir tablas sincronizadas en el DOM para renderizar pagos pendientes y realizados juntos."),
+                ("SUB-09 (Desarrollador 1 - 3h):", "Construir tabla consolidada en el DOM para renderizar todas las obligaciones y pagos del periodo."),
                 ("SUB-10 (Desarrollador 4 - 2h):", "Codificar sección de cuentas bancarias confidenciales con lógica de aislamiento para el Asistente."),
                 ("SUB-11 (Desarrollador 5 - 2h):", "Ejecutar pruebas de recálculo dinámico de métricas y filtrado temporal al cambiar de mes.")
             ]
@@ -386,7 +386,7 @@ def build_document():
         ["SUB-06", "HU-02", "Maquetar componente de navegación temporal (period-navigator) con botones anterior/siguiente", "Prototipado", "2h", "Desarrollador 2"],
         ["SUB-07", "HU-02", "Programar funciones de fechas (changePeriod, getActivePeriodKey) para Septiembre, Octubre y Noviembre", "Codificación", "2h", "Desarrollador 3"],
         ["SUB-08", "HU-02", "Desarrollar algoritmos de agregación financiera para cálculo dinámico de los 4 KPIs en Dashboard", "Codificación", "3h", "Desarrollador 3"],
-        ["SUB-09", "HU-02", "Construir tablas sincronizadas en el DOM para renderizar pagos pendientes y realizados juntos", "Codificación", "3h", "Desarrollador 1"],
+        ["SUB-09", "HU-02", "Construir tabla consolidada en el DOM para renderizar todas las obligaciones y pagos del periodo", "Codificación", "3h", "Desarrollador 1"],
         ["SUB-10", "HU-02", "Codificar sección de cuentas bancarias confidenciales con lógica de aislamiento para el Asistente", "Codificación", "2h", "Desarrollador 4"],
         ["SUB-11", "HU-02", "Ejecutar pruebas de recálculo dinámico de métricas y filtrado temporal al cambiar de mes", "Test", "2h", "Desarrollador 5"],
         ["SUB-12", "HU-03", "Definir e inicializar esquema en localStorage con atributos receiptId y fotos base64/SVG", "Análisis y diseño", "2h", "Desarrollador 4"],
@@ -535,16 +535,16 @@ def build_document():
         },
         {
             "num": "Paso 3",
-            "title": "Dashboard del Gerente con 4 KPIs y Pantalla Unificada (HU-01, HU-02, Criterios 1.3, 2.1, 2.2)",
+            "title": "Dashboard del Gerente con 4 KPIs y Tabla Única Consolidada (HU-01, HU-02, Criterios 1.3, 2.1, 2.2)",
             "hu": "HU-02: Dashboard Ejecutivo del Gerente y Navegación Temporal",
             "desc": "El Gerente ingresa y visualiza en la parte superior los 4 KPIs solicitados por el cliente:\n"
                     "1) Total Pendiente del Mes: S/ 6,370.35 (4 pagos pendientes).\n"
                     "2) Total Pagado del Mes: S/ 3,550.00 (2 pagos realizados).\n"
                     "3) Deudas Vencidas Anteriores: S/ 195.00 (1 deuda vencida que se arrastra de meses pasados).\n"
                     "4) Próximo Vencimiento: 18/10/2026 (Recibo de Energía Eléctrica).\n"
-                    "Debajo, en la misma pantalla, se despliegan juntas las tablas de pendientes y realizados.",
+                    "Debajo, en la misma ventana, se consolidan todas las obligaciones y pagos en una sola tabla unificada, mostrando a la derecha el estado ('Pendiente' o 'Realizado') con sus respectivos comprobantes y titularidad.",
             "img": "03_gerente_dashboard_octubre.png",
-            "val": "Cumple Criterios 2.1 y 2.2: 4 KPIs consolidados y visualización conjunta de listas en la misma pantalla."
+            "val": "Cumple Criterios 2.1 y 2.2: 4 KPIs consolidados y visualización unificada en una sola tabla sin divisiones innecesarias."
         },
         {
             "num": "Paso 4",

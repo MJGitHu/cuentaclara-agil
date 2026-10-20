@@ -648,13 +648,21 @@ body {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border: 1px solid var(--color-border);
   overflow: hidden;
-  max-height: 90vh;
+  max-height: 88vh;
   display: flex;
   flex-direction: column;
 }
 
+.modal-box form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .modal-header {
-  padding: var(--space-16) var(--space-24);
+  padding: 14px var(--space-24);
   border-bottom: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
@@ -683,18 +691,23 @@ body {
 }
 
 .modal-body {
-  padding: var(--space-24);
+  padding: 16px var(--space-24);
   overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .modal-footer {
-  padding: var(--space-16) var(--space-24);
+  padding: 12px var(--space-24);
   border-top: 1px solid var(--color-border);
   display: flex;
   justify-content: flex-end;
   gap: var(--space-8);
   background-color: var(--color-secondary-bg);
   flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
 }
 
 .info-summary-box {
@@ -723,11 +736,12 @@ body {
 
 .image-preview-img {
   max-width: 100%;
-  max-height: 180px;
+  max-height: 110px;
   object-fit: contain;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   background-color: #FAFAFA;
+  display: inline-block;
 }
 
 .image-viewer-modal-box {
