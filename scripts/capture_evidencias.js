@@ -150,29 +150,33 @@ async function run() {
   // 13. Modal Liquidación Yape
   console.log('Capturando 13_modal_pago_yape_datos.png');
   // Buscar botón de registrar pago del gasto FAC-F004-9842 (monto 500.35)
-  const recordBtns = await page.$$('.record-btn');
-  if (recordBtns.length > 1) {
-    await recordBtns[1].click(); // Factura con Yape / 500.35
-    await sleep(400);
-    await page.select('#paymentMethodSelect', 'Yape (Billetera Digital)');
-    await sleep(300);
-    await page.screenshot({ path: path.join(OUTPUT_DIR, '13_modal_pago_yape_datos.png'), fullPage: false });
-
-    // 14. Modal Liquidación Efectivo Ley 29571
-    console.log('Capturando 14_modal_pago_efectivo_redondeo_ley29571.png');
-    await page.select('#paymentMethodSelect', 'Efectivo');
-    await sleep(300);
-    await page.type('#cashReceivedInput', '510.00');
-    await sleep(300);
-    await page.screenshot({ path: path.join(OUTPUT_DIR, '14_modal_pago_efectivo_redondeo_ley29571.png'), fullPage: false });
-
-    // 15. Liquidar pago
-    await page.select('#paymentMethodSelect', 'Transferencia Bancaria');
-    await sleep(200);
-    await page.type('#paymentRefInput', 'OP-9988221');
-    await page.click('#recordPaymentForm button[type="submit"]');
-    await sleep(600);
+  const targetBtn = await page.$('.record-btn[data-id="exp-oct-2"]');
+  if (targetBtn) {
+    await targetBtn.click();
+  } else {
+    const recordBtns = await page.$$('.record-btn');
+    if (recordBtns.length > 1) await recordBtns[1].click();
   }
+  await sleep(400);
+
+  await page.select('#paymentMethodSelect', 'Yape (Billetera Digital)');
+  await sleep(300);
+  await page.screenshot({ path: path.join(OUTPUT_DIR, '13_modal_pago_yape_datos.png'), fullPage: false });
+
+  // 14. Modal Liquidación Efectivo Ley 29571
+  console.log('Capturando 14_modal_pago_efectivo_redondeo_ley29571.png');
+  await page.select('#paymentMethodSelect', 'Efectivo');
+  await sleep(300);
+  await page.type('#cashReceivedInput', '510.00');
+  await sleep(300);
+  await page.screenshot({ path: path.join(OUTPUT_DIR, '14_modal_pago_efectivo_redondeo_ley29571.png'), fullPage: false });
+
+  // 15. Liquidar pago
+  await page.select('#paymentMethodSelect', 'Transferencia Bancaria');
+  await sleep(200);
+  await page.type('#paymentRefInput', 'OP-9988221');
+  await page.click('#recordPaymentForm button[type="submit"]');
+  await sleep(600);
 
   // 16. Asistente con pago completado
   await page.select('#filterStatus', 'all');

@@ -65,7 +65,9 @@
     'Proveedor',
     'Préstamo',
     'Alquiler',
-    'Mantenimiento'
+    'Mantenimiento',
+    'Seguros',
+    'Telecomunicaciones'
   ];
 
   const DEFAULT_SUPPLIERS = [
@@ -152,6 +154,54 @@
       hasYape: true,
       yapePhone: '912345678',
       yapeHolder: 'Carlos Vega - Mantenimiento'
+    },
+    {
+      id: 'sup-8',
+      ruc: '20100017491',
+      name: 'Telefónica del Perú S.A.A. (Movistar)',
+      category: 'Telecomunicaciones',
+      contact: 'Atención Clientes Corporativos',
+      phone: '01-210-1000',
+      email: 'empresas@movistar.com.pe',
+      hasYape: false,
+      yapePhone: '',
+      yapeHolder: ''
+    },
+    {
+      id: 'sup-9',
+      ruc: '20100041953',
+      name: 'Rimac Seguros y Reaseguros',
+      category: 'Seguros',
+      contact: 'Pólizas Comerciales y Riesgos',
+      phone: '01-411-1000',
+      email: 'atencion@rimac.com.pe',
+      hasYape: false,
+      yapePhone: '',
+      yapeHolder: ''
+    },
+    {
+      id: 'sup-10',
+      ruc: '20601234567',
+      name: 'Comercializadora Papelera Sur E.I.R.L.',
+      category: 'Proveedor',
+      contact: 'Jorge Luis Quispe',
+      phone: '976-543-210',
+      email: 'ventas@papelerasur.pe',
+      hasYape: true,
+      yapePhone: '976543210',
+      yapeHolder: 'Jorge Quispe / Papelera Sur'
+    },
+    {
+      id: 'sup-11',
+      ruc: '20498765432',
+      name: 'Seguridad & Vigilancia Protec S.A.C.',
+      category: 'Servicio',
+      contact: 'Central de Operaciones Lima',
+      phone: '01-619-3300',
+      email: 'contratos@seguridadprotec.pe',
+      hasYape: false,
+      yapePhone: '',
+      yapeHolder: ''
     }
   ];
 
@@ -189,6 +239,66 @@
       titularProofPhoto: SAMPLE_DNI_SVG,
       paymentReceiptPhoto: SAMPLE_VOUCHER_SVG
     },
+    {
+      id: 'exp-sep-3',
+      receiptId: 'FAC-F002-3104',
+      description: 'Suministros y Papelería de Oficina - Stock Inicial',
+      supplierId: 'sup-10',
+      amount: 320.00,
+      dueDate: '2026-09-12',
+      type: 'Proveedor',
+      status: 'realizado',
+      paymentDate: '2026-09-12',
+      paymentMethod: 'Yape (Billetera Digital)',
+      ref: 'YAPE-881230',
+      titularProofPhoto: SAMPLE_DNI_SVG,
+      paymentReceiptPhoto: SAMPLE_VOUCHER_SVG
+    },
+    {
+      id: 'exp-sep-4',
+      receiptId: 'REC-ARRIENDO-0905',
+      description: 'Alquiler Mensual de Inmueble Comercial (Septiembre)',
+      supplierId: 'sup-5',
+      amount: 2800.00,
+      dueDate: '2026-09-05',
+      type: 'Alquiler',
+      status: 'realizado',
+      paymentDate: '2026-09-05',
+      paymentMethod: 'Transferencia Bancaria',
+      ref: 'TR-651029',
+      titularProofPhoto: SAMPLE_DNI_SVG,
+      paymentReceiptPhoto: SAMPLE_VOUCHER_SVG
+    },
+    {
+      id: 'exp-sep-5',
+      receiptId: 'NPS-SUNAT-0920',
+      description: 'Impuesto SUNAT - IGV y Renta (Septiembre 2026)',
+      supplierId: 'sup-3',
+      amount: 1780.00,
+      dueDate: '2026-09-20',
+      type: 'Impuesto',
+      status: 'realizado',
+      paymentDate: '2026-09-19',
+      paymentMethod: 'Transferencia Bancaria',
+      ref: 'TR-691024',
+      titularProofPhoto: SAMPLE_DNI_SVG,
+      paymentReceiptPhoto: SAMPLE_VOUCHER_SVG
+    },
+    {
+      id: 'exp-sep-6',
+      receiptId: 'CUOTA-BCP-0724',
+      description: 'Cuota Préstamo de Capital de Trabajo #07',
+      supplierId: 'sup-6',
+      amount: 3400.00,
+      dueDate: '2026-09-25',
+      type: 'Préstamo',
+      status: 'realizado',
+      paymentDate: '2026-09-24',
+      paymentMethod: 'Transferencia Bancaria',
+      ref: 'TR-662910',
+      titularProofPhoto: SAMPLE_DNI_SVG,
+      paymentReceiptPhoto: SAMPLE_VOUCHER_SVG
+    },
 
     // --- Octubre 2026 (Mes Actual) ---
     {
@@ -206,7 +316,7 @@
       titularProofPhoto: SAMPLE_DNI_SVG,
       paymentReceiptPhoto: null
     },
-    // Gasto con céntimos (S/ 500.35) para demostrar la Ley de Redondeo en Efectivo de Perú
+    // Gasto con céntimos (S/ 500.35) para demostrar la Ley de Redondeo en Efectivo de Perú y Yape
     {
       id: 'exp-oct-2',
       receiptId: 'FAC-F004-9842',
@@ -254,6 +364,51 @@
     },
     {
       id: 'exp-oct-5',
+      receiptId: 'REC-SEDAPAL-1022',
+      description: 'Servicio de Agua Potable - Planta y Oficinas',
+      supplierId: 'sup-2',
+      amount: 215.40,
+      dueDate: '2026-10-28',
+      type: 'Servicio',
+      status: 'pendiente',
+      paymentDate: null,
+      paymentMethod: null,
+      ref: null,
+      titularProofPhoto: SAMPLE_DNI_SVG,
+      paymentReceiptPhoto: null
+    },
+    {
+      id: 'exp-oct-6',
+      receiptId: 'REC-MOVISTAR-1015',
+      description: 'Enlace de Fibra Óptica Empresarial e Internet Dedicado',
+      supplierId: 'sup-8',
+      amount: 289.90,
+      dueDate: '2026-10-22',
+      type: 'Telecomunicaciones',
+      status: 'pendiente',
+      paymentDate: null,
+      paymentMethod: null,
+      ref: null,
+      titularProofPhoto: SAMPLE_DNI_SVG,
+      paymentReceiptPhoto: null
+    },
+    {
+      id: 'exp-oct-7',
+      receiptId: 'POLIZA-RIMAC-1030',
+      description: 'Póliza Multiriesgo Local Comercial e Inventarios',
+      supplierId: 'sup-9',
+      amount: 450.00,
+      dueDate: '2026-10-30',
+      type: 'Seguros',
+      status: 'pendiente',
+      paymentDate: null,
+      paymentMethod: null,
+      ref: null,
+      titularProofPhoto: SAMPLE_DNI_SVG,
+      paymentReceiptPhoto: null
+    },
+    {
+      id: 'exp-oct-8',
       receiptId: 'REC-ARRIENDO-1005',
       description: 'Alquiler Mensual de Inmueble Comercial',
       supplierId: 'sup-5',
@@ -268,7 +423,7 @@
       paymentReceiptPhoto: SAMPLE_VOUCHER_SVG
     },
     {
-      id: 'exp-oct-6',
+      id: 'exp-oct-9',
       receiptId: 'SERV-MANT-1009',
       description: 'Mantenimiento Preventivo de Equipos y Servidores',
       supplierId: 'sup-7',
@@ -282,10 +437,70 @@
       titularProofPhoto: SAMPLE_DNI_SVG,
       paymentReceiptPhoto: SAMPLE_VOUCHER_SVG
     },
+    {
+      id: 'exp-oct-10',
+      receiptId: 'FACT-PROTEC-1015',
+      description: 'Servicio de Seguridad y Vigilancia Quincenal',
+      supplierId: 'sup-11',
+      amount: 920.00,
+      dueDate: '2026-10-15',
+      type: 'Servicio',
+      status: 'realizado',
+      paymentDate: '2026-10-15',
+      paymentMethod: 'Transferencia Bancaria',
+      ref: 'TR-891044',
+      titularProofPhoto: SAMPLE_DNI_SVG,
+      paymentReceiptPhoto: SAMPLE_VOUCHER_SVG
+    },
+    {
+      id: 'exp-oct-11',
+      receiptId: 'FAC-F002-3891',
+      description: 'Compra de Papelería Continua y Facturación',
+      supplierId: 'sup-10',
+      amount: 180.00,
+      dueDate: '2026-10-11',
+      type: 'Proveedor',
+      status: 'realizado',
+      paymentDate: '2026-10-11',
+      paymentMethod: 'Yape (Billetera Digital)',
+      ref: 'YAPE-910244',
+      titularProofPhoto: SAMPLE_DNI_SVG,
+      paymentReceiptPhoto: SAMPLE_VOUCHER_SVG
+    },
 
     // --- Noviembre 2026 (Próximo Mes) ---
     {
       id: 'exp-nov-1',
+      receiptId: 'REC-ARRIENDO-1105',
+      description: 'Alquiler Mensual de Inmueble Comercial (Noviembre)',
+      supplierId: 'sup-5',
+      amount: 2800.00,
+      dueDate: '2026-11-05',
+      type: 'Alquiler',
+      status: 'pendiente',
+      paymentDate: null,
+      paymentMethod: null,
+      ref: null,
+      titularProofPhoto: SAMPLE_DNI_SVG,
+      paymentReceiptPhoto: null
+    },
+    {
+      id: 'exp-nov-2',
+      receiptId: 'REC-ENEL-1118',
+      description: 'Recibo de Energía Eléctrica Estimado Noviembre',
+      supplierId: 'sup-1',
+      amount: 640.00,
+      dueDate: '2026-11-18',
+      type: 'Servicio',
+      status: 'pendiente',
+      paymentDate: null,
+      paymentMethod: null,
+      ref: null,
+      titularProofPhoto: SAMPLE_DNI_SVG,
+      paymentReceiptPhoto: null
+    },
+    {
+      id: 'exp-nov-3',
       receiptId: 'NPS-SUNAT-1120',
       description: 'Impuesto SUNAT Estimado - Periodo Noviembre 2026',
       supplierId: 'sup-3',
@@ -300,7 +515,37 @@
       paymentReceiptPhoto: null
     },
     {
-      id: 'exp-nov-2',
+      id: 'exp-nov-4',
+      receiptId: 'REC-SEDAPAL-1122',
+      description: 'Servicio de Agua Potable Estimado Noviembre',
+      supplierId: 'sup-2',
+      amount: 210.00,
+      dueDate: '2026-11-22',
+      type: 'Servicio',
+      status: 'pendiente',
+      paymentDate: null,
+      paymentMethod: null,
+      ref: null,
+      titularProofPhoto: SAMPLE_DNI_SVG,
+      paymentReceiptPhoto: null
+    },
+    {
+      id: 'exp-nov-5',
+      receiptId: 'REC-MOVISTAR-1122',
+      description: 'Enlace de Fibra Óptica Empresarial Noviembre',
+      supplierId: 'sup-8',
+      amount: 289.90,
+      dueDate: '2026-11-22',
+      type: 'Telecomunicaciones',
+      status: 'pendiente',
+      paymentDate: null,
+      paymentMethod: null,
+      ref: null,
+      titularProofPhoto: SAMPLE_DNI_SVG,
+      paymentReceiptPhoto: null
+    },
+    {
+      id: 'exp-nov-6',
       receiptId: 'CUOTA-BCP-0924',
       description: 'Cuota Préstamo de Capital de Trabajo #09',
       supplierId: 'sup-6',
@@ -332,10 +577,10 @@
   };
 
   const STORAGE_KEYS = {
-    SUPPLIERS: 'cuentaclara_suppliers_v2',
-    EXPENSES: 'cuentaclara_expenses_v2',
-    TYPES: 'cuentaclara_types_v2',
-    SESSION: 'cuentaclara_session_v2'
+    SUPPLIERS: 'cuentaclara_suppliers_v3',
+    EXPENSES: 'cuentaclara_expenses_v3',
+    TYPES: 'cuentaclara_types_v3',
+    SESSION: 'cuentaclara_session_v3'
   };
 
   // ==========================================================================
@@ -451,8 +696,39 @@
 
     clearSession() {
       sessionStorage.removeItem(STORAGE_KEYS.SESSION);
+    },
+
+    resetDemoData() {
+      localStorage.setItem(STORAGE_KEYS.SUPPLIERS, JSON.stringify(DEFAULT_SUPPLIERS));
+      localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(DEFAULT_EXPENSES));
+      localStorage.setItem(STORAGE_KEYS.TYPES, JSON.stringify(DEFAULT_EXPENSE_TYPES));
     }
   };
+
+  // Notificaciones Toast de Persistencia Local
+  let toastTimeout = null;
+  function showToast(message, type = 'success') {
+    let toast = document.getElementById('appToast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'appToast';
+      document.body.appendChild(toast);
+    }
+    toast.className = `toast-notification toast-${type}`;
+    toast.textContent = message;
+    toast.style.display = 'flex';
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
+
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(10px)';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 300);
+    }, 3500);
+  }
 
   // ==========================================================================
   // Formateadores y Reglas de Negocio
@@ -545,6 +821,7 @@
     appHeader: document.getElementById('appHeader'),
     userHeaderActions: document.getElementById('userHeaderActions'),
     userBadgeInfo: document.getElementById('userBadgeInfo'),
+    resetDemoBtn: document.getElementById('resetDemoBtn'),
     logoutBtn: document.getElementById('logoutBtn'),
 
     // Navegación temporal
@@ -1238,10 +1515,24 @@
     DOM.resetFiltersBtn.addEventListener('click', function () {
       DOM.filterSupplier.value = 'all';
       DOM.filterType.value = 'all';
-      DOM.filterStatus.value = 'pendiente';
+      DOM.filterStatus.value = 'all';
       DOM.filterSort.value = 'due_asc';
       renderAssistantPayments();
     });
+
+    // Botón de Restablecer Datos de Demostración
+    if (DOM.resetDemoBtn) {
+      DOM.resetDemoBtn.addEventListener('click', function () {
+        const confirmReset = confirm('¿Desea restablecer la base de datos local con los datos de muestra iniciales?\n\nEsto recargará todos los proveedores y obligaciones originales.');
+        if (confirmReset) {
+          Store.resetDemoData();
+          updateSupplierSelects();
+          updateTypeSelects();
+          updatePeriodViews();
+          showToast('Base de datos restablecida a los valores iniciales de demostración.', 'success');
+        }
+      });
+    }
 
     // Modal: Registrar Pago
     DOM.closePaymentModalBtn.addEventListener('click', closeRecordPaymentModal);
@@ -1284,6 +1575,8 @@
       } else {
         renderAssistantPayments();
       }
+
+      showToast('Pago registrado exitosamente y archivado en la base de datos local.', 'success');
     });
 
     // Modal: Nuevo Gasto
@@ -1331,6 +1624,7 @@
 
       closeNewExpenseModal();
       renderAssistantPayments();
+      showToast('Obligación registrada y guardada en la base de datos local.', 'success');
     });
 
     // Modal: Nuevo Proveedor (Gerente)
@@ -1379,6 +1673,7 @@
       closeNewSupplierModal();
       updateSupplierSelects();
       renderGerenteDashboard();
+      showToast('Proveedor guardado con éxito en el catálogo local.', 'success');
     });
 
     // Modal: Nuevo Tipo de Gasto (Gerente)
@@ -1394,6 +1689,7 @@
       Store.addExpenseType(typeName);
       closeNewExpenseTypeModal();
       updateTypeSelects();
+      showToast(`Tipo de gasto "${typeName}" guardado en la base de datos local.`, 'success');
     });
 
     // Modal: Catálogo de Proveedores

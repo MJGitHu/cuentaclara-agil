@@ -16,6 +16,7 @@
 
     <div class="header-user-actions hidden" id="userHeaderActions">
       <div class="user-badge" id="userBadgeInfo"></div>
+      <button class="btn btn-secondary btn-sm" id="resetDemoBtn" type="button" title="Restablecer datos originales de prueba">Restablecer Datos</button>
       <button class="btn btn-secondary btn-sm" id="logoutBtn" type="button">Cerrar Sesión</button>
     </div>
   </header>
@@ -212,8 +213,8 @@
           <div class="form-group" style="margin-bottom: 0;">
             <label for="filterStatus">Estado</label>
             <select id="filterStatus" class="form-control">
-              <option value="all">Todos los estados</option>
-              <option value="pendiente" selected>Pendientes</option>
+              <option value="all" selected>Todos los estados</option>
+              <option value="pendiente">Pendientes</option>
               <option value="realizado">Realizados</option>
             </select>
           </div>
