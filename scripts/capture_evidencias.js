@@ -40,6 +40,10 @@ async function run() {
 
   // 3. Login Gerente
   console.log('Capturando 03_gerente_dashboard_octubre.png');
+  await page.evaluate(() => {
+    document.getElementById('usernameInput').value = '';
+    document.getElementById('passwordInput').value = '';
+  });
   await page.type('#usernameInput', 'gerente');
   await page.type('#passwordInput', 'gerente123');
   await page.click('button[type="submit"]');
@@ -86,7 +90,7 @@ async function run() {
     await viewTitularBtns[0].click();
     await sleep(400);
     await page.screenshot({ path: path.join(OUTPUT_DIR, '06_modal_ver_titular_dni.png'), fullPage: false });
-    await page.click('#closeImageViewerBtn');
+    await page.evaluate(() => document.getElementById('closeImageViewerBtn').click());
     await sleep(300);
   }
 
@@ -147,6 +151,10 @@ async function run() {
 
   // 11. Login Asistente
   console.log('Capturando 11_asistente_consola_octubre.png');
+  await page.evaluate(() => {
+    document.getElementById('usernameInput').value = '';
+    document.getElementById('passwordInput').value = '';
+  });
   await page.type('#usernameInput', 'asistente');
   await page.type('#passwordInput', 'asistente123');
   await page.click('button[type="submit"]');
